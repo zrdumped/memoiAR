@@ -19,7 +19,7 @@ public class NetworkClient : MonoBehaviour
 
     public Text networkText;
     public InputField ipField;
-
+    public InputField portField;
     // Use this for initialization 	
     void Start()
     {
@@ -65,7 +65,7 @@ public class NetworkClient : MonoBehaviour
     {
         try
         {
-            socketConnection = new TcpClient(ipField.text, 8052);
+            socketConnection = new TcpClient(ipField.text, int.Parse(portField.text));
             Byte[] bytes = new Byte[1024];
             while (true)
             {

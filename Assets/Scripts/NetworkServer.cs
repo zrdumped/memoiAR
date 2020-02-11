@@ -24,17 +24,20 @@ public class NetworkServer : MonoBehaviour
     /// Create handle to connected tcp client. 	
     /// </summary> 	
     private TcpClient connectedTcpClient;
+    private HashSet<TcpClient> clients;
     private string words;
     public bool serverStarted = false;
     #endregion
 
     public Text networkText;
     public InputField ipField;
-
+    public InputField portField;
     // Use this for initialization
     void Start()
     {
         // Start TcpServer background thread 		
+        clients = new HashSet<TcpClient>();
+
         tcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
         tcpListenerThread.IsBackground = true;
         //tcpListenerThread.Start();
@@ -57,6 +60,8 @@ public class NetworkServer : MonoBehaviour
         }
         if(serverStarted)
             networkText.text = words;
+
+        //Debug.Log(clients.Count);
     }
 
     /// <summary> 	
@@ -67,7 +72,7 @@ public class NetworkServer : MonoBehaviour
         try
         {
             // Create listener on localhost port 8052. 			
-            tcpListener = new TcpListener(IPAddress.Parse(ipField.text), 8052);
+            tcpListener = new TcpListener(IPAddress.Parse(ipField.text), int.Parse(portField.text));
             tcpListener.Start();
             Debug.Log("Server is listening");
             words = "Server is listening";
@@ -76,6 +81,7 @@ public class NetworkServer : MonoBehaviour
             {
                 using (connectedTcpClient = tcpListener.AcceptTcpClient())
                 {
+                    clients.Add(connectedTcpClient);
                     // Get a stream object for reading 					
                     using (NetworkStream stream = connectedTcpClient.GetStream())
                     {
@@ -105,23 +111,28 @@ public class NetworkServer : MonoBehaviour
     /// </summary> 	
     public void SendMessage(string serverMessage = "This is a message from your server.")
     {
-        if (connectedTcpClient == null)
-        {
+        if (clients.Count == 0)
+        //if (connectedTcpClient == null)
+        { 
             return;
         }
 
         try
         {
-            // Get a stream object for writing. 			
-            NetworkStream stream = connectedTcpClient.GetStream();
-            if (stream.CanWrite)
+            foreach (TcpClient tc in clients)
             {
-                // Convert string message to byte array.                 
-                byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
-                // Write byte array to socketConnection stream.               
-                stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
-                Debug.Log("Server sent his message - should be received by client");
-                words = "Server sent his message - should be received by client";
+                // Get a stream object for writing. 			
+                //NetworkStream stream = connectedTcpClient.GetStream();
+                NetworkStream stream = tc.GetStream();
+                if (stream.CanWrite)
+                {
+                    // Convert string message to byte array.                 
+                    byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
+                    // Write byte array to socketConnection stream.               
+                    stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
+                    Debug.Log("Server sent his message - should be received by client");
+                    words = "Server sent his message - should be received by client";
+                }
             }
         }
         catch (SocketException socketException)

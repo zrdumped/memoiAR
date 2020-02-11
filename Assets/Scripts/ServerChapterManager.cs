@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkInterface : MonoBehaviour
+public class ServerChapterManager : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
