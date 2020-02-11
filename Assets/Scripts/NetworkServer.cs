@@ -29,6 +29,7 @@ public class NetworkServer : MonoBehaviour
     #endregion
 
     public Text networkText;
+    public InputField ipField;
 
     // Use this for initialization
     void Start()
@@ -66,7 +67,7 @@ public class NetworkServer : MonoBehaviour
         try
         {
             // Create listener on localhost port 8052. 			
-            tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8052);
+            tcpListener = new TcpListener(IPAddress.Parse(ipField.text), 8052);
             tcpListener.Start();
             Debug.Log("Server is listening");
             words = "Server is listening";

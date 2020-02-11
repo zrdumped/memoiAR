@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -17,6 +18,7 @@ public class NetworkClient : MonoBehaviour
     #endregion
 
     public Text networkText;
+    public InputField ipField;
 
     // Use this for initialization 	
     void Start()
@@ -63,7 +65,7 @@ public class NetworkClient : MonoBehaviour
     {
         try
         {
-            socketConnection = new TcpClient("localhost", 8052);
+            socketConnection = new TcpClient(ipField.text, 8052);
             Byte[] bytes = new Byte[1024];
             while (true)
             {
