@@ -12,7 +12,7 @@ public class TCPTestClient : MonoBehaviour
 	public Action<string> OnLog = delegate{};
 	//public Action<TCPTestServer.ServerMessage> OnMessageReceived = delegate{};
 
-    public Text networkText;
+    //public Text networkText;
     public InputField ipField;
     public InputField portField;
 
@@ -28,14 +28,9 @@ public class TCPTestClient : MonoBehaviour
 	private Thread clientReceiveThread;
 	private NetworkStream stream;
 	private bool running;
-    private string output;
-
-    private void Update()
-    {
-        if (IsConnected)
-            networkText.text = output;
-    }
-
+    private TextOutput output;
+    private ClientStateController csc;
+    //private string output;
 
     /// <summary> 	
     /// Setup socket connection. 	
@@ -45,7 +40,9 @@ public class TCPTestClient : MonoBehaviour
 		try
 		{
 			OnLog(string.Format("Connecting to {0}:{1}", ipField.text, int.Parse(portField.text)));
-			clientReceiveThread = new Thread(new ThreadStart(ListenForData));
+            output = this.GetComponent<TextOutput>();
+            csc = this.GetComponent<ClientStateController>();
+            clientReceiveThread = new Thread(new ThreadStart(ListenForData));
 			clientReceiveThread.IsBackground = true;
 			clientReceiveThread.Start();
 		}
@@ -149,11 +146,12 @@ public class TCPTestClient : MonoBehaviour
 
 	public void OnSentMessage(string message)
 	{
-        output = "client message sent: " + message;
+        output.setText("client message sent: " + message);
 	}
 
     public void OnMessageReceived(TCPTestServer.ServerMessage message)
     {
-        output = "client message received: " + message.Data;
+        output.setText("client message received: " + message.Data);
+        csc.NetworkSetState(message.Data);
     }
 }

@@ -54,7 +54,7 @@ public class TCPTestServer : MonoBehaviour
 	//public string IPAddress = "127.0.0.1";
 	//public int Port = 8052;
 
-    public Text networkText;
+    //public Text networkText;
     public InputField ipField;
     public InputField portField;
 
@@ -71,28 +71,28 @@ public class TCPTestServer : MonoBehaviour
 
 	private List<ConnectedClient> connectedClients = new List<ConnectedClient>();
 
-    private string output;
+    //private string output;
+    private TextOutput output;
 
-    private void Update()
-    {
-        networkText.text = output;
-    }
+    private ServerStateController ssc;
 
     // Use this for initialization
     public void StartServer()
 	{
-		// Start TcpServer background thread 		
-		tcpListenerThread = new Thread(ListenForIncomingRequests);
+        // Start TcpServer background thread 		
+        output = this.GetComponent<TextOutput>();
+        ssc = this.GetComponent<ServerStateController>();
+        tcpListenerThread = new Thread(ListenForIncomingRequests);
 		tcpListenerThread.IsBackground = true;
 		tcpListenerThread.Start();
-        output = "server started";
+        output.setText("server started");
     }
 
     public void Broadcast(string message)
     {
         Debug.Log("server message broadcasted");
-        output = "server message broadcasted";
-        Debug.Log(output);
+        output.setText("server message broadcasted");
+        //Debug.Log(output);
         for (int i = 0; i < connectedClients.Count; i++)
         {
             ConnectedClient connection = connectedClients[i];
@@ -169,8 +169,8 @@ public class TCPTestServer : MonoBehaviour
 						if (clientMessage.StartsWith("!"))
 						{
                             Debug.Log("server message received: " + clientMessage);
-                            output = "server message received: " + clientMessage;
-                            Debug.Log(output);
+                            output.setText("server message received: " + clientMessage);
+                            //Debug.Log(output);
                             ProcessMessage(connectedClient, clientMessage);
 						}
 						else
@@ -205,9 +205,10 @@ public class TCPTestServer : MonoBehaviour
 					SendMessage(connectedClient.Client, serverMessage);
 					break;
 				default:
-					response = "Unknown Command '" + command + "'";
+					response = "messgae received: '" + command + "'";
+                    ssc.SetState(split[0].Substring(1));
 					serverMessage = new ServerMessage(connectedClient.ClientData, response);
-					SendMessage(connectedClient.Client, serverMessage);
+					//SendMessage(connectedClient.Client, serverMessage);
 					break;
 		}
 	}
@@ -238,8 +239,8 @@ public class TCPTestServer : MonoBehaviour
 	private bool SendMessage(TcpClient client, ServerMessage serverMessage)
 	{
         Debug.Log("server message sent: " + serverMessage.Data);
-        output = "server message sent: " + serverMessage.Data;
-        Debug.Log(output);
+        output.setText("server message sent: " + serverMessage.Data);
+        //Debug.Log(output);
         if (client != null && client.Connected)
 		{
 			try
