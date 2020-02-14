@@ -13,6 +13,8 @@ public class AnnaController : MonoBehaviour
     public GameObject rose;
     public GameObject coin;
 
+    public GameObject RoseInCase, CoinInCase;
+
     private ClientStateController csc;
     void Start()
     {
@@ -42,12 +44,12 @@ public class AnnaController : MonoBehaviour
 
     public void annaSelectedGift()
     {
-        if (coin.activeSelf == true)
+        if (coin.activeSelf)
         {
             coin.GetComponent<Gift>().startCalDistance();
             annaPickGift.SetActive(false);
         }
-        else if (rose.activeSelf == true)
+        else if (rose.activeSelf)
         {
             rose.GetComponent<Gift>().startCalDistance();
             annaPickGift.SetActive(false);
@@ -56,8 +58,24 @@ public class AnnaController : MonoBehaviour
         //csc.GiftGiven();
     }
 
-    public void makeAnnaTalk()
+    public void makeAnnaTalk(int musicNum, int giftNum)
     {
+        if (musicNum == 1)
+        {
+            annaTopic.GetComponent<Text>().text = "How Do You Feel About The Music 1?";
+        }
+        else
+        {
+            annaTopic.GetComponent<Text>().text = "How Do You Feel About The Music 2?";
+        }
+        if(giftNum == 0)
+        {
+            RoseInCase.SetActive(true);
+        }
+        else
+        {
+            CoinInCase.SetActive(true);
+        }
         annaTopic.SetActive(true);
     }
 

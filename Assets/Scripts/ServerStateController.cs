@@ -40,11 +40,18 @@ public class ServerStateController : MonoBehaviour
             server.Broadcast("MaxSelectMusic");
         }
 
-        else if (state == 3 && stateName == "MaxMusicSelected")
+        else if (state == 3 && stateName == "MaxMusicSelectedMusic1")
         {
             state++;
             //send message to lead anna to park
-            server.Broadcast("AnnaToPark");
+            server.Broadcast("AnnaToParkMusic1");
+        }
+
+        else if (state == 3 && stateName == "MaxMusicSelectedMusic2")
+        {
+            state++;
+            //send message to lead anna to park
+            server.Broadcast("AnnaToParkMusic2");
         }
 
         else if (state == 4 && stateName == "AnnaParkReached")
@@ -54,11 +61,18 @@ public class ServerStateController : MonoBehaviour
             server.Broadcast("AnnaPickGift");
         }
 
-        else if (state == 5 && stateName == "AnnaGiftGiven")
+        else if (state == 5 && stateName == "AnnaGiftGivenRose")
         {
             state++;
             //send message to make anna and max talk
-            server.Broadcast("StartTalking");
+            server.Broadcast("StartTalkingRose");
+        }
+
+        else if (state == 5 && stateName == "AnnaGiftGivenCoin")
+        {
+            state++;
+            //send message to make anna and max talk
+            server.Broadcast("StartTalkingCoin");
         }
     }
 }

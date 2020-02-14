@@ -20,13 +20,13 @@ public class Gift : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.GetComponent<Renderer>().material.renderQueue = 1000;
     }
 
     // Update is called once per frame
     void Update()
     {
-        output.text = this.transform.position + " " + target.transform.position;
+        output.text = this.transform.position + " " + target.transform.position + " " + startCal + " " + detectedObj;
         if (startCal && detectedObj)
         {
             if (float.Parse(distance.text) > target.transform.position.magnitude)
@@ -36,7 +36,7 @@ public class Gift : MonoBehaviour
 
     private void given()
     {
-        csc.GiftGiven();
+        csc.GiftGiven(giftNum);
         this.gameObject.SetActive(false);
         startCal = false;
     }

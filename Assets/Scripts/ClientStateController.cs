@@ -17,6 +17,9 @@ public class ClientStateController : MonoBehaviour
     private bool newState = false;
     private string newStateName = "";
 
+    //1 || 2
+    private int musicSelected = 0;
+
     private void Start()
     {
         client = this.GetComponent<TCPTestClient>();
@@ -55,9 +58,17 @@ public class ClientStateController : MonoBehaviour
             max.makeMaxSelectMusic();
         }
 
-        else if(stateName == "AnnaToPark" && character == 1)
+        else if(stateName == "AnnaToParkMusic1" && character == 1)
         {
             //anna to park
+            if (character == 2) musicSelected = 1;
+            anna.leadAnnaToPark();
+        }
+
+        else if (stateName == "AnnaToParkMusic2" && character == 1)
+        {
+            //anna to park
+            if (character == 2) musicSelected = 2;
             anna.leadAnnaToPark();
         }
 
@@ -67,11 +78,18 @@ public class ClientStateController : MonoBehaviour
             anna.makeAnnaSelectGift();
         }
 
-        else if(stateName == "StartTalking")
+        else if(stateName == "StartTalkingRose")
         {
             //show up board and start talking
-            if (character == 2) max.makeMaxTalk();
-            else if (character == 1) anna.makeAnnaTalk();
+            if (character == 2) max.makeMaxTalk(0);
+            else if (character == 1) anna.makeAnnaTalk(musicSelected, 0);
+        }
+
+        else if (stateName == "StartTalkingCoin")
+        {
+            //show up board and start talking
+            if (character == 2) max.makeMaxTalk(1);
+            else if (character == 1) anna.makeAnnaTalk(musicSelected, 1);
         }
     }
 
@@ -110,13 +128,19 @@ public class ClientStateController : MonoBehaviour
         }
     }
 
-    public void MusicSelected()
+    public void MusicSelected(int musicNum)
     {
-        client.ClientSendMessage("!MaxMusicSelected");
+        if(musicNum == 1)
+            client.ClientSendMessage("!MaxMusicSelectedMusic1");
+        else if (musicNum == 2)
+            client.ClientSendMessage("!MaxMusicSelectedMusic2");
     }
 
-    public void GiftGiven()
+    public void GiftGiven(int giftNum)
     {
-        client.ClientSendMessage("!AnnaGiftGiven");
+        if(giftNum == 0)
+            client.ClientSendMessage("!AnnaGiftGivenRose");
+        else if (giftNum == 1)
+            client.ClientSendMessage("!AnnaGiftGivenCoin");
     }
 }

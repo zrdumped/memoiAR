@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2229117198997928710}
   - component: {fileID: 2229117198997928706}
   - component: {fileID: 2229117198997928707}
-  - component: {fileID: 2229117198997928708}
   - component: {fileID: 2229117198997928709}
   m_Layer: 0
   m_Name: Coin
@@ -27,9 +26,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2229117198997928711}
-  m_LocalRotation: {x: -0.16354746, y: -0.19625193, z: 0.15868424, w: 0.95370686}
+  m_LocalRotation: {x: -0.16354877, y: -0.19624893, z: 0.15868801, w: 0.9537066}
   m_LocalPosition: {x: 0, y: 0, z: 2.63}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.42822, y: 0.42822, z: 0.42822}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -80,19 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &2229117198997928708
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2229117198997928711}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2229117198997928709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,3 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   csc: {fileID: 0}
   giftNum: 1
+  distance: {fileID: 0}
+  output: {fileID: 0}
+  target: {fileID: 0}
+  detectedObj: 0

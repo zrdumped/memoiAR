@@ -12,7 +12,11 @@ public class MaxController : MonoBehaviour
 
     public AudioClip music1, music2;
 
+    public GameObject RoseInCase, CoinInCase;
+
     private ClientStateController csc;
+    //1 || 2
+    private int musicSelected = 0;
     void Start()
     {
         csc = this.GetComponent<ClientStateController>();
@@ -42,23 +46,35 @@ public class MaxController : MonoBehaviour
     public void maxSelectedMusic()
     {
         maxSelectMusic.SetActive(false);
-        csc.MusicSelected();
+        csc.MusicSelected(musicSelected);
     }
 
     public void maxHearMusic1()
     {
         this.GetComponent<AudioSource>().clip = music1;
+        musicSelected = 1;
         this.GetComponent<AudioSource>().Play();
     }
 
     public void maxHearMusic2()
     {
         this.GetComponent<AudioSource>().clip = music2;
+        musicSelected = 2;
         this.GetComponent<AudioSource>().Play();
     }
 
-    public void makeMaxTalk()
+    public void makeMaxTalk(int giftNum)
     {
+        if (giftNum == 0)
+        {
+            maxTopic.GetComponent<Text>().text = "How Do You Feel About The Rose?";
+            RoseInCase.SetActive(true);
+        }
+        else
+        {
+            maxTopic.GetComponent<Text>().text = "How Do You Feel About The Coin?";
+            CoinInCase.SetActive(true);
+        }
         this.GetComponent<AudioSource>().Stop();
         maxTopic.SetActive(true);
     }
