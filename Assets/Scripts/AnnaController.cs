@@ -10,6 +10,9 @@ public class AnnaController : MonoBehaviour
     public GameObject annaTopic;
     public GameObject annaPickGift;
 
+    public GameObject rose;
+    public GameObject coin;
+
     private ClientStateController csc;
     void Start()
     {
@@ -39,12 +42,34 @@ public class AnnaController : MonoBehaviour
 
     public void annaSelectedGift()
     {
-        annaPickGift.SetActive(false);
-        csc.GiftGiven();
+        if (coin.activeSelf == true)
+        {
+            coin.GetComponent<Gift>().startCalDistance();
+            annaPickGift.SetActive(false);
+        }
+        else if (rose.activeSelf == true)
+        {
+            rose.GetComponent<Gift>().startCalDistance();
+            annaPickGift.SetActive(false);
+        }
+
+        //csc.GiftGiven();
     }
 
     public void makeAnnaTalk()
     {
         annaTopic.SetActive(true);
+    }
+
+    public void annaSelectRose()
+    {
+        coin.SetActive(false);
+        rose.SetActive(true);
+    }
+
+    public void annaSelectCoin()
+    {
+        coin.SetActive(true);
+        rose.SetActive(false);
     }
 }

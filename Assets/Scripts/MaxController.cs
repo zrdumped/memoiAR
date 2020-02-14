@@ -10,6 +10,8 @@ public class MaxController : MonoBehaviour
     public GameObject maxTopic;
     public GameObject maxSelectMusic;
 
+    public AudioClip music1, music2;
+
     private ClientStateController csc;
     void Start()
     {
@@ -43,8 +45,21 @@ public class MaxController : MonoBehaviour
         csc.MusicSelected();
     }
 
+    public void maxHearMusic1()
+    {
+        this.GetComponent<AudioSource>().clip = music1;
+        this.GetComponent<AudioSource>().Play();
+    }
+
+    public void maxHearMusic2()
+    {
+        this.GetComponent<AudioSource>().clip = music2;
+        this.GetComponent<AudioSource>().Play();
+    }
+
     public void makeMaxTalk()
     {
+        this.GetComponent<AudioSource>().Stop();
         maxTopic.SetActive(true);
     }
 }
