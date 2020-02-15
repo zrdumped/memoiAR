@@ -7,11 +7,13 @@ public class AnnaController : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject annaToPark;
-    public GameObject annaTopic;
+    public GameObject annaTopic, directionContent, subTitle;
     public GameObject annaPickGift;
 
     public GameObject rose;
     public GameObject coin;
+
+    public GameObject isAnnaText;
 
     public GameObject RoseInCase, CoinInCase;
 
@@ -19,6 +21,7 @@ public class AnnaController : MonoBehaviour
     void Start()
     {
         csc = this.GetComponent<ClientStateController>();
+       
     }
 
     // Update is called once per frame
@@ -29,6 +32,7 @@ public class AnnaController : MonoBehaviour
 
     public void leadAnnaToPark()
     {
+        isAnnaText.SetActive(true);
         annaToPark.SetActive(true);
     }
 
@@ -60,22 +64,23 @@ public class AnnaController : MonoBehaviour
 
     public void makeAnnaTalk(int musicNum, int giftNum)
     {
-        if (musicNum == 1)
+        string word = "";
+
+        if (giftNum == 0)
         {
-            annaTopic.GetComponent<Text>().text = "How Do You Feel About The Music 1?";
-        }
-        else
-        {
-            annaTopic.GetComponent<Text>().text = "How Do You Feel About The Music 2?";
-        }
-        if(giftNum == 0)
-        {
+            word += "Tell Max why you gave him the rose.\n";
             RoseInCase.SetActive(true);
         }
         else
         {
+            word += "Tell Max why you gave him the coin.\n";
             CoinInCase.SetActive(true);
         }
+
+        word += "How did the music make you feel?";
+        subTitle.GetComponent<Text>().text = "Charmed, Curious, Understood, Happy";
+
+        directionContent.GetComponent<Text>().text = word;
         annaTopic.SetActive(true);
     }
 

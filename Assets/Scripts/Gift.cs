@@ -11,7 +11,7 @@ public class Gift : MonoBehaviour
     //0.2
     public InputField distance;
     public Text output;
-    public GameObject target;
+    public GameObject target, arCamera;
 
     private bool startCal = false;
 
@@ -20,16 +20,16 @@ public class Gift : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.GetComponent<Renderer>().material.renderQueue = 1000;
+        this.GetComponent<Renderer>().material.renderQueue = 4000;
     }
 
     // Update is called once per frame
     void Update()
     {
-        output.text = this.transform.position + " " + target.transform.position + " " + startCal + " " + detectedObj;
+        output.text = arCamera.transform.position + " " + target.transform.position + " " + Vector3.Distance(arCamera.transform.position, target.transform.position);
         if (startCal && detectedObj)
         {
-            if (float.Parse(distance.text) > target.transform.position.magnitude)
+            if (float.Parse(distance.text) > Vector3.Distance(arCamera.transform.position, target.transform.position))
                 given();
         }
     }

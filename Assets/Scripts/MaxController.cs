@@ -7,12 +7,15 @@ public class MaxController : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject maxToPark;
-    public GameObject maxTopic;
+    public GameObject maxTopic, directionContent, subTitle;
+
     public GameObject maxSelectMusic;
 
     public AudioClip music1, music2;
 
     public GameObject RoseInCase, CoinInCase;
+
+    public GameObject isMaxText;
 
     private ClientStateController csc;
     //1 || 2
@@ -20,6 +23,7 @@ public class MaxController : MonoBehaviour
     void Start()
     {
         csc = this.GetComponent<ClientStateController>();
+        
     }
 
     // Update is called once per frame
@@ -30,6 +34,7 @@ public class MaxController : MonoBehaviour
 
     public void leadMaxToPark()
     {
+        isMaxText.SetActive(true);
         maxToPark.SetActive(true);
     }
 
@@ -67,12 +72,14 @@ public class MaxController : MonoBehaviour
     {
         if (giftNum == 0)
         {
-            maxTopic.GetComponent<Text>().text = "How Do You Feel About The Rose?";
+            directionContent.GetComponent<Text>().text = "The Flower was Pretty.\nTell Annaliese why you chose this music.";
+            subTitle.GetComponent<Text>().text = "Curious, Flirtatious, Coy";
             RoseInCase.SetActive(true);
         }
         else
         {
-            maxTopic.GetComponent<Text>().text = "How Do You Feel About The Coin?";
+            directionContent.GetComponent<Text>().text = "You appreciated the Coin.\nTell Annaliese why you chose this music.";
+            subTitle.GetComponent<Text>().text = "Curious, Grateful, Reflective";
             CoinInCase.SetActive(true);
         }
         this.GetComponent<AudioSource>().Stop();

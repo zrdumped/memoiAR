@@ -61,14 +61,14 @@ public class ClientStateController : MonoBehaviour
         else if(stateName == "AnnaToParkMusic1" && character == 1)
         {
             //anna to park
-            if (character == 2) musicSelected = 1;
+            if (character == 1) musicSelected = 1;
             anna.leadAnnaToPark();
         }
 
         else if (stateName == "AnnaToParkMusic2" && character == 1)
         {
             //anna to park
-            if (character == 2) musicSelected = 2;
+            if (character == 1) musicSelected = 2;
             anna.leadAnnaToPark();
         }
 
