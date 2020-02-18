@@ -15,7 +15,7 @@ public class MaxController : MonoBehaviour
 
     public GameObject RoseInCase, CoinInCase;
 
-    public GameObject isMaxText;
+    //public GameObject isMaxText;
 
     private ClientStateController csc;
     //1 || 2
@@ -32,9 +32,14 @@ public class MaxController : MonoBehaviour
         
     }
 
+    public void startTutorial()
+    {
+        return;
+    }
+
     public void leadMaxToPark()
     {
-        isMaxText.SetActive(true);
+        //isMaxText.SetActive(true);
         maxToPark.SetActive(true);
     }
 

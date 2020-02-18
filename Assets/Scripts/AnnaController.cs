@@ -13,7 +13,7 @@ public class AnnaController : MonoBehaviour
     public GameObject rose;
     public GameObject coin;
 
-    public GameObject isAnnaText;
+    //public GameObject isAnnaText;
 
     public GameObject RoseInCase, CoinInCase;
 
@@ -30,9 +30,14 @@ public class AnnaController : MonoBehaviour
 
     }
 
+    public void startTutorial()
+    {
+        return;
+    }
+
     public void leadAnnaToPark()
     {
-        isAnnaText.SetActive(true);
+        //isAnnaText.SetActive(true);
         annaToPark.SetActive(true);
     }
 
