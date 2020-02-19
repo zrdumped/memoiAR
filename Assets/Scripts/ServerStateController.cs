@@ -65,14 +65,14 @@ public class ServerStateController : MonoBehaviour
     //    {
     //        state++;
     //        //send message to make anna and max talk
-    //        server.Broadcast("StartTalkingRose");
+    //        server.Broadcast("StartTalkingCoin");
     //    }
 
     //    else if (state == 5 && stateName == "AnnaGiftGivenCoin")
     //    {
     //        state++;
     //        //send message to make anna and max talk
-    //        server.Broadcast("StartTalkingCoin");
+    //        server.Broadcast("StartTalkingRose");
     //    }
     //}
 
@@ -84,7 +84,8 @@ public class ServerStateController : MonoBehaviour
         {
             state++;
             server.Broadcast("AnnaStartTutorial");
-        } else if(state < 2 && stateName == "MaxHouseReached")
+        }
+        else if (state < 2 && stateName == "MaxHouseReached")
         {
             state++;
             server.Broadcast("MaxStartTutorial");
