@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5007392851703116989}
   - component: {fileID: 1603664303487174724}
   - component: {fileID: 209497957100785072}
+  - component: {fileID: 2365958456120045155}
   m_Layer: 0
   m_Name: tulip
   m_TagString: Untagged
@@ -93,7 +94,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   flowerType: 2
-  flowers: []
   basketType: 0
   flowerSlots: []
   nodeType: 0
+--- !u!65 &2365958456120045155
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044142572785761432}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.111219704, y: 0.33021173, z: 0.051480975}
+  m_Center: {x: 0.00024386123, y: 0.16510586, z: 0}

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5435562754437985275}
   - component: {fileID: 1752593969311993602}
   - component: {fileID: 2200482821123004197}
+  - component: {fileID: 6149709761758291140}
   m_Layer: 0
   m_Name: rose
   m_TagString: Untagged
@@ -93,7 +94,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   flowerType: 0
-  flowers: []
   basketType: 0
   flowerSlots: []
   nodeType: 0
+--- !u!65 &6149709761758291140
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31139136836959198}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.11751732, y: 0.3217207, z: 0.11947188}
+  m_Center: {x: 0.007619517, y: 0.16086034, z: 0.0027991738}

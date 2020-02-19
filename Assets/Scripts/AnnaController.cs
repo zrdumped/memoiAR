@@ -6,9 +6,12 @@ using UnityEngine.UI;
 public class AnnaController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject annaToPark;
+    //public GameObject annaToPark;
     public GameObject annaTopic, directionContent, subTitle;
     public GameObject annaPickGift;
+
+    public GameObject Hint;
+    public Text hintText;
 
     public GameObject rose;
     public GameObject coin;
@@ -35,15 +38,28 @@ public class AnnaController : MonoBehaviour
         return;
     }
 
+    public void wait()
+    {
+        Hint.SetActive(true);
+        hintText.text = "Anna, you are selling flowers in the park";
+    }
+
+    public void pickupFlowers()
+    {
+        Hint.SetActive(true);
+        hintText.text = "Anna, your flowers fell on the ground. Pick them up.";
+    }
+
     public void leadAnnaToPark()
     {
         //isAnnaText.SetActive(true);
-        annaToPark.SetActive(true);
+        Hint.SetActive(true);
+        hintText.text = "Anna, go to park selling flowers";
     }
 
     public void stopLeadAnnaToPark()
     {
-        annaToPark.SetActive(false);
+        Hint.SetActive(false);
     }
 
     public void makeAnnaSelectGift()

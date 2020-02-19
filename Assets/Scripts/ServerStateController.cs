@@ -83,12 +83,38 @@ public class ServerStateController : MonoBehaviour
         if (state < 2 && stateName == "AnnaFlowerShopReached")
         {
             state++;
-            server.Broadcast("AnnaStartTutorial");
+            if(state == 2)
+                server.Broadcast("StartTutorial");
         }
         else if (state < 2 && stateName == "MaxHouseReached")
         {
             state++;
-            server.Broadcast("MaxStartTutorial");
+            if(state == 2)
+                server.Broadcast("StartTutorial");
+        }
+
+        else if(state == 2 && stateName == "MusicComposed")
+        {
+            state++;
+            server.Broadcast("GoToPark");
+        }
+        
+        //max reaches first
+        else if(state == 3 && stateName == "MaxParkReached")
+        {
+            state++;
+            server.Broadcast("MakeMaxWait");
+        }
+        //anna reaches later
+        else if (state == 3 && stateName == "AnnaParkReached")
+        {
+            state++;
+            server.Broadcast("MakeAnnaWait");
+        }
+        else if (state == 4 && (stateName == "MaxParkReached" || stateName == "AnnaParkReached"))
+        {
+            state++;
+            server.Broadcast("PickUpFlower");
         }
     }
 

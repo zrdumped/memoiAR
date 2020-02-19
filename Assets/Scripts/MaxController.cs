@@ -6,8 +6,11 @@ using UnityEngine.UI;
 public class MaxController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject maxToPark;
+    //public GameObject maxToPark;
     public GameObject maxTopic, directionContent, subTitle;
+
+    public GameObject Hint;
+    public Text hintText;
 
     public GameObject maxSelectMusic;
 
@@ -37,15 +40,28 @@ public class MaxController : MonoBehaviour
         return;
     }
 
+    public void wait()
+    {
+        Hint.SetActive(true);
+        hintText.text = "Max, you are setting up the instruments in the park";
+    }
+
+    public void pickupFlowers()
+    {
+        Hint.SetActive(true);
+        hintText.text = "Max, someone's flowers fell on the ground. Help her.";
+    }
+
     public void leadMaxToPark()
     {
         //isMaxText.SetActive(true);
-        maxToPark.SetActive(true);
+        Hint.SetActive(true);
+        hintText.text = "Max, go to the park playing the music you composed";
     }
 
     public void stopLeadMaxToPark()
     {
-        maxToPark.SetActive(false);
+        Hint.SetActive(false);
     }
 
     public void makeMaxSelectMusic()

@@ -19,6 +19,8 @@ public class ClientStateController : MonoBehaviour
 
     public GameObject isMaxText, isAnnaText;
 
+    private ObjectManager om;
+
 
     //1 || 2
     private int musicSelected = 0;
@@ -28,6 +30,8 @@ public class ClientStateController : MonoBehaviour
         client = this.GetComponent<TCPTestClient>();
         anna = this.GetComponent<AnnaController>();
         max = this.GetComponent<MaxController>();
+
+        om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
     }
 
     private void Update()
@@ -49,13 +53,41 @@ public class ClientStateController : MonoBehaviour
     private void SetState(string stateName)
     {
         Debug.Log(stateName + " " + character);
-        if (stateName == "AnnaStartTutorial" && character == 1)
+        if (stateName == "StartTutorial" && character == 1)
         {
+            om.StartTutorial();
             anna.startTutorial();
         }
-        else if (stateName == "MaxStartTutorial" && character == 2)
+        else if (stateName == "StartTutorial" && character == 2)
         {
+            om.StartTutorial();
             max.startTutorial();
+        }
+        else if (stateName == "GoToPark" && character == 1)
+        {
+            anna.leadAnnaToPark();
+        }
+        else if (stateName == "GoToPark" && character == 2)
+        {
+            max.leadMaxToPark();
+        }
+        else if (stateName == "MakeAnnaWait" && character == 1)
+        {
+            anna.wait();
+        }
+        else if (stateName == "MakeMaxWait" && character == 2)
+        {
+            max.wait();
+        }
+        else if (stateName == "PickUpFlower" && character == 1)
+        {
+            om.StartPickingup();
+            anna.pickupFlowers();
+        }
+        else if (stateName == "PickUpFlower" && character == 2)
+        {
+            om.StartPickingup();
+            max.pickupFlowers();
         }
     }
 
@@ -109,6 +141,11 @@ public class ClientStateController : MonoBehaviour
     //        else if (character == 1) anna.makeAnnaTalk(musicSelected, 1);
     //    }
     //}
+
+    public void MusicComposed()
+    {
+        client.ClientSendMessage("!MusicComposed");
+    }
 
     public void FlowerShopFound()
     {

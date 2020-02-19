@@ -28,7 +28,10 @@ public class PickHand : MonoBehaviour
         holdingObj.transform.parent = this.transform;
         other.transform.position = slot.position;
         other.transform.rotation = slot.rotation;
-        other.transform.localScale = slot.localScale;
+        other.transform.localScale = new Vector3(
+            slot.localScale.x * other.transform.localScale.x,
+            slot.localScale.y * other.transform.localScale.y,
+            slot.localScale.z * other.transform.localScale.z);
         //Vector3 srcScale = other.transform.localScale;
         //srcScale.x *= 0.1f;
         //srcScale.y *= 0.1f;
@@ -38,6 +41,7 @@ public class PickHand : MonoBehaviour
 
     public void releaseStaff()
     {
+        if (holdingObj == null) return;
         Destroy(holdingObj);
         holdingObj = null;
     }

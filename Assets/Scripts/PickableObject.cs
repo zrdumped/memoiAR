@@ -7,22 +7,31 @@ public class PickableObject : MonoBehaviour
     public enum ObjectType { Flower, Basket, Node, MusicSheet};
     public ObjectType type;
 
+    private ObjectManager om;
+
+    private ClientStateController csc;
+
     [Header("FLower")]
     public int flowerType;
-    public List<GameObject> flowers; 
     [Header("Basket")]
     public int basketType;
     public List<GameObject> flowerSlots;
     private List<int> flowerNums = new List<int> { 0, 0, 0};
     [Header("Node")]
     public int nodeType;
+    [Header("MusicSheet")]
+    public List<GameObject> musicSheets;
+    public ParticleSystem musicNodeParticleSystem;
+    private int musicNum = 0;
+    private List<int> musicSelected = new List<int> { -1, -1, -1};
 
     private PickHand hand;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+        csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
     }
 
     // Update is called once per frame
@@ -42,11 +51,11 @@ public class PickableObject : MonoBehaviour
         if (type == ObjectType.Flower && hand.holdingObj == null)
         {
             //pick up the rose
-            flowerType = Random.Range(0, flowers.Count);
-            hand.holdStaff(Instantiate(flowers[flowerType]));
+            flowerType = Random.Range(0, om.flowers.Count);
+            hand.holdStaff(Instantiate(om.flowers[flowerType]));
         }
 
-        else if(type == ObjectType.Basket && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Flower){
+        else if(type == ObjectType.Basket && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Flower){
             if(hand.holdingObj.GetComponent<PickableObject>().flowerType == basketType)
             {
                 if (flowerNums[basketType] < 3)
@@ -55,5 +64,44 @@ public class PickableObject : MonoBehaviour
                 hand.releaseStaff();
             }
         }
+
+        else if(type == ObjectType.Node && (hand.holdingObj == null 
+            || (hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node 
+            && hand.holdingObj.GetComponent<PickableObject>().nodeType != nodeType)))
+        {
+            //pick up the node
+            hand.releaseStaff();
+            hand.holdStaff(Instantiate(this.gameObject));
+            om.audioSource.clip = om.nodeMusic[nodeType];
+            om.audioSource.Play();
+        }
+
+        else if(type == ObjectType.MusicSheet && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node)
+        {
+            musicSheets[musicNum].SetActive(true);
+            musicSelected[musicNum] = hand.holdingObj.GetComponent<PickableObject>().nodeType;
+            musicNum++;
+            om.audioSource.Stop();
+            if (musicNum == 3)
+            {
+                musicNodeParticleSystem.Play();
+                StartCoroutine(PlayComposedMusic());
+            }
+
+            hand.releaseStaff();
+        }
+    }
+
+    private IEnumerator PlayComposedMusic()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            om.audioSource.clip = om.nodeMusic[musicSelected[i]];
+            om.audioSource.Play();
+            while (om.audioSource.isPlaying)
+                yield return new WaitForFixedUpdate();
+        }
+        musicNodeParticleSystem.Stop();
+        csc.MusicComposed();
     }
 }
