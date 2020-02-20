@@ -82,7 +82,6 @@ public class ClientStateController : MonoBehaviour
         else if (stateName == "PickUpFlower" && character == 1)
         {
             om.RosesFallOnGround();
-            om.StartPickingup();
             anna.pickupFlowers();
         }
         else if (stateName == "PickUpFlower" && character == 2)
@@ -92,23 +91,23 @@ public class ClientStateController : MonoBehaviour
         }
         else if (stateName.Contains("FlowerPicked") && character != 0)
         {
-            om.rosesOnTheGround[stateName[0] - '0'].SetActive(false);
+            om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
         }
         else if (stateName.Contains("GiveFlower") && character == 1)
         {
-            om.rosesOnTheGround[stateName[0] - '0'].SetActive(false);
+            om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
             //anna.receiveFlower();
         }
         else if (stateName.Contains("GiveFlower") && character == 2)
         {
-            om.rosesOnTheGround[stateName[0] - '0'].SetActive(false);
+            om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
             //max.receiveFlower();
         }
     }
 
     public void FlowerPicked(int roseNum)
     {
-        client.SendMessage("!PickedUpFlower" + roseNum);
+        client.ClientSendMessage("!PickedUpFlower" + roseNum);
     }
 
     //Chapter 1 Version 1

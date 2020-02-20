@@ -70,8 +70,8 @@ public class ObjectManager : MonoBehaviour
         foreach (GameObject go in rosesInTheHand)
         {
             go.SetActive(true);
-            rosesInTheHandPos.Add(go.transform.position);
-            rosesInTheHandRot.Add(go.transform.eulerAngles);
+            rosesInTheHandPos.Add(go.transform.localPosition);
+            rosesInTheHandRot.Add(go.transform.localEulerAngles);
             go.transform.localPosition += new Vector3(0, 0.4f, 0);
         }
 
@@ -86,8 +86,10 @@ public class ObjectManager : MonoBehaviour
         for (int i = 0; i < rosesInTheHand.Count; i++)
         {
             rosesInTheHand[i].SetActive(false);
-            rosesInTheHand[i].transform.position = rosesInTheHandPos[i];
-            rosesInTheHand[i].transform.eulerAngles = rosesInTheHandRot[i];
+            rosesInTheHand[i].transform.localPosition = rosesInTheHandPos[i];
+            rosesInTheHand[i].transform.localEulerAngles = rosesInTheHandRot[i];
         }
+
+        StartPickingup();
     }
 }

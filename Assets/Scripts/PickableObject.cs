@@ -82,6 +82,7 @@ public class PickableObject : MonoBehaviour
 
         else if(type == ObjectType.MusicSheet && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node)
         {
+            if (musicNum > 3) return;
             musicSheets[musicNum].SetActive(true);
             musicSelected[musicNum] = hand.holdingObj.GetComponent<PickableObject>().nodeType;
             musicNum++;
@@ -100,6 +101,7 @@ public class PickableObject : MonoBehaviour
             om.rosesInTheHand[hand.roseNum].SetActive(true);
             hand.roseNum++;
             csc.FlowerPicked(roseNum);
+            this.gameObject.SetActive(false);
         }
     }
 

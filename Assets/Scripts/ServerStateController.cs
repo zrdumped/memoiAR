@@ -13,6 +13,9 @@ public class ServerStateController : MonoBehaviour
     private int state = 0;
 
     private int roseNum = 0;
+
+    private bool maxIsWaiting = false;
+    private bool annaIsWaiting = false;
     //Chapter 1 Version 1
     //0 - start
     //1 - one reached spot a
@@ -106,15 +109,19 @@ public class ServerStateController : MonoBehaviour
         {
             state++;
             server.Broadcast("MakeMaxWait");
+            maxIsWaiting = true;
         }
         //anna reaches later
         else if (state == 3 && stateName == "AnnaParkReached")
         {
             state++;
             server.Broadcast("MakeAnnaWait");
+            annaIsWaiting = true;
         }
-        else if (state == 4 && (stateName == "MaxParkReached" || stateName == "AnnaParkReached"))
+        else if (state == 4 && ((stateName == "MaxParkReached"&& annaIsWaiting) || (stateName == "AnnaParkReached" && maxIsWaiting)))
         {
+            annaIsWaiting = false;
+            maxIsWaiting = false;
             state++;
             server.Broadcast("PickUpFlower");
         }
