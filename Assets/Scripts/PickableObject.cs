@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickableObject : MonoBehaviour
 {
-    public enum ObjectType { Flower, Basket, Node, MusicSheet};
+    public enum ObjectType { Flower, Basket, Node, MusicSheet, RoseOnGround};
     public ObjectType type;
 
     private ObjectManager om;
@@ -24,6 +24,10 @@ public class PickableObject : MonoBehaviour
     public ParticleSystem musicNodeParticleSystem;
     private int musicNum = 0;
     private List<int> musicSelected = new List<int> { -1, -1, -1};
+
+    [Header("RoseOnGround")]
+    public int roseNum;
+    private int pickupRoseNum = 0;
 
     private PickHand hand;
 
@@ -89,6 +93,13 @@ public class PickableObject : MonoBehaviour
             }
 
             hand.releaseStaff();
+        }
+
+        else if(type == ObjectType.RoseOnGround)
+        {
+            om.rosesInTheHand[hand.roseNum].SetActive(true);
+            hand.roseNum++;
+            csc.FlowerPicked(roseNum);
         }
     }
 

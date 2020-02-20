@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class ObjectManager : MonoBehaviour
 {
@@ -13,11 +14,14 @@ public class ObjectManager : MonoBehaviour
 
     public ClientStateController csc;
 
-    public List<GameObject> hiddenThingsInFlowerShop, hiddenThingsInHouse, rosesOnTheGround;
+    public List<GameObject> hiddenThingsInFlowerShop, hiddenThingsInHouse, rosesOnTheGround, rosesInTheHand;
+    private List<Vector3> rosesInTheHandPos, rosesInTheHandRot;
 
     private void Start()
     {
-        foreach(GameObject go in hiddenThingsInFlowerShop)
+        rosesInTheHandPos = new List<Vector3>();
+        rosesInTheHandRot = new List<Vector3>();
+        foreach (GameObject go in hiddenThingsInFlowerShop)
         {
             go.SetActive(false);
         }
@@ -25,7 +29,12 @@ public class ObjectManager : MonoBehaviour
         {
             go.SetActive(false);
         }
-        foreach (GameObject go in rosesOnTheGround)
+        for(int i = 0; i < rosesOnTheGround.Count; i++)
+        {
+            rosesOnTheGround[i].GetComponent<PickableObject>().roseNum = i;
+            rosesOnTheGround[i].SetActive(false);
+        }
+        foreach (GameObject go in rosesInTheHand)
         {
             go.SetActive(false);
         }
@@ -48,6 +57,37 @@ public class ObjectManager : MonoBehaviour
         foreach (GameObject go in rosesOnTheGround)
         {
             go.SetActive(true);
+        }
+    }
+
+    public void RosesFallOnGround()
+    {
+        StartCoroutine(RosesFallAnimation());
+    }
+
+    public IEnumerator RosesFallAnimation()
+    {
+        foreach (GameObject go in rosesInTheHand)
+        {
+            go.SetActive(true);
+            rosesInTheHandPos.Add(go.transform.position);
+            rosesInTheHandRot.Add(go.transform.eulerAngles);
+            go.transform.localPosition += new Vector3(0, 0.4f, 0);
+        }
+
+        foreach (GameObject go in rosesInTheHand)
+        {
+            go.transform.DOLocalMove(new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-1, -1.5f), Random.Range(-0.1f, 0.1f)), 3);
+            go.transform.DOLocalRotate(new Vector3(go.transform.eulerAngles.x, go.transform.eulerAngles.y, go.transform.eulerAngles.z + Random.Range(-30, 30)), 3);
+        }
+
+        yield return new WaitForSeconds(3);
+
+        for (int i = 0; i < rosesInTheHand.Count; i++)
+        {
+            rosesInTheHand[i].SetActive(false);
+            rosesInTheHand[i].transform.position = rosesInTheHandPos[i];
+            rosesInTheHand[i].transform.eulerAngles = rosesInTheHandRot[i];
         }
     }
 }

@@ -9,7 +9,7 @@ public class PickHand : MonoBehaviour
 
     public Transform slot;
 
-    public 
+    public int roseNum = 0;
 
     void Start()
     {

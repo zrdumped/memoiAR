@@ -11,6 +11,8 @@ public class ServerStateController : MonoBehaviour
         server = this.GetComponent<TCPTestServer>();
     }
     private int state = 0;
+
+    private int roseNum = 0;
     //Chapter 1 Version 1
     //0 - start
     //1 - one reached spot a
@@ -115,6 +117,19 @@ public class ServerStateController : MonoBehaviour
         {
             state++;
             server.Broadcast("PickUpFlower");
+        }
+        else if(state == 5 && stateName.Contains("PickedUpFlower"))
+        {
+            roseNum++;
+            if(roseNum == 10)
+            {
+                state++;
+                server.Broadcast(stateName[stateName.Length - 1] + "GiveFlower");
+            }
+            else
+            {
+                server.Broadcast(stateName[stateName.Length - 1] + "FlowerPicked");
+            }
         }
     }
 
