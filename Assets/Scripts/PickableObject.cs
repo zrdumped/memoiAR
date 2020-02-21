@@ -73,7 +73,7 @@ public class PickableObject : MonoBehaviour
             || (hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node 
             && hand.holdingObj.GetComponent<PickableObject>().nodeType != nodeType)))
         {
-            if (musicNum > 3) return;
+            //if (musicNum > 3) return;
             //pick up the node
             hand.releaseStaff();
             hand.holdStaff(Instantiate(this.gameObject));
@@ -83,7 +83,11 @@ public class PickableObject : MonoBehaviour
 
         else if(type == ObjectType.MusicSheet && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node)
         {
-            if (musicNum > 3) return;
+            if (musicNum >= 3)
+            {
+                hand.releaseStaff();
+                return;
+            }
             musicSheets[musicNum].SetActive(true);
             musicSelected[musicNum] = hand.holdingObj.GetComponent<PickableObject>().nodeType;
             musicNum++;

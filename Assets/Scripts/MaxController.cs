@@ -40,6 +40,7 @@ public class MaxController : MonoBehaviour
 
     public void startTutorial()
     {
+        Hint.SetActive(true);
         hintText.text = "10am was far too early for anyone to be awake. The Cabaret was hot last night. Even so, you still had to practice for your next gig.";
         subText.text = "Compose music for your upcoming gig";
         return;
@@ -47,6 +48,7 @@ public class MaxController : MonoBehaviour
 
     public void sendFlower()
     {
+        Hint.SetActive(true);
         hintText.text = "Well you certainly couldn’t finish helping her by just standing there.";
         subText.text = "Scan the image on Annaliese’s iPad to give her the flowers";
         return;
