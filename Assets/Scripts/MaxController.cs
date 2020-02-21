@@ -11,12 +11,15 @@ public class MaxController : MonoBehaviour
 
     public GameObject Hint;
     public Text hintText;
+    public Text subText;
 
     public GameObject maxSelectMusic;
 
     public AudioClip music1, music2;
 
     public GameObject RoseInCase, CoinInCase;
+
+    private PickHand hand;
 
     //public GameObject isMaxText;
 
@@ -26,7 +29,7 @@ public class MaxController : MonoBehaviour
     void Start()
     {
         csc = this.GetComponent<ClientStateController>();
-        
+        hand = GameObject.FindGameObjectWithTag("Hand").GetComponent<PickHand>();
     }
 
     // Update is called once per frame
@@ -37,26 +40,39 @@ public class MaxController : MonoBehaviour
 
     public void startTutorial()
     {
+        hintText.text = "10am was far too early for anyone to be awake. The Cabaret was hot last night. Even so, you still had to practice for your next gig.";
+        subText.text = "Compose music for your upcoming gig";
+        return;
+    }
+
+    public void sendFlower()
+    {
+        hintText.text = "Well you certainly couldn’t finish helping her by just standing there.";
+        subText.text = "Scan the image on Annaliese’s iPad to give her the flowers";
         return;
     }
 
     public void wait()
     {
         Hint.SetActive(true);
-        hintText.text = "Max, you are setting up the instruments in the park";
+        hintText.text = "You are setting up the instruments in the park";
+        subText.text = "";
     }
 
     public void pickupFlowers()
     {
         Hint.SetActive(true);
-        hintText.text = "Max, someone's flowers fell on the ground. Help her.";
+        hintText.text = "Looks like someone dropped their flowers. Do you CHOOSE to help her?";
+        subText.text = "Why Not?";
     }
 
     public void leadMaxToPark()
     {
         //isMaxText.SetActive(true);
+        hand.releaseStaff();
         Hint.SetActive(true);
-        hintText.text = "Max, go to the park playing the music you composed";
+        hintText.text = "Why not try out your latest piece at the park? People sometimes gave money, but performing was its own reward.";
+        subText.text = "Go to the park to play music";
     }
 
     public void stopLeadMaxToPark()
@@ -89,21 +105,24 @@ public class MaxController : MonoBehaviour
         this.GetComponent<AudioSource>().Play();
     }
 
-    public void makeMaxTalk(int giftNum)
+    public void makeMaxTalk()
     {
-        if (giftNum == 0)
-        {
-            directionContent.GetComponent<Text>().text = "The Flower was Pretty.\nTell Annaliese why you chose this music.";
-            subTitle.GetComponent<Text>().text = "Curious, Flirtatious, Coy";
-            RoseInCase.SetActive(true);
-        }
-        else
-        {
-            directionContent.GetComponent<Text>().text = "You appreciated the Coin.\nTell Annaliese why you chose this music.";
-            subTitle.GetComponent<Text>().text = "Curious, Grateful, Reflective";
-            CoinInCase.SetActive(true);
-        }
-        this.GetComponent<AudioSource>().Stop();
-        maxTopic.SetActive(true);
+        Hint.SetActive(true);
+        hintText.text = "Why did you help her ? \nWhy was she carrying so many roses ? \nDid you happen to catch her name?";
+        subText.text = "";
+        //if (giftNum == 0)
+        //{
+        //    directionContent.GetComponent<Text>().text = "The Flower was Pretty.\nTell Annaliese why you chose this music.";
+        //    subTitle.GetComponent<Text>().text = "Curious, Flirtatious, Coy";
+        //    RoseInCase.SetActive(true);
+        //}
+        //else
+        //{
+        //    directionContent.GetComponent<Text>().text = "You appreciated the Coin.\nTell Annaliese why you chose this music.";
+        //    subTitle.GetComponent<Text>().text = "Curious, Grateful, Reflective";
+        //    CoinInCase.SetActive(true);
+        //}
+        //this.GetComponent<AudioSource>().Stop();
+        //maxTopic.SetActive(true);
     }
 }

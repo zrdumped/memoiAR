@@ -96,13 +96,30 @@ public class ClientStateController : MonoBehaviour
         else if (stateName.Contains("GiveFlower") && character == 1)
         {
             om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
-            //anna.receiveFlower();
+            anna.receiveFlower();
         }
         else if (stateName.Contains("GiveFlower") && character == 2)
         {
             om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
-            //max.receiveFlower();
+            max.sendFlower();
         }
+        else if(stateName == "FlowerGiven" && character == 1)
+        {
+            anna.flowerGiven();
+            anna.makeAnnaTalk();
+            om.RosesCome();
+        }
+        else if (stateName == "FlowerGiven" && character == 2)
+        {
+            om.RosesLeave();
+            max.makeMaxTalk();
+        }
+    }
+
+
+    public void FlowerGiven()
+    {
+        client.ClientSendMessage("!FlowerGiven");
     }
 
     public void FlowerPicked(int roseNum)

@@ -138,6 +138,11 @@ public class ServerStateController : MonoBehaviour
                 server.Broadcast(stateName[stateName.Length - 1] + "FlowerPicked");
             }
         }
+        else if(state == 6 && stateName == "FlowerGiven")
+        {
+            state++;
+            server.Broadcast("FlowerGiven");
+        }
     }
 
 }

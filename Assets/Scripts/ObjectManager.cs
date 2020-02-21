@@ -37,6 +37,8 @@ public class ObjectManager : MonoBehaviour
         foreach (GameObject go in rosesInTheHand)
         {
             go.SetActive(false);
+            rosesInTheHandPos.Add(go.transform.localPosition);
+            rosesInTheHandRot.Add(go.transform.localEulerAngles);
         }
     }
 
@@ -65,13 +67,21 @@ public class ObjectManager : MonoBehaviour
         StartCoroutine(RosesFallAnimation());
     }
 
+    public void RosesLeave()
+    {
+        StartCoroutine(RosesLeaveAnimation());
+    }
+
+    public void RosesCome()
+    {
+        StartCoroutine(RosesComeAnimation());
+    }
+
     public IEnumerator RosesFallAnimation()
     {
         foreach (GameObject go in rosesInTheHand)
         {
             go.SetActive(true);
-            rosesInTheHandPos.Add(go.transform.localPosition);
-            rosesInTheHandRot.Add(go.transform.localEulerAngles);
             go.transform.localPosition += new Vector3(0, 0.4f, 0);
         }
 
@@ -91,5 +101,43 @@ public class ObjectManager : MonoBehaviour
         }
 
         StartPickingup();
+    }
+
+    public IEnumerator RosesLeaveAnimation()
+    {
+        foreach (GameObject go in rosesInTheHand)
+        {
+            if (go.activeSelf)
+            {
+                go.transform.DOLocalMove(new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-1f, -1.5f)), 3);
+                go.transform.DOLocalRotate(new Vector3(go.transform.eulerAngles.x, go.transform.eulerAngles.y, go.transform.eulerAngles.z + Random.Range(-30, 30)), 3);
+            }
+        }
+        yield return new WaitForSeconds(3);
+        foreach (GameObject go in rosesInTheHand)
+        {
+            if (go.activeSelf)
+            {
+                go.SetActive(false);
+            }
+        }
+    }
+
+    public IEnumerator RosesComeAnimation()
+    {
+        for(int i = 0; i < rosesInTheHand.Count; i++)
+        {
+            GameObject go = rosesInTheHand[i];
+            if (!go.activeSelf)
+            {
+                go.transform.localPosition += new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(1f, 1.5f));
+                go.transform.localEulerAngles += new Vector3(go.transform.eulerAngles.x, go.transform.eulerAngles.y, go.transform.eulerAngles.z + Random.Range(-30, 30));
+                go.SetActive(true);
+                go.transform.DOLocalMove(rosesInTheHandPos[i], 3);
+                go.transform.DOLocalRotate(rosesInTheHandRot[i], 3);
+            }
+        }
+
+        yield return new WaitForSeconds(3);
     }
 }

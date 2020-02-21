@@ -21,7 +21,7 @@ MonoBehaviour:
     maxSimultaneousObjectTargets: 3
     useDelayedLoadingObjectTargets: 1
     modelTargetRecoWhileExtendedTracked: 1
-    version: 8.6.7
+    version: 8.6.10
     eulaAcceptedVersions: '{"Values":["8.6"]}'
     modelTargetMode: 0
   database:
