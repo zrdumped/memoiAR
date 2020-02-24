@@ -9,6 +9,7 @@ TagManager:
   - ObjectManager
   - Client
   - Hand
+  - Hint
   layers:
   - Default
   - TransparentFX

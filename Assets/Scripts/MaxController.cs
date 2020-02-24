@@ -9,10 +9,6 @@ public class MaxController : MonoBehaviour
     //public GameObject maxToPark;
     public GameObject maxTopic, directionContent, subTitle;
 
-    public GameObject Hint;
-    public Text hintText;
-    public Text subText;
-
     public GameObject maxSelectMusic;
 
     public AudioClip music1, music2;
@@ -20,6 +16,9 @@ public class MaxController : MonoBehaviour
     public GameObject RoseInCase, CoinInCase;
 
     private PickHand hand;
+
+    private HintManager hm;
+    private string ins, story;
 
     //public GameObject isMaxText;
 
@@ -30,6 +29,7 @@ public class MaxController : MonoBehaviour
     {
         csc = this.GetComponent<ClientStateController>();
         hand = GameObject.FindGameObjectWithTag("Hand").GetComponent<PickHand>();
+        hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
     }
 
     // Update is called once per frame
@@ -40,46 +40,46 @@ public class MaxController : MonoBehaviour
 
     public void startTutorial()
     {
-        Hint.SetActive(true);
-        hintText.text = "10am was far too early for anyone to be awake. The Cabaret was hot last night. Even so, you still had to practice for your next gig.";
-        subText.text = "Compose music for your upcoming gig";
+        story = "10am was far too early for anyone to be awake. The Cabaret was hot last night. Even so, you still had to practice for your next gig.";
+        ins = "Compose music for your upcoming gig";
+        hm.InputNewWords(story, ins);
         return;
     }
 
     public void sendFlower()
     {
-        Hint.SetActive(true);
-        hintText.text = "Well you certainly couldn’t finish helping her by just standing there.";
-        subText.text = "Scan the image on Annaliese’s iPad to give her the flowers";
+        story = "Well you certainly couldn’t finish helping her by just standing there.";
+        ins = "Scan the image on Annaliese’s iPad to give her the flowers";
+        hm.InputNewWords(story, ins);
         return;
     }
 
     public void wait()
     {
-        Hint.SetActive(true);
-        hintText.text = "You are setting up the instruments in the park";
-        subText.text = "";
+        story = "You are setting up the instruments in the park";
+        ins = "";
+        hm.InputNewWords(story, ins);
     }
 
     public void pickupFlowers()
     {
-        Hint.SetActive(true);
-        hintText.text = "Looks like someone dropped their flowers. Do you CHOOSE to help her?";
-        subText.text = "Why Not?";
+        story = "Looks like someone dropped their flowers. Do you CHOOSE to help her?";
+        ins = "Why Not?";
+        hm.InputNewWords(story, ins);
     }
 
     public void leadMaxToPark()
     {
         //isMaxText.SetActive(true);
         hand.releaseStaff();
-        Hint.SetActive(true);
-        hintText.text = "Why not try out your latest piece at the park? People sometimes gave money, but performing was its own reward.";
-        subText.text = "Go to the park to play music";
+        story = "Why not try out your latest piece at the park? People sometimes gave money, but performing was its own reward.";
+        ins = "Go to the park to play music";
+        hm.InputNewWords(story, ins);
     }
 
     public void stopLeadMaxToPark()
     {
-        Hint.SetActive(false);
+        //Hint.SetActive(false);
     }
 
     public void makeMaxSelectMusic()
@@ -109,9 +109,9 @@ public class MaxController : MonoBehaviour
 
     public void makeMaxTalk()
     {
-        Hint.SetActive(true);
-        hintText.text = "Why did you help her ? \nWhy was she carrying so many roses ? \nDid you happen to catch her name?";
-        subText.text = "";
+        story = "Why did you help her ? \nWhy was she carrying so many roses ? \nDid you happen to catch her name?";
+        ins = "";
+        hm.InputNewWords(story, ins);
         //if (giftNum == 0)
         //{
         //    directionContent.GetComponent<Text>().text = "The Flower was Pretty.\nTell Annaliese why you chose this music.";

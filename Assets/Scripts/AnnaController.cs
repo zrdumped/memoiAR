@@ -10,9 +10,8 @@ public class AnnaController : MonoBehaviour
     public GameObject annaTopic, directionContent, subTitle;
     public GameObject annaPickGift;
 
-    public GameObject Hint;
-    public Text hintText;
-    public Text subText;
+    private HintManager hm;
+    private string ins, story;
 
     public GameObject rose;
     public GameObject coin;
@@ -30,6 +29,7 @@ public class AnnaController : MonoBehaviour
     {
         csc = this.GetComponent<ClientStateController>();
         hand = GameObject.FindGameObjectWithTag("Hand").GetComponent<PickHand>();
+        hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
     }
 
     // Update is called once per frame
@@ -51,38 +51,38 @@ public class AnnaController : MonoBehaviour
 
     public void startTutorial()
     {
-        Hint.SetActive(true);
-        hintText.text = "Annalieses Flowers: your flower shop. It was yours, to make the world a little more beautiful (and to feed yourself).";
-        subText.text = "Sort the flowers that you sold that sunny April day";
+        story = "Annalieses Flowers: your flower shop. It was yours, to make the world a little more beautiful (and to feed yourself).";
+        ins = "Sort the flowers that you sold that sunny April day";
+        hm.InputNewWords(story, ins);
         return;
     }
 
     public void wait()
     {
-        Hint.SetActive(true);
-        hintText.text = "You are selling flowers in the park";
-        subText.text = "";
+        story = "You are selling flowers in the park";
+        ins = "";
+        hm.InputNewWords(story, ins);
     }
 
     public void pickupFlowers()
     {
-        Hint.SetActive(true);
-        hintText.text = "Oh no! Your flowers!";
-        subText.text = "Don’t let them get away";
+        story = "Oh no! Your flowers!";
+        ins = "Don’t let them get away";
+        hm.InputNewWords(story, ins);
     }
 
     public void leadAnnaToPark()
     {
         //isAnnaText.SetActive(true);
         hand.releaseStaff();
-        Hint.SetActive(true);
-        hintText.text = "Office workers and families would concentrate at the park for lunch: a great chance to make extra money.";
-        subText.text = "Go to the park to sell flowers";
+        story = "Office workers and families would concentrate at the park for lunch: a great chance to make extra money.";
+        ins = "Go to the park to sell flowers";
+        hm.InputNewWords(story, ins);
     }
 
     public void stopLeadAnnaToPark()
     {
-        Hint.SetActive(false);
+        //Hint.SetActive(false);
     }
 
     public void makeAnnaSelectGift()
@@ -108,9 +108,9 @@ public class AnnaController : MonoBehaviour
 
     public void makeAnnaTalk()
     {
-        Hint.SetActive(true);
-        hintText.text = "How did his helping you make you feel? \nWhy does he have an open violin case? \nDid you happen to catch his name?";
-        subText.text = "";
+        story = "How did his helping you make you feel? \nWhy does he have an open violin case? \nDid you happen to catch his name?";
+        ins = "";
+        hm.InputNewWords(story, ins);
         //string word = "";
 
         //if (giftNum == 0)
