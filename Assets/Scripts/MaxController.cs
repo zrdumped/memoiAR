@@ -71,9 +71,15 @@ public class MaxController : MonoBehaviour
     public void leadMaxToPark()
     {
         //isMaxText.SetActive(true);
-        hand.releaseStaff();
         story = "Why not try out your latest piece at the park? People sometimes gave money, but performing was its own reward.";
         ins = "Go to the park to play music";
+        hm.InputNewWords(story, ins);
+    }
+
+    public void ConfirmComposing()
+    {
+        story = "You composed a music";
+        ins = "pick up the violin case to confirm";
         hm.InputNewWords(story, ins);
     }
 

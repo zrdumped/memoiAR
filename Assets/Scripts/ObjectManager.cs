@@ -25,11 +25,8 @@ public class ObjectManager : MonoBehaviour
         {
             go.SetActive(false);
         }
-        foreach (GameObject go in hiddenThingsInHouse)
-        {
-            go.SetActive(false);
-        }
-        for(int i = 0; i < rosesOnTheGround.Count; i++)
+        //disableHouse();
+        for (int i = 0; i < rosesOnTheGround.Count; i++)
         {
             rosesOnTheGround[i].GetComponent<PickableObject>().roseNum = i;
             rosesOnTheGround[i].SetActive(false);
@@ -39,6 +36,14 @@ public class ObjectManager : MonoBehaviour
             go.SetActive(false);
             rosesInTheHandPos.Add(go.transform.localPosition);
             rosesInTheHandRot.Add(go.transform.localEulerAngles);
+        }
+    }
+
+    public void disableHouse()
+    {
+        foreach (GameObject go in hiddenThingsInHouse)
+        {
+            go.SetActive(false);
         }
     }
 

@@ -74,7 +74,6 @@ public class AnnaController : MonoBehaviour
     public void leadAnnaToPark()
     {
         //isAnnaText.SetActive(true);
-        hand.releaseStaff();
         story = "Office workers and families would concentrate at the park for lunch: a great chance to make extra money.";
         ins = "Go to the park to sell flowers";
         hm.InputNewWords(story, ins);

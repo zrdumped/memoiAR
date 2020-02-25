@@ -183,6 +183,15 @@ public class ClientStateController : MonoBehaviour
         client.ClientSendMessage("!MusicComposed");
     }
 
+    public void AskMaxToComfirm()
+    {
+        max.ConfirmComposing();
+        if (character == 2)
+        {
+            max.ConfirmComposing();
+        }
+    }
+
     public void FlowerShopFound()
     {
         if (character == 0 && client.IsConnected)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickableObject : MonoBehaviour
 {
-    public enum ObjectType { Flower, Basket, Node, MusicSheet, RoseOnGround};
+    public enum ObjectType { Flower, Basket, Node, MusicSheet, RoseOnGround, ViolinCase};
     public ObjectType type;
 
     private ObjectManager om;
@@ -20,14 +20,19 @@ public class PickableObject : MonoBehaviour
     [Header("Node")]
     public int nodeType;
     [Header("MusicSheet")]
-    public List<GameObject> musicSheets;
+    public GameObject nodesOnSheet;
     public ParticleSystem musicNodeParticleSystem;
-    private int musicNum = 0;
-    private List<int> musicSelected = new List<int> { -1, -1, -1};
+    public ParticleSystem sheetGlowParticleSystem;
+    public List<PickableObject> musicSheets;
+    public int activeMusicSheetNum = 0;
+    public int nodeNum = -1;
+    //private int musicNum = 0;
 
     [Header("RoseOnGround")]
     public int roseNum;
     private int pickupRoseNum = 0;
+
+    private bool readyToConfirmMusic = false;
 
     private PickHand hand;
 
@@ -83,21 +88,23 @@ public class PickableObject : MonoBehaviour
 
         else if(type == ObjectType.MusicSheet && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node)
         {
-            if (musicNum >= 3)
-            {
-                hand.releaseStaff();
-                return;
-            }
-            musicSheets[musicNum].SetActive(true);
-            musicSelected[musicNum] = hand.holdingObj.GetComponent<PickableObject>().nodeType;
-            musicNum++;
             om.audioSource.Stop();
-            if (musicNum == 3)
+            if (nodeNum == -1)
             {
-                musicNodeParticleSystem.Play();
-                StartCoroutine(PlayComposedMusic());
+                musicSheets[0].activeMusicSheetNum++;
+                sheetGlowParticleSystem.Play();
             }
+            var col = sheetGlowParticleSystem.transform.GetChild(0).GetComponent<ParticleSystem>().colorOverLifetime;
+            col.color = hand.holdingObj.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>().colorOverLifetime.color;
 
+            nodeNum = hand.holdingObj.GetComponent<PickableObject>().nodeType;
+            nodesOnSheet.SetActive(true);
+            if(musicSheets[0].activeMusicSheetNum == 3)
+            {
+                //musicNodeParticleSystem.Play();
+                StartCoroutine(musicSheets[0].PlayComposedMusic());
+                readyToConfirmMusic = true;
+            }
             hand.releaseStaff();
         }
 
@@ -108,18 +115,27 @@ public class PickableObject : MonoBehaviour
             csc.FlowerPicked(roseNum);
             this.gameObject.SetActive(false);
         }
+
+        else if(type == ObjectType.ViolinCase && readyToConfirmMusic)
+        {
+            hand.holdStaff(this.gameObject);
+            this.gameObject.GetComponent<Collider>().enabled = false;
+            csc.MusicComposed();
+            om.disableHouse();
+        }
     }
 
     private IEnumerator PlayComposedMusic()
     {
+        csc.AskMaxToComfirm();
         for (int i = 0; i < 3; i++)
         {
-            om.audioSource.clip = om.nodeMusic[musicSelected[i]];
+            musicSheets[i].musicNodeParticleSystem.Play();
+            om.audioSource.clip = om.nodeMusic[musicSheets[i].nodeNum];
             om.audioSource.Play();
             while (om.audioSource.isPlaying)
                 yield return new WaitForFixedUpdate();
+            musicSheets[i].musicNodeParticleSystem.Stop();
         }
-        musicNodeParticleSystem.Stop();
-        csc.MusicComposed();
     }
 }

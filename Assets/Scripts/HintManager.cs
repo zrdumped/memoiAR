@@ -55,7 +55,7 @@ public class HintManager : MonoBehaviour
         for (int i = 0; i < insText.Length; i++)
         {
             Instruction.text += insText[i];
-            if (storyText[i] == ' ')
+            if (insText[i] == ' ')
                 yield return new WaitForSeconds(delay * 2);
             else
                 yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
