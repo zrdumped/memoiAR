@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickableObject : MonoBehaviour
 {
-    public enum ObjectType { Flower, Basket, Node, MusicSheet, RoseOnGround, ViolinCase};
+    public enum ObjectType { Flower, Basket, Node, MusicSheet, RoseOnGround, ViolinCase, FLowerBunch};
     public ObjectType type;
 
     private ObjectManager om;
@@ -33,14 +33,20 @@ public class PickableObject : MonoBehaviour
     private int pickupRoseNum = 0;
 
     private bool readyToConfirmMusic = false;
+    public bool readyToConfirmFlower = false;
 
     private PickHand hand;
+
+    private MaxController max;
+    private AnnaController anna;
 
     // Start is called before the first frame update
     void Start()
     {
         om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
         csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
+        anna = GameObject.FindGameObjectWithTag("Client").GetComponent<AnnaController>();
+        max = GameObject.FindGameObjectWithTag("Client").GetComponent<MaxController>();
     }
 
     // Update is called once per frame
@@ -64,8 +70,17 @@ public class PickableObject : MonoBehaviour
             hand.holdStaff(Instantiate(om.flowers[flowerType]));
         }
 
-        else if(type == ObjectType.Basket && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Flower){
-            if(hand.holdingObj.GetComponent<PickableObject>().flowerType == basketType)
+        else if (type == ObjectType.Flower && readyToConfirmFlower)
+        {
+            hand.releaseStaff();
+            om.showFlowerInHand();
+            anna.annaIsReadyToPark();
+            anna.leadAnnaToPark();
+        }
+
+        else if (type == ObjectType.Basket && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Flower)
+        {
+            if (hand.holdingObj.GetComponent<PickableObject>().flowerType == basketType)
             {
                 if (flowerNums[basketType] < 3)
                     flowerSlots[flowerNums[basketType]].SetActive(true);
@@ -74,8 +89,8 @@ public class PickableObject : MonoBehaviour
             }
         }
 
-        else if(type == ObjectType.Node && (hand.holdingObj == null 
-            || (hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node 
+        else if (type == ObjectType.Node && (hand.holdingObj == null
+            || (hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node
             && hand.holdingObj.GetComponent<PickableObject>().nodeType != nodeType)))
         {
             //if (musicNum > 3) return;
@@ -86,7 +101,7 @@ public class PickableObject : MonoBehaviour
             om.audioSource.Play();
         }
 
-        else if(type == ObjectType.MusicSheet && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node)
+        else if (type == ObjectType.MusicSheet && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject>().type == ObjectType.Node)
         {
             om.audioSource.Stop();
             if (nodeNum == -1)
@@ -99,7 +114,7 @@ public class PickableObject : MonoBehaviour
 
             nodeNum = hand.holdingObj.GetComponent<PickableObject>().nodeType;
             nodesOnSheet.SetActive(true);
-            if(musicSheets[0].activeMusicSheetNum == 3)
+            if (musicSheets[0].activeMusicSheetNum == 3)
             {
                 //musicNodeParticleSystem.Play();
                 StartCoroutine(musicSheets[0].PlayComposedMusic());
@@ -108,7 +123,7 @@ public class PickableObject : MonoBehaviour
             hand.releaseStaff();
         }
 
-        else if(type == ObjectType.RoseOnGround)
+        else if (type == ObjectType.RoseOnGround)
         {
             om.rosesInTheHand[hand.roseNum].SetActive(true);
             hand.roseNum++;
@@ -116,18 +131,19 @@ public class PickableObject : MonoBehaviour
             this.gameObject.SetActive(false);
         }
 
-        else if(type == ObjectType.ViolinCase && readyToConfirmMusic)
+        else if (type == ObjectType.ViolinCase && readyToConfirmMusic)
         {
             hand.holdStaff(this.gameObject);
             this.gameObject.GetComponent<Collider>().enabled = false;
             csc.MusicComposed();
+            max.maxReadyToPark();
             om.disableHouse();
         }
     }
 
     private IEnumerator PlayComposedMusic()
     {
-        csc.AskMaxToComfirm();
+        max.ConfirmComposing();
         for (int i = 0; i < 3; i++)
         {
             musicSheets[i].musicNodeParticleSystem.Play();

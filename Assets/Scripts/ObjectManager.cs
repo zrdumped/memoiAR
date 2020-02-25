@@ -21,11 +21,8 @@ public class ObjectManager : MonoBehaviour
     {
         rosesInTheHandPos = new List<Vector3>();
         rosesInTheHandRot = new List<Vector3>();
-        foreach (GameObject go in hiddenThingsInFlowerShop)
-        {
-            go.SetActive(false);
-        }
-        //disableHouse();
+        disableFlowerShop();
+        disableHouse();
         for (int i = 0; i < rosesOnTheGround.Count; i++)
         {
             rosesOnTheGround[i].GetComponent<PickableObject>().roseNum = i;
@@ -44,6 +41,22 @@ public class ObjectManager : MonoBehaviour
         foreach (GameObject go in hiddenThingsInHouse)
         {
             go.SetActive(false);
+        }
+    }
+
+    public void disableFlowerShop()
+    {
+        foreach (GameObject go in hiddenThingsInFlowerShop)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    public void showFlowerInHand()
+    {
+        foreach (GameObject go in rosesInTheHand)
+        {
+            go.SetActive(true);
         }
     }
 

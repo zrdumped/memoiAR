@@ -20,6 +20,8 @@ public class MaxController : MonoBehaviour
     private HintManager hm;
     private string ins, story;
 
+    private bool readyToPark = false;
+
     //public GameObject isMaxText;
 
     private ClientStateController csc;
@@ -81,6 +83,16 @@ public class MaxController : MonoBehaviour
         story = "You composed a music";
         ins = "pick up the violin case to confirm";
         hm.InputNewWords(story, ins);
+    }
+
+    public void maxReadyToPark()
+    {
+        readyToPark = true;
+    }
+
+    public bool maxIsReadyToPark()
+    {
+        return readyToPark;
     }
 
     public void stopLeadMaxToPark()

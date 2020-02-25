@@ -16,6 +16,8 @@ public class AnnaController : MonoBehaviour
     public GameObject rose;
     public GameObject coin;
 
+    public PickableObject flowerBunch;
+
     //public GameObject isAnnaText;
 
     public GameObject RoseInCase, CoinInCase;
@@ -25,6 +27,8 @@ public class AnnaController : MonoBehaviour
     private ClientStateController csc;
 
     private PickHand hand;
+
+    private bool readyToPark;
     void Start()
     {
         csc = this.GetComponent<ClientStateController>();
@@ -78,6 +82,25 @@ public class AnnaController : MonoBehaviour
         ins = "Go to the park to sell flowers";
         hm.InputNewWords(story, ins);
     }
+
+    public void annaReadyToPark()
+    {
+        readyToPark = true;
+    }
+
+    public void makeAnnaConfirm()
+    {
+        flowerBunch.readyToConfirmFlower = true;
+        story = "Time to sell flowers";
+        ins = "Pick up the flowers";
+        hm.InputNewWords(story, ins);
+    }
+
+    public bool annaIsReadyToPark()
+    {
+        return readyToPark;
+    }
+
 
     public void stopLeadAnnaToPark()
     {
