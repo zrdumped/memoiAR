@@ -14,6 +14,8 @@ public class ObjectManager : MonoBehaviour
 
     public ClientStateController csc;
 
+    public List<int> musicSelected = new List<int> { 1, 2, 3 };
+
     public List<GameObject> hiddenThingsInFlowerShop, hiddenThingsInHouse, rosesOnTheGround, rosesInTheHand;
     private List<Vector3> rosesInTheHandPos, rosesInTheHandRot;
 

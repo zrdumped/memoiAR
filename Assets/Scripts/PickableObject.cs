@@ -82,7 +82,7 @@ public class PickableObject : MonoBehaviour
         {
             if (hand.holdingObj.GetComponent<PickableObject>().flowerType == basketType)
             {
-                if (flowerNums[basketType] < 3)
+                if (flowerNums[basketType] < flowerSlots.Count)
                     flowerSlots[flowerNums[basketType]].SetActive(true);
                 flowerNums[basketType]++;
                 hand.releaseStaff();
@@ -144,6 +144,10 @@ public class PickableObject : MonoBehaviour
     private IEnumerator PlayComposedMusic()
     {
         max.ConfirmComposing();
+        for (int i = 0; i < 3; i++)
+        {
+            om.musicSelected[i] = musicSheets[i].nodeNum;
+        }
         for (int i = 0; i < 3; i++)
         {
             musicSheets[i].musicNodeParticleSystem.Play();
