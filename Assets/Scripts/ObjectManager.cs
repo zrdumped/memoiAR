@@ -24,7 +24,7 @@ public class ObjectManager : MonoBehaviour
         rosesInTheHandPos = new List<Vector3>();
         rosesInTheHandRot = new List<Vector3>();
         disableFlowerShop();
-        disableHouse();
+        //disableHouse();
         for (int i = 0; i < rosesOnTheGround.Count; i++)
         {
             rosesOnTheGround[i].GetComponent<PickableObject>().roseNum = i;

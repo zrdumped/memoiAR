@@ -4502,12 +4502,14 @@ MonoBehaviour:
   - {fileID: 749726185}
   nodeType: 0
   nodesOnSheet: {fileID: 0}
+  violinCase: {fileID: 0}
   musicNodeParticleSystem: {fileID: 0}
   sheetGlowParticleSystem: {fileID: 0}
   musicSheets: []
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!65 &374705712
 BoxCollider:
@@ -7277,6 +7279,7 @@ MonoBehaviour:
   flowerSlots: []
   nodeType: 0
   nodesOnSheet: {fileID: 1730037260}
+  violinCase: {fileID: 1301614623}
   musicNodeParticleSystem: {fileID: 2103291086}
   sheetGlowParticleSystem: {fileID: 1122824092}
   musicSheets:
@@ -7286,6 +7289,7 @@ MonoBehaviour:
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!4 &654519909 stripped
 Transform:
@@ -12177,6 +12181,7 @@ MonoBehaviour:
   flowerSlots: []
   nodeType: 0
   nodesOnSheet: {fileID: 993763516}
+  violinCase: {fileID: 1301614623}
   musicNodeParticleSystem: {fileID: 84764226}
   sheetGlowParticleSystem: {fileID: 626497311}
   musicSheets:
@@ -12186,6 +12191,7 @@ MonoBehaviour:
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!65 &1148133079
 BoxCollider:
@@ -13894,12 +13900,14 @@ MonoBehaviour:
   flowerSlots: []
   nodeType: 0
   nodesOnSheet: {fileID: 0}
+  violinCase: {fileID: 0}
   musicNodeParticleSystem: {fileID: 0}
   sheetGlowParticleSystem: {fileID: 0}
   musicSheets: []
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!65 &1301614624
 BoxCollider:
@@ -13913,7 +13921,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.7147355, y: 4.130201, z: 10.272031}
-  m_Center: {x: -0.5997049, y: 2.0647924, z: 0.0000030994415}
+  m_Center: {x: -0.5997049, y: 0.76, z: 0.0000030994415}
 --- !u!1001 &1305133627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15389,6 +15397,7 @@ MonoBehaviour:
   flowerSlots: []
   nodeType: 0
   nodesOnSheet: {fileID: 1531283116}
+  violinCase: {fileID: 1301614623}
   musicNodeParticleSystem: {fileID: 1606900987}
   sheetGlowParticleSystem: {fileID: 87145500}
   musicSheets:
@@ -15398,6 +15407,7 @@ MonoBehaviour:
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!65 &1463658546
 BoxCollider:
@@ -18432,12 +18442,14 @@ MonoBehaviour:
   - {fileID: 2038629792}
   nodeType: 0
   nodesOnSheet: {fileID: 0}
+  violinCase: {fileID: 0}
   musicNodeParticleSystem: {fileID: 0}
   sheetGlowParticleSystem: {fileID: 0}
   musicSheets: []
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!65 &1777168481
 BoxCollider:
@@ -20199,12 +20211,14 @@ MonoBehaviour:
   flowerSlots: []
   nodeType: 0
   nodesOnSheet: {fileID: 0}
+  violinCase: {fileID: 0}
   musicNodeParticleSystem: {fileID: 0}
   sheetGlowParticleSystem: {fileID: 0}
   musicSheets: []
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!135 &1969314521
 SphereCollider:
@@ -21679,12 +21693,14 @@ MonoBehaviour:
   - {fileID: 688768078}
   nodeType: 0
   nodesOnSheet: {fileID: 0}
+  violinCase: {fileID: 0}
   musicNodeParticleSystem: {fileID: 0}
   sheetGlowParticleSystem: {fileID: 0}
   musicSheets: []
   activeMusicSheetNum: 0
   nodeNum: -1
   roseNum: 0
+  readyToConfirmMusic: 0
   readyToConfirmFlower: 0
 --- !u!65 &2056122700
 BoxCollider:

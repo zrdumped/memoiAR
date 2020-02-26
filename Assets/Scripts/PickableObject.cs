@@ -21,6 +21,7 @@ public class PickableObject : MonoBehaviour
     public int nodeType;
     [Header("MusicSheet")]
     public GameObject nodesOnSheet;
+    public PickableObject violinCase;
     public ParticleSystem musicNodeParticleSystem;
     public ParticleSystem sheetGlowParticleSystem;
     public List<PickableObject> musicSheets;
@@ -32,7 +33,7 @@ public class PickableObject : MonoBehaviour
     public int roseNum;
     private int pickupRoseNum = 0;
 
-    private bool readyToConfirmMusic = false;
+    public bool readyToConfirmMusic = false;
     public bool readyToConfirmFlower = false;
 
     private PickHand hand;
@@ -118,7 +119,7 @@ public class PickableObject : MonoBehaviour
             {
                 //musicNodeParticleSystem.Play();
                 StartCoroutine(musicSheets[0].PlayComposedMusic());
-                readyToConfirmMusic = true;
+                violinCase.readyToConfirmMusic = true;
             }
             hand.releaseStaff();
         }
@@ -133,6 +134,7 @@ public class PickableObject : MonoBehaviour
 
         else if (type == ObjectType.ViolinCase && readyToConfirmMusic)
         {
+            readyToConfirmMusic = false;
             hand.holdStaff(this.gameObject);
             this.gameObject.GetComponent<Collider>().enabled = false;
             csc.MusicComposed();
