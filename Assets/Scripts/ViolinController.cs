@@ -9,6 +9,7 @@ public class ViolinController : MonoBehaviour
     private int currentNum = 0;
 
     public ParticleSystem musicNode;
+    public ParticleSystem musicFlash;
 
     private AudioSource violinPlayer;
 
@@ -111,7 +112,7 @@ public class ViolinController : MonoBehaviour
                 bow.transform.position = hit.point;
                 bow.transform.localPosition = new Vector3(bow.transform.localPosition.x, oldLocal.y, oldLocal.z);
                 //bow.transform.position = new Vector3(worldToLocal.x, bow.transform.position.y, bow.transform.position.z);
-                Debug.Log(curVelocity);
+                //Debug.Log(curVelocity);
             }
             //Debug.Log("move " + hit.transform.gameObject.name);
         }
@@ -120,18 +121,27 @@ public class ViolinController : MonoBehaviour
     private float playTime = 0;
     private IEnumerator PlayViolin()
     {
-        Debug.Log("dwqdqwd");
+        //Debug.Log("dwqdqwd");
         violinPlayer.clip = om.nodeMusic[om.musicSelected[currentNum]];
         while (true)
         {
             if (timeToPause)
             {
                 violinPlayer.Pause();
+                musicNode.Stop();
+                musicFlash.Stop();
             }
             else
             {
-                if(!violinPlayer.isPlaying)
+                if (!violinPlayer.isPlaying)
+                {
                     violinPlayer.Play();
+                    musicNode.Play();
+                    musicFlash.Play();
+                    //get componet in children does not work
+                    var color = musicFlash.transform.GetChild(0).GetComponent<ParticleSystem>().colorOverLifetime;
+                    color.color = om.psColor[om.musicSelected[currentNum]].colorOverLifetime.color;
+                }
                 playTime += Time.fixedDeltaTime;
                 if(playTime > om.nodeMusic[om.musicSelected[currentNum]].length)
                 {
@@ -141,6 +151,8 @@ public class ViolinController : MonoBehaviour
                         currentNum++;
                     playTime = 0;
                     violinPlayer.clip = om.nodeMusic[om.musicSelected[currentNum]];
+                    var color = musicFlash.transform.GetChild(0).GetComponent<ParticleSystem>().colorOverLifetime;
+                    color.color = om.psColor[om.musicSelected[currentNum]].colorOverLifetime.color;
                 }
             }
             yield return new WaitForFixedUpdate();

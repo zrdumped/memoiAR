@@ -27,6 +27,17 @@ public class MaxController : MonoBehaviour
     private ClientStateController csc;
     //1 || 2
     private int musicSelected = 0;
+
+    private int roseCount = 0;
+    private List<string> maxList = new List<string>
+    {
+        "Did you help her yet?",
+        "Did you happen to catch her name?",
+        "She’s cute. Do you think she likes music?",
+        "Has she thanked you yet?",
+        "Nice! Why does she have so many flowers?" 
+    };
+
     void Start()
     {
         csc = this.GetComponent<ClientStateController>();
@@ -42,8 +53,8 @@ public class MaxController : MonoBehaviour
 
     public void startTutorial()
     {
-        story = "10am was far too early for anyone to be awake. The Cabaret was hot last night. Even so, you still had to practice for your next gig.";
-        ins = "Compose music for your upcoming gig";
+        story = "One morning at home";
+        ins = "Compose your music";
         hm.InputNewWords(story, ins);
         return;
     }
@@ -65,15 +76,15 @@ public class MaxController : MonoBehaviour
 
     public void pickupFlowers()
     {
-        story = "Looks like someone dropped their flowers. Do you CHOOSE to help her?";
-        ins = "Why Not?";
+        story = "Looks like someone dropped their flowers!";
+        ins = "Help her. Don't be a jerk.";
         hm.InputNewWords(story, ins);
     }
 
     public void leadMaxToPark()
     {
         //isMaxText.SetActive(true);
-        story = "Why not try out your latest piece at the park? People sometimes gave money, but performing was its own reward.";
+        story = "Why not try out your latest piece at the park?";
         ins = "Go to the park to play music";
         hm.InputNewWords(story, ins);
     }
@@ -125,9 +136,20 @@ public class MaxController : MonoBehaviour
         this.GetComponent<AudioSource>().Play();
     }
 
+    public void showFlowertext()
+    {
+        if(roseCount < maxList.Count)
+        {
+            story = maxList[roseCount];
+            ins = "";
+            hm.InputNewWords(story, ins);
+        }
+        roseCount++;
+    }
+
     public void makeMaxTalk()
     {
-        story = "Why did you help her ? \nWhy was she carrying so many roses ? \nDid you happen to catch her name?";
+        story = "";
         ins = "";
         hm.InputNewWords(story, ins);
         //if (giftNum == 0)

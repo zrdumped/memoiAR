@@ -29,6 +29,19 @@ public class AnnaController : MonoBehaviour
     private PickHand hand;
 
     private bool readyToPark;
+
+    private int roseCount = 0;
+    private List<string> annaList = new List<string>
+    {
+        "Is there anyone you could ask for help?",
+        "How nice of him to help!",
+        "Why does he have a violin?",
+        "Do you like his outfit?",
+        "You’ve seen him perform in the park before!",
+        "He looks handsome",
+        "He’s dressed strangely. Tell him."
+    };
+
     void Start()
     {
         csc = this.GetComponent<ClientStateController>();
@@ -45,6 +58,9 @@ public class AnnaController : MonoBehaviour
     public void receiveFlower()
     {
         FlowerGiveMarker.SetActive(true);
+        story = "A nice man helped you pick up flowers";
+        ins = "Show him your basket to get your flowers back";
+        hm.InputNewWords(story, ins);
     }
 
 
@@ -55,8 +71,8 @@ public class AnnaController : MonoBehaviour
 
     public void startTutorial()
     {
-        story = "Annalieses Flowers: your flower shop. It was yours, to make the world a little more beautiful (and to feed yourself).";
-        ins = "Sort the flowers that you sold that sunny April day";
+        story = "Annalieses Flowers";
+        ins = "Sort your flowers";
         hm.InputNewWords(story, ins);
         return;
     }
@@ -70,15 +86,15 @@ public class AnnaController : MonoBehaviour
 
     public void pickupFlowers()
     {
-        story = "Oh no! Your flowers!";
-        ins = "Don’t let them get away";
+        story = "Oh No! Your flowers!";
+        ins = "Pick up your flowers";
         hm.InputNewWords(story, ins);
     }
 
     public void leadAnnaToPark()
     {
         //isAnnaText.SetActive(true);
-        story = "Office workers and families would concentrate at the park for lunch: a great chance to make extra money.";
+        story = "It's a great chance to make money now.";
         ins = "Go to the park to sell flowers";
         hm.InputNewWords(story, ins);
     }
@@ -128,11 +144,23 @@ public class AnnaController : MonoBehaviour
         //csc.GiftGiven();
     }
 
+    public void showFlowertext()
+    {
+        if (roseCount < annaList.Count)
+        {
+            story = annaList[roseCount];
+            ins = "";
+            hm.InputNewWords(story, ins);
+        }
+        roseCount++;
+    }
+
     public void makeAnnaTalk()
     {
-        story = "How did his helping you make you feel? \nWhy does he have an open violin case? \nDid you happen to catch his name?";
+        story = "";
         ins = "";
         hm.InputNewWords(story, ins);
+        
         //string word = "";
 
         //if (giftNum == 0)

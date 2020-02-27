@@ -8,10 +8,12 @@ public class HintManager : MonoBehaviour
     public Text Story;
     public Text Instruction;
 
-    private float delay = 0.08f;
+    private float delay = 0.06f;
 
     //public AudioClip typeSound;
     private AudioSource typeSoundPlayer;
+
+    private Coroutine printCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +36,9 @@ public class HintManager : MonoBehaviour
 
     public void InputNewWords(string storyText, string insText)
     {
-        StartCoroutine(typeWords(storyText, insText));
+        if(printCoroutine != null)
+            StopCoroutine(printCoroutine);
+        printCoroutine = StartCoroutine(typeWords(storyText, insText));
     }
 
     private IEnumerator typeWords(string storyText, string insText)
@@ -51,14 +55,17 @@ public class HintManager : MonoBehaviour
                 yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
         }
 
-        insText = "[HINT] " + insText;
-        for (int i = 0; i < insText.Length; i++)
+        if (insText != "")
         {
-            Instruction.text += insText[i];
-            if (insText[i] == ' ')
-                yield return new WaitForSeconds(delay * 2);
-            else
-                yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
+            insText = "[HINT] " + insText;
+            for (int i = 0; i < insText.Length; i++)
+            {
+                Instruction.text += insText[i];
+                if (insText[i] == ' ')
+                    yield return new WaitForSeconds(delay * 2);
+                else
+                    yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
+            }
         }
         typeSoundPlayer.Stop();
     }

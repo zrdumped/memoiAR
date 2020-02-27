@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class ObjectManager : MonoBehaviour
@@ -15,6 +16,7 @@ public class ObjectManager : MonoBehaviour
     public ClientStateController csc;
 
     public List<int> musicSelected = new List<int> { 1, 2, 3 };
+    public List<ParticleSystem> psColor;
 
     public GameObject violin;
 
@@ -22,6 +24,10 @@ public class ObjectManager : MonoBehaviour
 
     public List<GameObject> hiddenThingsInFlowerShop, hiddenThingsInHouse, rosesOnTheGround, rosesInTheHand;
     private List<Vector3> rosesInTheHandPos, rosesInTheHandRot;
+
+    public GameObject promptText;
+
+    public GameObject annaPanel, maxPanel;
 
     private void Start()
     {
@@ -43,6 +49,10 @@ public class ObjectManager : MonoBehaviour
         violin.SetActive(false);
         violinCaseHolding.SetActive(false);
         violinCaseTarget.SetActive(false);
+
+        promptText.SetActive(false);
+        annaPanel.SetActive(false);
+        maxPanel.SetActive(false);
     }
 
     public void disableHouse()
@@ -104,6 +114,29 @@ public class ObjectManager : MonoBehaviour
         StartCoroutine(RosesComeAnimation());
     }
 
+    public void showPrompt(string showText = "Oh No! Your flowers!")
+    {
+        GameObject newText = Instantiate(promptText);
+        newText.transform.parent = promptText.transform.parent;
+        newText.GetComponent<Text>().text = showText;
+        newText.SetActive(true);
+        newText.GetComponent<RectTransform>().localPosition = new Vector3(Random.Range(-100, 100), Random.Range(-200, 300), 0);
+        newText.GetComponent<RectTransform>().localEulerAngles = new Vector3(0, 0, Random.Range(-30, 30));
+        newText.GetComponent<RectTransform>().localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        StartCoroutine(promptMove(newText));
+    }
+
+    private IEnumerator promptMove(GameObject target)
+    {
+        target.GetComponent<RectTransform>().DOScale(new Vector3(1, 1, 1), 3);
+        target.GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, Random.Range(-30, 30)) +
+            new Vector3(0, 0, Random.Range(-30, 30)), 3);
+        target.GetComponent<RectTransform>().DOLocalMove(target.GetComponent<RectTransform>().localPosition + 
+            new Vector3(Random.Range(-40, 40), Random.Range(-80, 80), 0), 3);
+        yield return new WaitForSeconds(4);
+        Destroy(target);
+    }
+
     public IEnumerator RosesFallAnimation()
     {
         foreach (GameObject go in rosesInTheHand)
@@ -148,6 +181,8 @@ public class ObjectManager : MonoBehaviour
                 go.SetActive(false);
             }
         }
+        yield return new WaitForSeconds(1);
+        maxPanel.SetActive(true);
     }
 
     public IEnumerator RosesComeAnimation()
@@ -165,7 +200,8 @@ public class ObjectManager : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(4);
+        annaPanel.SetActive(true);
     }
 
     public void flyAndOpenViolinCase()
@@ -181,5 +217,11 @@ public class ObjectManager : MonoBehaviour
     {
         violinCaseTarget.SetActive(true);
         violinCaseTarget.GetComponent<Animator>().SetTrigger("Open");
+    }
+
+    public void StartViolin()
+    {
+        maxPanel.SetActive(false);
+        violin.SetActive(true);
     }
 }

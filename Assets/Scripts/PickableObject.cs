@@ -134,6 +134,14 @@ public class PickableObject : MonoBehaviour
         {
             om.rosesInTheHand[hand.roseNum].SetActive(true);
             hand.roseNum++;
+            if (csc.isAnna())
+            {
+                anna.showFlowertext();
+            }
+            else if (csc.isMax())
+            {
+                max.showFlowertext();
+            }
             csc.FlowerPicked(roseNum);
             this.gameObject.SetActive(false);
         }

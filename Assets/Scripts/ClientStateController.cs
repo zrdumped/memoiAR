@@ -117,6 +117,16 @@ public class ClientStateController : MonoBehaviour
         }
     }
 
+    public bool isAnna()
+    {
+        return character == 1;
+    }
+
+    public bool isMax()
+    {
+        return character == 2;
+    }
+
 
     public void FlowerGiven()
     {
