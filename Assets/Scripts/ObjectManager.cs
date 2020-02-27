@@ -16,6 +16,10 @@ public class ObjectManager : MonoBehaviour
 
     public List<int> musicSelected = new List<int> { 1, 2, 3 };
 
+    public GameObject violin;
+
+    public GameObject violinCaseHolding, violinCaseTarget;
+
     public List<GameObject> hiddenThingsInFlowerShop, hiddenThingsInHouse, rosesOnTheGround, rosesInTheHand;
     private List<Vector3> rosesInTheHandPos, rosesInTheHandRot;
 
@@ -24,7 +28,7 @@ public class ObjectManager : MonoBehaviour
         rosesInTheHandPos = new List<Vector3>();
         rosesInTheHandRot = new List<Vector3>();
         disableFlowerShop();
-        //disableHouse();
+        disableHouse();
         for (int i = 0; i < rosesOnTheGround.Count; i++)
         {
             rosesOnTheGround[i].GetComponent<PickableObject>().roseNum = i;
@@ -36,6 +40,9 @@ public class ObjectManager : MonoBehaviour
             rosesInTheHandPos.Add(go.transform.localPosition);
             rosesInTheHandRot.Add(go.transform.localEulerAngles);
         }
+        violin.SetActive(false);
+        violinCaseHolding.SetActive(false);
+        violinCaseTarget.SetActive(false);
     }
 
     public void disableHouse()
@@ -159,5 +166,20 @@ public class ObjectManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(3);
+    }
+
+    public void flyAndOpenViolinCase()
+    {
+        violinCaseHolding.transform.parent = violinCaseTarget.transform.parent;
+        violinCaseHolding.GetComponent<Animator>().SetTrigger("Open");
+        violinCaseHolding.transform.DOLocalMove(violinCaseTarget.transform.localPosition, 3);
+        violinCaseHolding.transform.DORotateQuaternion(violinCaseTarget.transform.rotation, 3);
+        violinCaseHolding.transform.DOScale(violinCaseTarget.transform.localScale, 3);
+    }
+
+    public void OpenViolinCase()
+    {
+        violinCaseTarget.SetActive(true);
+        violinCaseTarget.GetComponent<Animator>().SetTrigger("Open");
     }
 }

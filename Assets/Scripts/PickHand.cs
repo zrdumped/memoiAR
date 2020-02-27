@@ -39,6 +39,20 @@ public class PickHand : MonoBehaviour
         //other.transform.localScale = srcScale;
     }
 
+    public void holdStaff(GameObject other, Vector3 localPos, Vector3 localRot, Vector3 localScale)
+    {
+        holdingObj = other;
+        holdingObj.transform.parent = this.transform;
+        other.transform.position = localPos;
+        other.transform.eulerAngles = localRot;
+        other.transform.localScale = localScale;
+        //Vector3 srcScale = other.transform.localScale;
+        //srcScale.x *= 0.1f;
+        //srcScale.y *= 0.1f;
+        //srcScale.z *= 0.1f;
+        //other.transform.localScale = srcScale;
+    }
+
     public void releaseStaff()
     {
         if (holdingObj == null) return;

@@ -88,7 +88,7 @@ public class ServerStateController : MonoBehaviour
         if (state < 2 && stateName == "AnnaFlowerShopReached")
         {
             state++;
-            if(state == 2)
+            if (state == 2)
                 server.Broadcast("StartTutorial");
         }
         else if (state < 2 && stateName == "MaxHouseReached")

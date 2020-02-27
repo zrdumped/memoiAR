@@ -81,6 +81,7 @@ public class ClientStateController : MonoBehaviour
         }
         else if (stateName == "PickUpFlower" && character == 1)
         {
+            om.OpenViolinCase();
             om.RosesFallOnGround();
             anna.pickupFlowers();
         }
@@ -207,8 +208,9 @@ public class ClientStateController : MonoBehaviour
 
     public void ParkFound()
     {
-        if(character == 2 && max.maxIsReadyToPark())
+        if (character == 2 && max.maxIsReadyToPark())
         {
+            om.flyAndOpenViolinCase();
             max.stopLeadMaxToPark();
             client.ClientSendMessage("!MaxParkReached");
         }

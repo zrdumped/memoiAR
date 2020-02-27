@@ -33,6 +33,10 @@ public class PickableObject : MonoBehaviour
     public int roseNum;
     private int pickupRoseNum = 0;
 
+    [Header("ViolinCase")]
+    public GameObject ViolinCase;
+
+    [Header("Other")]
     public bool readyToConfirmMusic = false;
     public bool readyToConfirmFlower = false;
 
@@ -48,6 +52,8 @@ public class PickableObject : MonoBehaviour
         csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
         anna = GameObject.FindGameObjectWithTag("Client").GetComponent<AnnaController>();
         max = GameObject.FindGameObjectWithTag("Client").GetComponent<MaxController>();
+        if(ViolinCase != null)
+            ViolinCase.SetActive(false);
     }
 
     // Update is called once per frame
@@ -64,7 +70,7 @@ public class PickableObject : MonoBehaviour
 
         hand = collision.gameObject.GetComponent<PickHand>();
 
-        if (type == ObjectType.Flower && hand.holdingObj == null)
+        if (type == ObjectType.Flower && hand.holdingObj == null && !readyToConfirmFlower)
         {
             //pick up the rose
             flowerType = Random.Range(0, om.flowers.Count);
@@ -75,7 +81,7 @@ public class PickableObject : MonoBehaviour
         {
             hand.releaseStaff();
             om.showFlowerInHand();
-            anna.annaIsReadyToPark();
+            anna.annaReadyToPark();
             anna.leadAnnaToPark();
         }
 
@@ -135,11 +141,13 @@ public class PickableObject : MonoBehaviour
         else if (type == ObjectType.ViolinCase && readyToConfirmMusic)
         {
             readyToConfirmMusic = false;
-            hand.holdStaff(this.gameObject);
+            //hand.holdStaff(this.gameObject);
             this.gameObject.GetComponent<Collider>().enabled = false;
             csc.MusicComposed();
             max.maxReadyToPark();
             om.disableHouse();
+            om.violinCaseHolding.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 

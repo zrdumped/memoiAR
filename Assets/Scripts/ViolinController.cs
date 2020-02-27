@@ -69,6 +69,8 @@ public class ViolinController : MonoBehaviour
                     }
                     break;
                 case TouchPhase.Ended:
+                    totalT = 0;
+                    totalS = 0;
                     timeToPause = true;
                     break;
             }
