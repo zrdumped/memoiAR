@@ -100,6 +100,7 @@ public class AnnaController : MonoBehaviour
 
     public void leadAnnaToPark()
     {
+        om.parkPanel.SetActive(true);
         //isAnnaText.SetActive(true);
         story = "It's a great chance to make money now.";
         ins = "Go to the park to sell flowers";

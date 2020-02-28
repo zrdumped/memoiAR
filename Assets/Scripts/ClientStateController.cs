@@ -207,6 +207,7 @@ public class ClientStateController : MonoBehaviour
     {
         if (character == 0 && client.IsConnected)
         {
+            om.flowerShopPanel.SetActive(false);
             isAnnaText.SetActive(true);
             character = 1;
             anna.enabled = true;
@@ -218,6 +219,7 @@ public class ClientStateController : MonoBehaviour
     {
         if (character == 0 && client.IsConnected)
         {
+            om.housePanel.SetActive(false);
             isMaxText.SetActive(true);
             character = 2;
             max.enabled = true;
@@ -229,6 +231,7 @@ public class ClientStateController : MonoBehaviour
     {
         if (character == 2 && max.maxIsReadyToPark())
         {
+            om.parkPanel.SetActive(false);
             om.flyAndOpenViolinCase();
             max.stopLeadMaxToPark();
             client.ClientSendMessage("!MaxParkReached");
@@ -236,6 +239,7 @@ public class ClientStateController : MonoBehaviour
 
         else if(character == 1 && anna.annaIsReadyToPark())
         {
+            om.parkPanel.SetActive(false);
             anna.stopLeadAnnaToPark();
             client.ClientSendMessage("!AnnaParkReached");
         }
@@ -260,5 +264,18 @@ public class ClientStateController : MonoBehaviour
     public void EndChapter1()
     {
         client.ClientSendMessage("!EndChapter1");
+    }
+
+    public void ConnectToServer(int signal)
+    {
+        client.ConnectToTcpServer();
+        if (signal == 1)
+        {
+            om.flowerShopPanel.SetActive(true);
+        }
+        else if(signal == 2)
+        {
+            om.housePanel.SetActive(true);
+        }
     }
 }

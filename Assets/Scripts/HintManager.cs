@@ -55,17 +55,13 @@ public class HintManager : MonoBehaviour
                 yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
         }
 
-        if (insText != "")
+        for (int i = 0; i < insText.Length; i++)
         {
-            insText = "[HINT] " + insText;
-            for (int i = 0; i < insText.Length; i++)
-            {
-                Instruction.text += insText[i];
-                if (insText[i] == ' ')
-                    yield return new WaitForSeconds(delay * 2);
-                else
-                    yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
-            }
+            Instruction.text += insText[i];
+            if (insText[i] == ' ')
+                yield return new WaitForSeconds(delay * 2);
+            else
+                yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
         }
         typeSoundPlayer.Stop();
     }

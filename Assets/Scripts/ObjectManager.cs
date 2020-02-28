@@ -28,6 +28,7 @@ public class ObjectManager : MonoBehaviour
     public GameObject promptText;
 
     public GameObject annaPanel, maxPanel, endPanel;
+    public GameObject parkPanel, housePanel, flowerShopPanel;
 
     public List<GameObject> testUIs;
 
@@ -56,6 +57,9 @@ public class ObjectManager : MonoBehaviour
         annaPanel.SetActive(false);
         maxPanel.SetActive(false);
         endPanel.SetActive(false);
+        parkPanel.SetActive(false);
+        housePanel.SetActive(false);
+        flowerShopPanel.SetActive(false);
     }
 
     public void hideButtons()
@@ -223,11 +227,28 @@ public class ObjectManager : MonoBehaviour
 
     public void flyAndOpenViolinCase()
     {
-        violinCaseHolding.transform.parent = violinCaseTarget.transform.parent;
-        violinCaseHolding.GetComponent<Animator>().SetTrigger("Open");
-        violinCaseHolding.transform.DOLocalMove(violinCaseTarget.transform.localPosition, 3);
-        violinCaseHolding.transform.DORotateQuaternion(violinCaseTarget.transform.rotation, 3);
-        violinCaseHolding.transform.DOScale(violinCaseTarget.transform.localScale, 3);
+        violinCaseHolding.SetActive(false);
+        violinCaseTarget.SetActive(true);
+        Vector3 srcPos, srcScale;
+        Quaternion srcRot;
+        srcPos = violinCaseTarget.transform.localPosition;
+        srcRot = violinCaseTarget.transform.localRotation;
+        srcScale = violinCaseTarget.transform.localScale;
+
+        violinCaseTarget.transform.position = violinCaseHolding.transform.position;
+        violinCaseTarget.transform.rotation = violinCaseHolding.transform.rotation;
+        violinCaseTarget.transform.localScale = violinCaseHolding.transform.localScale;
+
+        //violinCaseTarget.SetActive(true);
+        //violinCaseHolding.transform.parent = violinCaseTarget.transform.parent;
+        violinCaseTarget.GetComponent<Animator>().SetTrigger("Open");
+        violinCaseTarget.transform.DOLocalMove(srcPos, 3);
+        violinCaseTarget.transform.DOScale(srcScale, 3);
+        violinCaseTarget.transform.DOLocalRotateQuaternion(srcRot, 3);
+        //Debug.Log(violinCaseTarget.transform.localEulerAngles);
+        //violinCaseHolding.transform.DORotate(violinCaseTarget.transform.eulerAngles, 3);
+        //violinCaseHolding.transform.DOScale(violinCaseTarget.transform.localScale, 3);
+        //violinCaseTarget.SetActive(false);
     }
 
     public void OpenViolinCase()

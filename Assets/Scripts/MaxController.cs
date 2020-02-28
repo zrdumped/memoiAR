@@ -22,6 +22,8 @@ public class MaxController : MonoBehaviour
 
     private bool readyToPark = false;
 
+    private ObjectManager om;
+
     //public GameObject isMaxText;
 
     private ClientStateController csc;
@@ -43,6 +45,7 @@ public class MaxController : MonoBehaviour
         csc = this.GetComponent<ClientStateController>();
         hand = GameObject.FindGameObjectWithTag("Hand").GetComponent<PickHand>();
         hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
+        om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
     }
 
     // Update is called once per frame
@@ -83,6 +86,7 @@ public class MaxController : MonoBehaviour
 
     public void leadMaxToPark()
     {
+        om.parkPanel.SetActive(true);
         //isMaxText.SetActive(true);
         story = "Why not try out your latest piece at the park?";
         ins = "Go to the park to play music";
