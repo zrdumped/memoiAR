@@ -115,6 +115,15 @@ public class ClientStateController : MonoBehaviour
             om.RosesLeave();
             max.makeMaxTalk();
         }
+        else if (stateName == "EndChapter1")
+        {
+            om.stopGame();
+        }
+    }
+
+    public void hideButtons()
+    {
+        om.hideButtons();
     }
 
     public bool isAnna()
@@ -246,5 +255,10 @@ public class ClientStateController : MonoBehaviour
             client.ClientSendMessage("!AnnaGiftGivenRose");
         else if (giftNum == 1)
             client.ClientSendMessage("!AnnaGiftGivenCoin");
+    }
+
+    public void EndChapter1()
+    {
+        client.ClientSendMessage("!EndChapter1");
     }
 }

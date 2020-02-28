@@ -23,9 +23,13 @@ public class ViolinController : MonoBehaviour
 
     private float totalS = 0, totalT = 0;
 
+    private ClientStateController csc;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
         om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
         violinPlayer = gameObject.GetComponent<AudioSource>();
     }
@@ -146,7 +150,11 @@ public class ViolinController : MonoBehaviour
                 if(playTime > om.nodeMusic[om.musicSelected[currentNum]].length)
                 {
                     if (currentNum == 2)
-                        currentNum = 0;
+                    {
+                        csc.EndChapter1();
+                        break;
+                    }
+                    //currentNum = 0;
                     else
                         currentNum++;
                     playTime = 0;

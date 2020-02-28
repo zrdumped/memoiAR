@@ -143,6 +143,11 @@ public class ServerStateController : MonoBehaviour
             state++;
             server.Broadcast("FlowerGiven");
         }
+        else if (state == 7 && stateName == "EndChapter1")
+        {
+            state++;
+            server.Broadcast("EndChapter1");
+        }
     }
 
 }

@@ -80,6 +80,7 @@ public class PickableObject : MonoBehaviour
         else if (type == ObjectType.Flower && readyToConfirmFlower)
         {
             hand.releaseStaff();
+            om.disableFlowerShop();
             om.showFlowerInHand();
             anna.annaReadyToPark();
             anna.leadAnnaToPark();
@@ -153,6 +154,7 @@ public class PickableObject : MonoBehaviour
             this.gameObject.GetComponent<Collider>().enabled = false;
             csc.MusicComposed();
             max.maxReadyToPark();
+            hand.releaseStaff();
             om.disableHouse();
             om.violinCaseHolding.SetActive(true);
             gameObject.SetActive(false);

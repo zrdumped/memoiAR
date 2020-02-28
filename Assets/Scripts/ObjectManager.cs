@@ -27,7 +27,9 @@ public class ObjectManager : MonoBehaviour
 
     public GameObject promptText;
 
-    public GameObject annaPanel, maxPanel;
+    public GameObject annaPanel, maxPanel, endPanel;
+
+    public List<GameObject> testUIs;
 
     private void Start()
     {
@@ -53,6 +55,21 @@ public class ObjectManager : MonoBehaviour
         promptText.SetActive(false);
         annaPanel.SetActive(false);
         maxPanel.SetActive(false);
+        endPanel.SetActive(false);
+    }
+
+    public void hideButtons()
+    {
+        foreach (GameObject go in testUIs)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    public void stopGame()
+    {
+        endPanel.SetActive(true);
+        Time.timeScale = 0;
     }
 
     public void disableHouse()
@@ -223,5 +240,21 @@ public class ObjectManager : MonoBehaviour
     {
         maxPanel.SetActive(false);
         violin.SetActive(true);
+    }
+
+    public void HideAnnaFLowers(int count)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            rosesInTheHand[i].SetActive(false);
+        }
+    }
+
+    public void ShowAnnaFLowers(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            rosesInTheHand[i].SetActive(true);
+        }
     }
 }
