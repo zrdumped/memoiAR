@@ -10,6 +10,8 @@ TagManager:
   - Client
   - Hand
   - Hint
+  - Chap1Client
+  - Chap0Client
   layers:
   - Default
   - TransparentFX

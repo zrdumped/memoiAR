@@ -10,6 +10,8 @@ public class ClientStateController : MonoBehaviour
     //2 - Max
     int character = 0;
 
+    private int chapNum = 0;
+
     private TCPTestClient client;
     private AnnaController anna;
     private MaxController max;
@@ -20,7 +22,12 @@ public class ClientStateController : MonoBehaviour
     public GameObject isMaxText, isAnnaText;
 
     private ObjectManager om;
+    private GameManager gm;
+    private HintManager hm;
 
+    private Chapter0Controller c0c;
+
+    public GameObject loadingPanel;
 
     //1 || 2
     private int musicSelected = 0;
@@ -28,10 +35,14 @@ public class ClientStateController : MonoBehaviour
     private void Start()
     {
         client = this.GetComponent<TCPTestClient>();
-        anna = this.GetComponent<AnnaController>();
-        max = this.GetComponent<MaxController>();
+        gm = GameObject.FindGameObjectWithTag("Client").GetComponent<GameManager>();
+        hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
+        //anna = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<AnnaController>();
+        //max = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<MaxController>();
 
-        om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+        //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+
+        loadingPanel.SetActive(false);
     }
 
     private void Update()
@@ -123,7 +134,7 @@ public class ClientStateController : MonoBehaviour
 
     public void hideButtons()
     {
-        om.hideButtons();
+        //om.hideButtons();
     }
 
     public bool isAnna()
@@ -208,7 +219,7 @@ public class ClientStateController : MonoBehaviour
         if (character == 0 && client.IsConnected)
         {
             om.flowerShopPanel.SetActive(false);
-            isAnnaText.SetActive(true);
+            //isAnnaText.SetActive(true);
             character = 1;
             anna.enabled = true;
             client.ClientSendMessage("!AnnaFlowerShopReached");
@@ -220,7 +231,7 @@ public class ClientStateController : MonoBehaviour
         if (character == 0 && client.IsConnected)
         {
             om.housePanel.SetActive(false);
-            isMaxText.SetActive(true);
+            //isMaxText.SetActive(true);
             character = 2;
             max.enabled = true;
             client.ClientSendMessage("!MaxHouseReached");
@@ -271,11 +282,61 @@ public class ClientStateController : MonoBehaviour
         client.ConnectToTcpServer();
         if (signal == 1)
         {
-            om.flowerShopPanel.SetActive(true);
+            isAnnaText.SetActive(true);
+            //om.flowerShopPanel.SetActive(true);
         }
         else if(signal == 2)
         {
-            om.housePanel.SetActive(true);
+            isMaxText.SetActive(true);
+            //om.housePanel.SetActive(true);
         }
+        chapNum = 0;
+        gm.SwitchScene("Chapter0");
+    }
+
+    public void SetupAfterSceneLoaded()
+    {
+        if (chapNum == 0)
+        {
+            //anna = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<AnnaController>();
+            //max = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<MaxController>();
+            //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+            c0c = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<Chapter0Controller>();
+            hm.InputNewWords("Put on your favourite accessory to wear", "");
+            hm.enableButton();
+            if (isAnnaText.activeSelf)
+            {
+                c0c.setUpAsAnna();
+            }else if (isMaxText.activeSelf)
+            {
+                c0c.setUpAsMax();
+            }
+        }
+        else if(chapNum == 1)
+        {
+            anna = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<AnnaController>();
+            max = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<MaxController>();
+            om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+            if (isAnnaText.activeSelf)
+            {
+                om.flowerShopPanel.SetActive(true);
+                hm.InputNewWords("Now you are Annaliese. Bring the Rose to the Flowershop.", "");
+            }
+            else if (isMaxText.activeSelf)
+            {
+                om.housePanel.SetActive(true);
+                hm.InputNewWords("Now you are Max. Bring your violin home to 4076 Auguststrasse.", "");
+            }
+            hm.disableButton();
+
+            loadingPanel.SetActive(false);
+        }
+    }
+
+    public void Chapter0Ended()
+    {
+        loadingPanel.SetActive(true);
+        chapNum = 1;
+        //gm.SwitchScene("Chapter1");
     }
 }

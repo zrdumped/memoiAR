@@ -7,6 +7,7 @@ public class HintManager : MonoBehaviour
 {
     public Text Story;
     public Text Instruction;
+    public GameObject button;
 
     private float delay = 0.06f;
 
@@ -15,10 +16,14 @@ public class HintManager : MonoBehaviour
 
     private Coroutine printCoroutine;
 
+    //private GameManager gm;
+
     // Start is called before the first frame update
     void Start()
     {
+        //gm = GameObject.FindGameObjectWithTag("Client").GetComponent<GameManager>();
         typeSoundPlayer = this.GetComponentInChildren<AudioSource>();
+        button.SetActive(false);
         Story.text = "";
         Instruction.text = "";
     }
@@ -64,5 +69,15 @@ public class HintManager : MonoBehaviour
                 yield return new WaitForSeconds(delay + Random.Range(-delay, 0));
         }
         typeSoundPlayer.Stop();
+    }
+
+    public void enableButton()
+    {
+        button.SetActive(true);
+    }
+
+    public void disableButton()
+    {
+        button.SetActive(false);
     }
 }

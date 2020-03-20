@@ -46,7 +46,7 @@ public class TCPTestClient : MonoBehaviour
 			clientReceiveThread.IsBackground = true;
 			clientReceiveThread.Start();
 
-            csc.hideButtons();
+            //csc.hideButtons();
 		}
 		catch (Exception e)
 		{
