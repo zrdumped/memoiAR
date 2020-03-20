@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +34,8 @@ public class Chapter0Controller : MonoBehaviour
 
     public GameObject arCamera;
 
+public GameObject mirrorCamera;
+
     //1 anna 2 max
     private int character = 0;
 
@@ -66,11 +68,16 @@ public class Chapter0Controller : MonoBehaviour
         }
         if (frontCameraName == "")
             frontCameraName = devices[0].name;
-
-        image = new WebCamTexture(frontCameraName);
+Debug.Log(frontCameraName);
+        image = new WebCamTexture(frontCameraName, Screen.width, Screen.height);
         frontImage.SetActive(true);
+
+//Quaternion rotation = Quaternion.Euler (0, 90, 0);
+//Matrix4x4 rotationMatrix = Matrix4x4.TRS (Vector3.zero, rotation, new Vector3(1, 1, 1));
+//frontImage.GetComponent<RawImage>().material.SetMatrix ("_Rotation", rotationMatrix);
+
         frontImage.GetComponent<RawImage>().texture = image;
-        //frontImage.GetComponent<RawImage>().material.mainTexture = image;
+        frontImage.GetComponent<RawImage>().material.mainTexture = image;
 
         image.Play();
 
@@ -79,7 +86,9 @@ public class Chapter0Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(image.isPlaying){
+        frontImage.GetComponent<RawImage>().texture = image;
+        frontImage.GetComponent<RawImage>().material.mainTexture = image;}
     }
 
     public void setUpAsAnna()
@@ -100,8 +109,9 @@ public class Chapter0Controller : MonoBehaviour
     {
         image.Stop();
         frontImage.SetActive(false);
-
+mirrorCamera.SetActive(false);
         arCamera.SetActive(true);
+
 
         //csc.Chapter0Ended();
         StartCoroutine(rim());
@@ -112,11 +122,13 @@ public class Chapter0Controller : MonoBehaviour
 
         if (character == 1)
         {
+rose.SetActive(true);
             annaDes.SetActive(false);
             rosePanel.SetActive(true);
         }
         else if (character == 2)
         {
+violin.SetActive(true);
             maxDes.SetActive(false);
             violinPanel.SetActive(true);
         }

@@ -22,7 +22,7 @@ MonoBehaviour:
     useDelayedLoadingObjectTargets: 1
     modelTargetRecoWhileExtendedTracked: 1
     version: 8.6.10
-    eulaAcceptedVersions: '{"Values":["8.6"]}'
+    eulaAcceptedVersions: '{"Values":["8.6","8.5"]}'
     modelTargetMode: 0
   database:
     disableModelExtraction: 0
