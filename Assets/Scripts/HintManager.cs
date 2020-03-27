@@ -7,6 +7,8 @@ public class HintManager : MonoBehaviour
 {
     public Text Story;
     public Text Instruction;
+    public GameObject InstructionSlot1;
+    public GameObject InstructionSlot2;
     public GameObject button;
 
     private float delay = 0.06f;
@@ -15,6 +17,8 @@ public class HintManager : MonoBehaviour
     private AudioSource typeSoundPlayer;
 
     private Coroutine printCoroutine;
+
+    private Vector3 subDownPos, subUpPos;
 
     //private GameManager gm;
 
@@ -26,6 +30,9 @@ public class HintManager : MonoBehaviour
         button.SetActive(false);
         Story.text = "";
         Instruction.text = "";
+
+        subUpPos = InstructionSlot2.GetComponent<RectTransform>().position;
+        subDownPos = InstructionSlot1.GetComponent<RectTransform>().position;
     }
 
     // Update is called once per frame
@@ -41,7 +48,12 @@ public class HintManager : MonoBehaviour
 
     public void InputNewWords(string storyText, string insText)
     {
-        if(printCoroutine != null)
+        if (storyText == "")
+            InstructionSlot1.GetComponent<RectTransform>().position = subUpPos;
+        else
+            InstructionSlot1.GetComponent<RectTransform>().position = subDownPos;
+
+        if (printCoroutine != null)
             StopCoroutine(printCoroutine);
         printCoroutine = StartCoroutine(typeWords(storyText, insText));
     }

@@ -14,7 +14,9 @@ public class ClientStateController : MonoBehaviour
 
     private TCPTestClient client;
     private AnnaController anna;
+    private AnnaController2 anna2;
     private MaxController max;
+    private MaxController2 max2;
 
     private bool newState = false;
     private string newStateName = "";
@@ -22,12 +24,15 @@ public class ClientStateController : MonoBehaviour
     public GameObject isMaxText, isAnnaText;
 
     private ObjectManager om;
+    private ObjectManager2 om2;
     private GameManager gm;
     private HintManager hm;
 
     private Chapter0Controller c0c;
 
-    public GameObject loadingPanel;
+    public GameObject chapter0Panel;
+    public GameObject chapter1Panel;
+    public GameObject chapter2Panel;
 
     //1 || 2
     private int musicSelected = 0;
@@ -42,7 +47,8 @@ public class ClientStateController : MonoBehaviour
 
         //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
 
-        loadingPanel.SetActive(false);
+        chapter1Panel.SetActive(false);
+        chapter2Panel.SetActive(false);
     }
 
     private void Update()
@@ -256,22 +262,6 @@ public class ClientStateController : MonoBehaviour
         }
     }
 
-    public void MusicSelected(int musicNum)
-    {
-        if(musicNum == 1)
-            client.ClientSendMessage("!MaxMusicSelectedMusic1");
-        else if (musicNum == 2)
-            client.ClientSendMessage("!MaxMusicSelectedMusic2");
-    }
-
-    public void GiftGiven(int giftNum)
-    {
-        if(giftNum == 0)
-            client.ClientSendMessage("!AnnaGiftGivenRose");
-        else if (giftNum == 1)
-            client.ClientSendMessage("!AnnaGiftGivenCoin");
-    }
-
     public void EndChapter1()
     {
         client.ClientSendMessage("!EndChapter1");
@@ -291,6 +281,7 @@ public class ClientStateController : MonoBehaviour
             //om.housePanel.SetActive(true);
         }
         chapNum = 0;
+        chapter0Panel.SetActive(true);
         gm.SwitchScene("Chapter0");
     }
 
@@ -311,6 +302,7 @@ public class ClientStateController : MonoBehaviour
             {
                 c0c.setUpAsMax();
             }
+            chapter0Panel.SetActive(false);
         }
         else if(chapNum == 1)
         {
@@ -329,14 +321,24 @@ public class ClientStateController : MonoBehaviour
             }
             hm.disableButton();
 
-            loadingPanel.SetActive(false);
+            chapter1Panel.SetActive(false);
+        }
+        else if(chapNum == 2)
+        {
+            anna2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<AnnaController2>();
+            max2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<MaxController2>();
+            om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
+
+            hm.disableButton();
+
+            chapter2Panel.SetActive(false);
         }
     }
 
     public void Chapter0Ended()
     {
-        loadingPanel.SetActive(true);
-        chapNum = 1;
-        //gm.SwitchScene("Chapter1");
+        chapter2Panel.SetActive(true);
+        chapNum = 2;
+        gm.SwitchScene("Chapter2");
     }
 }

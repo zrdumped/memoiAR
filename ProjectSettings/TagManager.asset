@@ -12,6 +12,8 @@ TagManager:
   - Hint
   - Chap1Client
   - Chap0Client
+  - Chap2Client
+  - ObjectManager2
   layers:
   - Default
   - TransparentFX
