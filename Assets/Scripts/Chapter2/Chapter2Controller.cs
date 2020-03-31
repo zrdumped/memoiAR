@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +11,7 @@ public class Chapter2Controller : MonoBehaviour
     public Transform houseTrans;
     public GameObject crowdSprite;
     public AudioClip crowdClip;
-    private int crowdNum = 1;
+    private int crowdNum = 2;
     private float crowdRange = 0.5f;
     private List<Vector3> generatedGrowds;
     private int crowdCount = 0;
@@ -48,15 +48,19 @@ public class Chapter2Controller : MonoBehaviour
             {
                 minDistance = Mathf.Min(minDistance, Vector3.Distance(generatedGrowds[i], ARCamera.transform.position));
             }
+float proportion;
             if(minDistance < crowdRange)
             {
-                float proportion = minDistance / crowdRange;
+               proportion = 1.0f - minDistance / crowdRange;
                 //Debug.Log(proportion);
+
+            }else{
+proportion = 0;
+}
                 Color curColor = crowdSprite.GetComponent<Image>().color;
                 curColor.a = proportion;
                 crowdSprite.GetComponent<Image>().color = curColor;
                 audioSource.volume = proportion;
-            }
         }
     }
 
