@@ -281,9 +281,9 @@ public class ClientStateController : MonoBehaviour
             isMaxText.SetActive(true);
             //om.housePanel.SetActive(true);
         }
-        chapNum = 2;
+        chapNum = 0;
         loadingPanel.SetActive(true);
-        gm.SwitchScene("Chapter2");
+        gm.SwitchScene("Chapter0");
     }
 
     public void SetupAfterSceneLoaded()

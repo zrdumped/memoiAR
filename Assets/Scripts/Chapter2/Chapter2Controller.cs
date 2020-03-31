@@ -12,7 +12,7 @@ public class Chapter2Controller : MonoBehaviour
     public GameObject crowdSprite;
     public AudioClip crowdClip;
     private int crowdNum = 1;
-    private float crowdRange = 1;
+    private float crowdRange = 0.5f;
     private List<Vector3> generatedGrowds;
     private int crowdCount = 0;
     private bool onTheWayToHouse = false;
@@ -42,6 +42,7 @@ public class Chapter2Controller : MonoBehaviour
     {
         if (onTheWayToHouse)
         {
+            //Debug.Log(ARCamera.transform.position + " " + generatedGrowds[0] + " " + houseTrans.position + " " + parkTrans.position);
             float minDistance = 100;
             for(int i = 0; i < crowdNum; i++)
             {
@@ -50,31 +51,29 @@ public class Chapter2Controller : MonoBehaviour
             if(minDistance < crowdRange)
             {
                 float proportion = minDistance / crowdRange;
+                //Debug.Log(proportion);
                 Color curColor = crowdSprite.GetComponent<Image>().color;
-                curColor.a = proportion * 255.0f;
+                curColor.a = proportion;
                 crowdSprite.GetComponent<Image>().color = curColor;
+                audioSource.volume = proportion;
             }
         }
     }
 
     public void TransitToSummer()
     {
-        return;
         if(duringTransition)
             StartCoroutine(om2.ChangeToSummer());
     }
 
     public void TransitToAutumn()
     {
-        return;
         if (duringTransition)
             StartCoroutine(om2.ChangeToAutumn());
     }
 
     public void TransitToWinter()
     {
-        GenerateCrowds();
-        return;
         if (duringTransition)
             StartCoroutine(om2.ChangeToWinter());
         duringTransition = false;
@@ -89,7 +88,7 @@ public class Chapter2Controller : MonoBehaviour
         {
             //GameObject newCrowd = Instantiate(crowd);
             //newCrowd.transform.position = ;
-            generatedGrowds.Add(parkTrans.position + distance * (i + 1));
+            generatedGrowds.Add(houseTrans.position + distance * (i + 1));
         }
         onTheWayToHouse = true;
         crowdSprite.SetActive(true);

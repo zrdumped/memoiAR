@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Rendering.PostProcessing;
 using DG.Tweening;
 
@@ -36,6 +37,7 @@ public class ObjectManager2 : MonoBehaviour
     public GameObject flowershopPanel;
     public GameObject housePanel;
     public GameObject parkPanel;
+    public GameObject chapter2Panel;
 
     // Start is called before the first frame update
     public void Start()
@@ -181,6 +183,18 @@ public class ObjectManager2 : MonoBehaviour
         yield return new WaitForSeconds(8);
         playingPhoto.SetActive(false);
         snow.SetActive(false);
+
+        chapter2Panel.SetActive(true);
+        curColor = chapter2Panel.GetComponent<Image>().color;
+        curColor.a = 0;
+        chapter2Panel.GetComponent<Image>().color = curColor;
+        curColor.a = 1;
+        chapter2Panel.GetComponent<Image>().DOColor(curColor, 1);
+        yield return new WaitForSeconds(2);
+        curColor.a = 0;
+        chapter2Panel.GetComponent<Image>().DOColor(curColor, 1);
+        yield return new WaitForSeconds(1);
+        chapter2Panel.SetActive(false);
 
         hm.InputNewWords("You spent a nice day here with each other", "Time to go back home");
         //flowershopPanel.SetActive(true);
