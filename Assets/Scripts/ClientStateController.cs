@@ -33,6 +33,7 @@ public class ClientStateController : MonoBehaviour
     public GameObject chapter0Panel;
     public GameObject chapter1Panel;
     public GameObject chapter2Panel;
+    public GameObject loadingPanel;
 
     //1 || 2
     private int musicSelected = 0;
@@ -280,13 +281,14 @@ public class ClientStateController : MonoBehaviour
             isMaxText.SetActive(true);
             //om.housePanel.SetActive(true);
         }
-        chapNum = 0;
-        chapter0Panel.SetActive(true);
-        gm.SwitchScene("Chapter0");
+        chapNum = 2;
+        loadingPanel.SetActive(true);
+        gm.SwitchScene("Chapter2");
     }
 
     public void SetupAfterSceneLoaded()
     {
+        loadingPanel.SetActive(false);
         if (chapNum == 0)
         {
             //anna = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<AnnaController>();
@@ -302,7 +304,7 @@ public class ClientStateController : MonoBehaviour
             {
                 c0c.setUpAsMax();
             }
-            chapter0Panel.SetActive(false);
+            //chapter0Panel.SetActive(false);
         }
         else if(chapNum == 1)
         {
@@ -321,7 +323,7 @@ public class ClientStateController : MonoBehaviour
             }
             hm.disableButton();
 
-            chapter1Panel.SetActive(false);
+            //chapter1Panel.SetActive(false);
         }
         else if(chapNum == 2)
         {
@@ -331,13 +333,13 @@ public class ClientStateController : MonoBehaviour
 
             hm.disableButton();
 
-            chapter2Panel.SetActive(false);
+            //chapter2Panel.SetActive(false);
         }
     }
 
     public void Chapter0Ended()
     {
-        chapter2Panel.SetActive(true);
+        loadingPanel.SetActive(true);
         chapNum = 2;
         gm.SwitchScene("Chapter2");
     }

@@ -9,6 +9,7 @@ public class ObjectManager2 : MonoBehaviour
     public PostProcessProfile normalProfile;
     public PostProcessVolume volumn;
     private HintManager hm;
+    private Chapter2Controller c2c;
     //public GameObject effectCamera;
     [Header("Summer")]
     public GameObject flare, vLight1, vLight2;
@@ -42,6 +43,7 @@ public class ObjectManager2 : MonoBehaviour
         volumn.profile = normalProfile;
 
         hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
+        c2c = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<Chapter2Controller>();
         hm.InputNewWords("", "Go to the flowershop");
 
         //summer
@@ -181,6 +183,7 @@ public class ObjectManager2 : MonoBehaviour
         snow.SetActive(false);
 
         hm.InputNewWords("You spent a nice day here with each other", "Time to go back home");
-        flowershopPanel.SetActive(true);
+        //flowershopPanel.SetActive(true);
+        c2c.GenerateCrowds();
     }
 }
