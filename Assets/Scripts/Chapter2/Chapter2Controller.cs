@@ -11,8 +11,8 @@ public class Chapter2Controller : MonoBehaviour
     public Transform houseTrans;
     public GameObject crowdSprite;
     public AudioClip crowdClip;
-    private int crowdNum = 2;
-    private float crowdRange = 0.5f;
+    private int crowdNum = 3;
+    private float crowdRange = 0.4f;
     private List<Vector3> generatedGrowds;
     private int crowdCount = 0;
     private bool onTheWayToHouse = false;
@@ -44,23 +44,29 @@ public class Chapter2Controller : MonoBehaviour
         {
             //Debug.Log(ARCamera.transform.position + " " + generatedGrowds[0] + " " + houseTrans.position + " " + parkTrans.position);
             float minDistance = 100;
-            for(int i = 0; i < crowdNum; i++)
+            for (int i = 0; i < crowdNum; i++)
             {
-                minDistance = Mathf.Min(minDistance, Vector3.Distance(generatedGrowds[i], ARCamera.transform.position));
+                Vector3 pos1 = generatedGrowds[i];
+                pos1.y = 0;
+                Vector3 pos2 = ARCamera.transform.position;
+                pos2.y = 0;
+                minDistance = Mathf.Min(minDistance, Vector3.Distance(pos1, pos2));
             }
-float proportion;
-            if(minDistance < crowdRange)
+            float proportion;
+            if (minDistance < crowdRange)
             {
-               proportion = 1.0f - minDistance / crowdRange;
+                proportion = 1.0f - minDistance / crowdRange;
                 //Debug.Log(proportion);
 
-            }else{
-proportion = 0;
-}
-                Color curColor = crowdSprite.GetComponent<Image>().color;
-                curColor.a = proportion;
-                crowdSprite.GetComponent<Image>().color = curColor;
-                audioSource.volume = proportion;
+            }
+            else
+            {
+                proportion = 0;
+            }
+            Color curColor = crowdSprite.GetComponent<Image>().color;
+            curColor.a = proportion;
+            crowdSprite.GetComponent<Image>().color = curColor;
+            audioSource.volume = proportion;
         }
     }
 

@@ -28,7 +28,8 @@ public class Chapter0Controller : MonoBehaviour
     public GameObject slot;
     public GameObject line;
 
-    public GameObject frontImage;
+    public GameObject frontImage_IOS;
+    public GameObject frontImage_Android;
 
     private WebCamTexture image;
 
@@ -70,15 +71,23 @@ public GameObject mirrorCamera;
             frontCameraName = devices[0].name;
 Debug.Log(frontCameraName);
         image = new WebCamTexture(frontCameraName, Screen.width, Screen.height);
-        frontImage.SetActive(true);
+#if UNITY_IOS
+        frontImage_IOS.SetActive(true);
+#else
+        frontImage_Android.SetActive(true);
+#endif
 
-//Quaternion rotation = Quaternion.Euler (0, 90, 0);
-//Matrix4x4 rotationMatrix = Matrix4x4.TRS (Vector3.zero, rotation, new Vector3(1, 1, 1));
-//frontImage.GetComponent<RawImage>().material.SetMatrix ("_Rotation", rotationMatrix);
+        //Quaternion rotation = Quaternion.Euler (0, 90, 0);
+        //Matrix4x4 rotationMatrix = Matrix4x4.TRS (Vector3.zero, rotation, new Vector3(1, 1, 1));
+        //frontImage.GetComponent<RawImage>().material.SetMatrix ("_Rotation", rotationMatrix);
 
-        frontImage.GetComponent<RawImage>().texture = image;
-        frontImage.GetComponent<RawImage>().material.mainTexture = image;
-
+#if UNITY_IOS
+        frontImage_IOS.GetComponent<RawImage>().texture = image;
+        frontImage_IOS.GetComponent<RawImage>().material.mainTexture = image;
+#else
+        frontImage_Android.GetComponent<RawImage>().texture = image;
+        frontImage_Android.GetComponent<RawImage>().material.mainTexture = image;
+#endif
         image.Play();
 
     }
@@ -86,9 +95,13 @@ Debug.Log(frontCameraName);
     // Update is called once per frame
     void Update()
     {
-        if(image.isPlaying){
-        frontImage.GetComponent<RawImage>().texture = image;
-        frontImage.GetComponent<RawImage>().material.mainTexture = image;}
+#if UNITY_IOS
+        if (image.isPlaying)
+        {
+            frontImage_IOS.GetComponent<RawImage>().texture = image;
+            frontImage_IOS.GetComponent<RawImage>().material.mainTexture = image;
+        }
+#endif
     }
 
     public void setUpAsAnna()
@@ -108,8 +121,12 @@ Debug.Log(frontCameraName);
     private void startTutorial()
     {
         image.Stop();
-        frontImage.SetActive(false);
-mirrorCamera.SetActive(false);
+#if UNITY_IOS
+        frontImage_IOS.SetActive(false);
+#else
+        frontImage_Android.SetActive(false);
+#endif
+        mirrorCamera.SetActive(false);
         arCamera.SetActive(true);
 
 
@@ -122,13 +139,13 @@ mirrorCamera.SetActive(false);
 
         if (character == 1)
         {
-rose.SetActive(true);
+            rose.SetActive(true);
             annaDes.SetActive(false);
             rosePanel.SetActive(true);
         }
         else if (character == 2)
         {
-violin.SetActive(true);
+            violin.SetActive(true);
             maxDes.SetActive(false);
             violinPanel.SetActive(true);
         }
