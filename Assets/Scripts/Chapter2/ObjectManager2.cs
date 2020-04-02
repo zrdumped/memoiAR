@@ -47,6 +47,16 @@ public class ObjectManager2 : MonoBehaviour
     public List<Sprite> crowds;
     public AudioSource crowdScreamingAS;
 
+    [Header("Max's House")]
+    public GameObject teaboxLid;
+    public GameObject kettleOnTable;
+    public GameObject kettleOnScreen;
+    private bool teaboxTouched = false;
+    private bool kettleTouched = false;
+    private bool cupTouched = false;
+    private Vector3 originalLocalPostion;
+    private Quaternion originalLocalRotation;
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -89,6 +99,11 @@ public class ObjectManager2 : MonoBehaviour
         crowdPanel.SetActive(false);
         effectPanel1.SetActive(false);
         effectPanel2.SetActive(false);
+
+        //max's house
+        kettleOnScreen.SetActive(false);
+        originalLocalPostion = kettleOnTable.transform.localPosition;
+        originalLocalRotation = kettleOnTable.transform.localRotation;
     }
 
     public IEnumerator ChangeToSummer()
@@ -213,7 +228,7 @@ public class ObjectManager2 : MonoBehaviour
         yield return new WaitForSeconds(1);
         chapter2Panel.SetActive(false);
 
-        hm.InputNewWords("You spent a nice day here with each other", "Time to go back home");
+        hm.InputNewWords("You were your way home from the park when you heard shouting in the distance", "Go back home");
         //flowershopPanel.SetActive(true);
         c2c.GenerateCrowds();
     }
@@ -276,5 +291,42 @@ public class ObjectManager2 : MonoBehaviour
         effectPanel1.SetActive(false);
         effectPanel2.SetActive(false);
         crowdScreamingAS.Stop();
+    }
+
+    public void observeTeabox()
+    {
+        if (!teaboxTouched)
+        {
+            teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
+        }
+        teaboxTouched = true;
+        if (kettleTouched)
+            hm.InputNewWords("The teabox is empty. Maybe we only have hot water tonight.", "");
+        else
+            hm.InputNewWords("The teabox is empty. Just pour some hot water in...", "Touch the kettle");
+    }
+
+    public GameObject observeKettle()
+    {
+        if (kettleTouched)
+        {
+            hm.InputNewWords("", "The kettle is empty");
+            return null;
+        }
+        kettleOnScreen.SetActive(true);
+        kettleOnTable.SetActive(false);
+        kettleTouched = true;
+        hm.InputNewWords("","Pour the water into the cup");
+        return kettleOnScreen;
+    }
+
+    public void pourWater()
+    {
+        kettleOnTable.transform.position = kettleOnScreen.transform.position;
+        kettleOnTable.transform.rotation = kettleOnScreen.transform.rotation;
+        kettleOnScreen.SetActive(false);
+        kettleOnTable.SetActive(true);
+        kettleOnTable.transform.DOLocalMove(originalLocalPostion, 2);
+        kettleOnTable.transform.DOLocalRotateQuaternion(originalLocalRotation, 2);
     }
 }

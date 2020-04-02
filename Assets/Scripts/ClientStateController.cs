@@ -61,6 +61,57 @@ public class ClientStateController : MonoBehaviour
         }
     }
 
+    public void SetupAfterSceneLoaded()
+    {
+        loadingPanel.SetActive(false);
+        if (chapNum == 0)
+        {
+            //anna = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<AnnaController>();
+            //max = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<MaxController>();
+            //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+            c0c = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<Chapter0Controller>();
+            hm.InputNewWords("Put on your favourite accessory to wear", "");
+            hm.enableButton();
+            if (isAnna())
+            {
+                c0c.setUpAsAnna();
+            }
+            else if (isMax())
+            {
+                c0c.setUpAsMax();
+            }
+            //chapter0Panel.SetActive(false);
+        }
+        else if (chapNum == 1)
+        {
+            anna = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<AnnaController>();
+            max = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<MaxController>();
+            om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+            if (isAnna())
+            {
+                om.flowerShopPanel.SetActive(true);
+                hm.InputNewWords("Now you are Annaliese. Bring the Rose to the Flowershop.", "");
+            }
+            else if (isMax())
+            {
+                om.housePanel.SetActive(true);
+                hm.InputNewWords("Now you are Max. Bring your violin home to 4076 Auguststrasse.", "");
+            }
+            hm.disableButton();
+
+            //chapter1Panel.SetActive(false);
+        }
+        else if (chapNum == 2)
+        {
+            anna2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<AnnaController2>();
+            max2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<MaxController2>();
+            om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
+
+            hm.disableButton();
+
+            //chapter2Panel.SetActive(false);
+        }
+    }
 
     public void NetworkSetState(string stateName)
     {
@@ -71,77 +122,87 @@ public class ClientStateController : MonoBehaviour
     private void SetState(string stateName)
     {
         Debug.Log(stateName + " " + character);
-        if (stateName == "StartTutorial" && character == 1)
-        {
-            om.StartTutorial();
-            anna.startTutorial();
+        if (chapNum == 1) {
+            if (stateName == "StartTutorial" && character == 1)
+            {
+                om.StartTutorial();
+                anna.startTutorial();
+            }
+            else if (stateName == "StartTutorial" && character == 2)
+            {
+                om.StartTutorial();
+                max.startTutorial();
+            }
+            else if (stateName == "GoToPark" && character == 1)
+            {
+                anna.makeAnnaConfirm();
+            }
+            else if (stateName == "GoToPark" && character == 2)
+            {
+                max.leadMaxToPark();
+            }
+            else if (stateName == "MakeAnnaWait" && character == 1)
+            {
+                anna.wait();
+            }
+            else if (stateName == "MakeMaxWait" && character == 2)
+            {
+                max.wait();
+            }
+            else if (stateName == "PickUpFlower" && character == 1)
+            {
+                om.OpenViolinCase();
+                om.RosesFallOnGround();
+                anna.pickupFlowers();
+            }
+            else if (stateName == "PickUpFlower" && character == 2)
+            {
+                om.StartPickingup();
+                max.pickupFlowers();
+            }
+            else if (stateName.Contains("FlowerPicked") && character != 0)
+            {
+                om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
+            }
+            else if (stateName.Contains("GiveFlower") && character == 1)
+            {
+                om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
+                anna.receiveFlower();
+            }
+            else if (stateName.Contains("GiveFlower") && character == 2)
+            {
+                om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
+                max.sendFlower();
+            }
+            else if (stateName == "FlowerGiven" && character == 1)
+            {
+                anna.flowerGiven();
+                anna.makeAnnaTalk();
+                om.RosesCome();
+            }
+            else if (stateName == "FlowerGiven" && character == 2)
+            {
+                om.RosesLeave();
+                max.makeMaxTalk();
+            }
+            else if (stateName == "EndChapter1")
+            {
+                om.stopGame();
+            }
         }
-        else if (stateName == "StartTutorial" && character == 2)
+        else if (chapNum == 2)
         {
-            om.StartTutorial();
-            max.startTutorial();
+            if(stateName == "BothArriveHouse")
+            {
+                if (isAnna())
+                {
+                    hm.InputNewWords("That was scary. Make a cup of tea for max", "Touch the teabox and kettle");
+                }else if (isMax())
+                {
+                    hm.InputNewWords("That was scary. See if Annaliese is ok.", "Talk with Annaliese");
+                }
+            }
         }
-        else if (stateName == "GoToPark" && character == 1)
-        {
-            anna.makeAnnaConfirm();
-        }
-        else if (stateName == "GoToPark" && character == 2)
-        {
-            max.leadMaxToPark();
-        }
-        else if (stateName == "MakeAnnaWait" && character == 1)
-        {
-            anna.wait();
-        }
-        else if (stateName == "MakeMaxWait" && character == 2)
-        {
-            max.wait();
-        }
-        else if (stateName == "PickUpFlower" && character == 1)
-        {
-            om.OpenViolinCase();
-            om.RosesFallOnGround();
-            anna.pickupFlowers();
-        }
-        else if (stateName == "PickUpFlower" && character == 2)
-        {
-            om.StartPickingup();
-            max.pickupFlowers();
-        }
-        else if (stateName.Contains("FlowerPicked") && character != 0)
-        {
-            om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
-        }
-        else if (stateName.Contains("GiveFlower") && character == 1)
-        {
-            om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
-            anna.receiveFlower();
-        }
-        else if (stateName.Contains("GiveFlower") && character == 2)
-        {
-            om.rosesOnTheGround[stateName[0] - (int)'0'].SetActive(false);
-            max.sendFlower();
-        }
-        else if(stateName == "FlowerGiven" && character == 1)
-        {
-            anna.flowerGiven();
-            anna.makeAnnaTalk();
-            om.RosesCome();
-        }
-        else if (stateName == "FlowerGiven" && character == 2)
-        {
-            om.RosesLeave();
-            max.makeMaxTalk();
-        }
-        else if (stateName == "EndChapter1")
-        {
-            om.stopGame();
-        }
-    }
-
-    public void hideButtons()
-    {
-        //om.hideButtons();
     }
 
     public bool isAnna()
@@ -154,7 +215,15 @@ public class ClientStateController : MonoBehaviour
         return character == 2 || isMaxText.activeSelf;
     }
 
+    //Chapter 0 
+    public void Chapter0Ended()
+    {
+        loadingPanel.SetActive(true);
+        chapNum = 2;
+        gm.SwitchScene("Chapter2");
+    }
 
+    //Chapter 1
     public void FlowerGiven()
     {
         client.ClientSendMessage("!FlowerGiven");
@@ -292,61 +361,26 @@ public class ClientStateController : MonoBehaviour
 #endif
     }
 
-    public void SetupAfterSceneLoaded()
+    //Chapter 2
+    public void HouseArrived()
     {
-        loadingPanel.SetActive(false);
-        if (chapNum == 0)
+        hm.InputNewWords("After all the mess on the street, you arrived your house", "");
+#if OFFLINE_MODE
+        StartCoroutine(houseArriveOffline());
+#else
+        if (isAnna())
         {
-            //anna = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<AnnaController>();
-            //max = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<MaxController>();
-            //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
-            c0c = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<Chapter0Controller>();
-            hm.InputNewWords("Put on your favourite accessory to wear", "");
-            hm.enableButton();
-            if (isAnna())
-            {
-                c0c.setUpAsAnna();
-            }else if (isMax())
-            {
-                c0c.setUpAsMax();
-            }
-            //chapter0Panel.SetActive(false);
-        }
-        else if(chapNum == 1)
+            client.ClientSendMessage("AnnaArrivesHouse");
+        }else if (isMax())
         {
-            anna = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<AnnaController>();
-            max = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<MaxController>();
-            om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
-            if (isAnna())
-            {
-                om.flowerShopPanel.SetActive(true);
-                hm.InputNewWords("Now you are Annaliese. Bring the Rose to the Flowershop.", "");
-            }
-            else if (isMax())
-            {
-                om.housePanel.SetActive(true);
-                hm.InputNewWords("Now you are Max. Bring your violin home to 4076 Auguststrasse.", "");
-            }
-            hm.disableButton();
-
-            //chapter1Panel.SetActive(false);
+            client.ClientSendMessage("MaxArrivesHouse");
         }
-        else if(chapNum == 2)
-        {
-            anna2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<AnnaController2>();
-            max2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<MaxController2>();
-            om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
-
-            hm.disableButton();
-
-            //chapter2Panel.SetActive(false);
-        }
+#endif
     }
 
-    public void Chapter0Ended()
+    private IEnumerator houseArriveOffline()
     {
-        loadingPanel.SetActive(true);
-        chapNum = 2;
-        gm.SwitchScene("Chapter2");
+        yield return new WaitForSeconds(3);
+        SetState("BothArriveHouse");
     }
 }

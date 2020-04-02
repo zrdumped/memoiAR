@@ -12,12 +12,14 @@ public class Chapter2Controller : MonoBehaviour
     private int crowdNum = 2;
     private float crowdRange = 0.5f;
     private List<Vector3> generatedGrowds;
-    private int crowdCount = 0;
     private bool onTheWayToHouse = false;
     private bool inCrowd = false;
     public AudioSource crowdBgAS;
     private float houseParkDistance;
     private Vector3 housePos;
+
+    //Max House
+    //public GameObject teaboxLid;
 
     //Global variables
     public GameObject ARCamera;
@@ -26,12 +28,14 @@ public class Chapter2Controller : MonoBehaviour
     //Transition variables
     private bool duringTransition = true;
 
-    //private HintManager hm;
+    private HintManager hm;
+    private ClientStateController csc;
     // Start is called before the first frame update
     void Start()
     {
         om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
-        //hm = GameObject.FindGameObjectWithTag("Client").GetComponent<HintManager>();
+        hm = GameObject.FindGameObjectWithTag("Client").GetComponent<HintManager>();
+        csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
 
         //hm.InputNewWords("", "Go to the flowershop");
 #if SKIP_TRANSITION
@@ -43,6 +47,8 @@ public class Chapter2Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+#if SKIP_GOHOME
+#else
         if (onTheWayToHouse)
         {
             Vector3 cameraPos = ARCamera.transform.position;
@@ -75,6 +81,7 @@ public class Chapter2Controller : MonoBehaviour
                 om2.destroyCrowd();
             }
         }
+#endif
     }
 
     public void FlowerShopFound()
@@ -91,6 +98,9 @@ public class Chapter2Controller : MonoBehaviour
         {
             onTheWayToHouse = false;
             crowdBgAS.volume = 0.2f;
+            //teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
+
+            csc.HouseArrived();
         }
     }
 
