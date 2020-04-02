@@ -13,12 +13,12 @@ public class ObjectManager2 : MonoBehaviour
     private Chapter2Controller c2c;
     //public GameObject effectCamera;
     [Header("Summer")]
-    public GameObject flare, vLight1, vLight2;
+    public GameObject flare;
+    public GameObject vLight1;
+    public GameObject vLight2;
     public GameObject weddingPhoto;
     public Transform flarePos1, flarePos2;
-
     public PostProcessProfile summerProfile;
-
     private float srcVLight1Intensity, srcVLight2Intensity;
     private float srcVLight1Range, srcVLight2Range;
 
@@ -38,6 +38,14 @@ public class ObjectManager2 : MonoBehaviour
     public GameObject housePanel;
     public GameObject parkPanel;
     public GameObject chapter2Panel;
+
+    [Header("CrowdEffects")]
+    public GameObject crowdPanel;
+    public GameObject effectPanel1;
+    public GameObject effectPanel2;
+    public List<Sprite> effects;
+    public List<Sprite> crowds;
+    public AudioSource crowdScreamingAS;
 
     // Start is called before the first frame update
     public void Start()
@@ -69,9 +77,18 @@ public class ObjectManager2 : MonoBehaviour
         fe.enabled = false;
 
         //panels
+#if SKIP_TRANSITION
+        flowershopPanel.SetActive(false);
+#else
         flowershopPanel.SetActive(true);
+#endif
         housePanel.SetActive(false);
         parkPanel.SetActive(false);
+
+        //crowd effects
+        crowdPanel.SetActive(false);
+        effectPanel1.SetActive(false);
+        effectPanel2.SetActive(false);
     }
 
     public IEnumerator ChangeToSummer()
@@ -199,5 +216,65 @@ public class ObjectManager2 : MonoBehaviour
         hm.InputNewWords("You spent a nice day here with each other", "Time to go back home");
         //flowershopPanel.SetActive(true);
         c2c.GenerateCrowds();
+    }
+
+    public void initCrowd()
+    {
+        int crownNum = Random.Range(0, 3);
+        Color curColor = crowdPanel.GetComponent<Image>().color;
+        curColor.a = 0;
+        crowdPanel.GetComponent<Image>().color = curColor;
+        crowdPanel.GetComponent<Image>().sprite = crowds[crownNum];
+        crowdPanel.SetActive(true);
+
+        curColor = effectPanel1.GetComponent<Image>().color;
+        curColor.a = 0;
+        effectPanel1.GetComponent<Image>().color = curColor;
+        effectPanel2.GetComponent<Image>().color = curColor;
+        effectPanel1.GetComponent<Image>().sprite = effects[0];
+        effectPanel2.GetComponent<Image>().sprite = effects[0];
+        effectPanel1.SetActive(true);
+        effectPanel2.SetActive(true);
+
+        crowdScreamingAS.volume = 0;
+        crowdScreamingAS.Play();
+    }
+
+    public void updateCrowd(float proportion)
+    {
+        Color curColor = crowdPanel.GetComponent<Image>().color;
+        curColor.a = proportion;
+        crowdPanel.GetComponent<Image>().color = curColor;
+
+        if(proportion <= 0.5)
+        {
+            float scaledProportion = proportion / 0.5f;
+            curColor = effectPanel1.GetComponent<Image>().color;
+            curColor.a = 1 - scaledProportion;
+            effectPanel1.GetComponent<Image>().color = curColor;
+            curColor.a = scaledProportion;
+            effectPanel2.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[0];
+            effectPanel2.GetComponent<Image>().sprite = effects[1];
+        }else
+        {
+            float scaledProportion = (proportion - 0.5f) / 0.5f;
+            curColor = effectPanel1.GetComponent<Image>().color;
+            curColor.a = 1 - scaledProportion;
+            effectPanel1.GetComponent<Image>().color = curColor;
+            curColor.a = scaledProportion;
+            effectPanel2.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[1];
+            effectPanel2.GetComponent<Image>().sprite = effects[2];
+        }
+
+        crowdScreamingAS.volume = proportion;
+    }
+
+    public void destroyCrowd()
+    {
+        effectPanel1.SetActive(false);
+        effectPanel2.SetActive(false);
+        crowdScreamingAS.Stop();
     }
 }

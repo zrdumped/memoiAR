@@ -146,12 +146,12 @@ public class ClientStateController : MonoBehaviour
 
     public bool isAnna()
     {
-        return character == 1;
+        return character == 1 || isAnnaText.activeSelf;
     }
 
     public bool isMax()
     {
-        return character == 2;
+        return character == 2 || isMaxText.activeSelf;
     }
 
 
@@ -281,9 +281,15 @@ public class ClientStateController : MonoBehaviour
             isMaxText.SetActive(true);
             //om.housePanel.SetActive(true);
         }
+#if CHAPTER_2_ONLY
+        chapNum = 2;
+        loadingPanel.SetActive(true);
+        gm.SwitchScene("Chapter2");
+#else
         chapNum = 0;
         loadingPanel.SetActive(true);
         gm.SwitchScene("Chapter0");
+#endif
     }
 
     public void SetupAfterSceneLoaded()
@@ -297,10 +303,10 @@ public class ClientStateController : MonoBehaviour
             c0c = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<Chapter0Controller>();
             hm.InputNewWords("Put on your favourite accessory to wear", "");
             hm.enableButton();
-            if (isAnnaText.activeSelf)
+            if (isAnna())
             {
                 c0c.setUpAsAnna();
-            }else if (isMaxText.activeSelf)
+            }else if (isMax())
             {
                 c0c.setUpAsMax();
             }
@@ -311,12 +317,12 @@ public class ClientStateController : MonoBehaviour
             anna = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<AnnaController>();
             max = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<MaxController>();
             om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
-            if (isAnnaText.activeSelf)
+            if (isAnna())
             {
                 om.flowerShopPanel.SetActive(true);
                 hm.InputNewWords("Now you are Annaliese. Bring the Rose to the Flowershop.", "");
             }
-            else if (isMaxText.activeSelf)
+            else if (isMax())
             {
                 om.housePanel.SetActive(true);
                 hm.InputNewWords("Now you are Max. Bring your violin home to 4076 Auguststrasse.", "");

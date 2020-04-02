@@ -9,14 +9,15 @@ public class Chapter2Controller : MonoBehaviour
     //public GameObject crowd;
     public Transform parkTrans;
     public Transform houseTrans;
-    public GameObject crowdSprite;
-    public AudioClip crowdClip;
-    private int crowdNum = 3;
-    private float crowdRange = 0.4f;
+    private int crowdNum = 2;
+    private float crowdRange = 0.5f;
     private List<Vector3> generatedGrowds;
     private int crowdCount = 0;
     private bool onTheWayToHouse = false;
-    private AudioSource audioSource;
+    private bool inCrowd = false;
+    public AudioSource crowdBgAS;
+    private float houseParkDistance;
+    private Vector3 housePos;
 
     //Global variables
     public GameObject ARCamera;
@@ -29,12 +30,14 @@ public class Chapter2Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = this.gameObject.GetComponent<AudioSource>();
         om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
         //hm = GameObject.FindGameObjectWithTag("Client").GetComponent<HintManager>();
 
         //hm.InputNewWords("", "Go to the flowershop");
-        crowdSprite.SetActive(false);
+#if SKIP_TRANSITION
+        duringTransition = false;
+        onTheWayToHouse = true;
+#endif
     }
 
     // Update is called once per frame
@@ -42,8 +45,13 @@ public class Chapter2Controller : MonoBehaviour
     {
         if (onTheWayToHouse)
         {
-            //Debug.Log(ARCamera.transform.position + " " + generatedGrowds[0] + " " + houseTrans.position + " " + parkTrans.position);
-            float minDistance = 100;
+            Vector3 cameraPos = ARCamera.transform.position;
+            cameraPos.y = 0;
+            float remainingDistance = Vector3.Distance(housePos, cameraPos);
+            crowdBgAS.volume = 1 - remainingDistance / houseParkDistance;
+
+            //calculate the min distance
+            float minDistance = crowdRange;
             for (int i = 0; i < crowdNum; i++)
             {
                 Vector3 pos1 = generatedGrowds[i];
@@ -52,37 +60,41 @@ public class Chapter2Controller : MonoBehaviour
                 pos2.y = 0;
                 minDistance = Mathf.Min(minDistance, Vector3.Distance(pos1, pos2));
             }
-            float proportion;
-            if (minDistance < crowdRange)
+            float proportion = 1 - minDistance / crowdRange;
+            if(proportion < 1 && !inCrowd)
             {
-                proportion = 1.0f - minDistance / crowdRange;
-                //Debug.Log(proportion);
-
-            }
-            else
+                inCrowd = true;
+                om2.initCrowd();
+                om2.updateCrowd(proportion);
+            }else if(proportion < 1 && inCrowd)
             {
-                proportion = 0;
+                om2.updateCrowd(proportion);
+            }else if (inCrowd)
+            {
+                inCrowd = false;
+                om2.destroyCrowd();
             }
-            Color curColor = crowdSprite.GetComponent<Image>().color;
-            curColor.a = proportion;
-            crowdSprite.GetComponent<Image>().color = curColor;
-            audioSource.volume = proportion;
         }
     }
 
-    public void TransitToSummer()
+    public void FlowerShopFound()
     {
         if(duringTransition)
             StartCoroutine(om2.ChangeToSummer());
     }
 
-    public void TransitToAutumn()
+    public void HouseFound()
     {
         if (duringTransition)
             StartCoroutine(om2.ChangeToAutumn());
+        else if (onTheWayToHouse)
+        {
+            onTheWayToHouse = false;
+            crowdBgAS.volume = 0.2f;
+        }
     }
 
-    public void TransitToWinter()
+    public void ParkFound()
     {
         if (duringTransition)
             StartCoroutine(om2.ChangeToWinter());
@@ -93,30 +105,20 @@ public class Chapter2Controller : MonoBehaviour
     public void GenerateCrowds()
     {
         generatedGrowds = new List<Vector3>();
-        Vector3 distance = (parkTrans.position - houseTrans.position) / (crowdNum + 1);
-        for(int i = 0; i < crowdNum; i++)
+        Vector3 pos1 = parkTrans.position;
+        pos1.y = 0;
+        housePos = houseTrans.position;
+        housePos.y = 0;
+        Vector3 distance = (pos1 - housePos) / (crowdNum + 1);
+        houseParkDistance = Vector3.Distance(pos1, housePos);
+        for (int i = 0; i < crowdNum; i++)
         {
             //GameObject newCrowd = Instantiate(crowd);
             //newCrowd.transform.position = ;
             generatedGrowds.Add(houseTrans.position + distance * (i + 1));
         }
         onTheWayToHouse = true;
-        crowdSprite.SetActive(true);
-        audioSource.clip = crowdClip;
-        audioSource.loop = true;
-        audioSource.Play();
+        crowdBgAS.volume = 0;
+        crowdBgAS.Play();
     }
-
-    public void DestroyCrowds()
-    {
-        //for(int i = crowdNum - 1; i >= 0; i--)
-        //{
-        //    Destroy(generatedGrowds[i]);
-        //}
-        crowdSprite.SetActive(false);
-        onTheWayToHouse = false;
-        audioSource.loop = false;
-        audioSource.Stop();
-    }
-
 }

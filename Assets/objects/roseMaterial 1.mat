@@ -42,7 +42,7 @@ Material:
     - _Glossiness: 0.353
     - _Metallic: 0
     - _ReflectionOn: 1
-    - _ReflectionRate: 5.6
+    - _ReflectionRate: 0.6999998
     - _RefractionOn: 0
     - _RefractionRate: 4.3
     - _Speed: 2.43
