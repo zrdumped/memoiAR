@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -340,7 +340,7 @@ public class ObjectManager2 : MonoBehaviour
 
     public void testPourWater()
     {
-        StartCoroutine(swipeGlass());
+        StartCoroutine(blackOut());
     }
 
     public IEnumerator pourWater(bool fromscreen = true)
@@ -391,9 +391,15 @@ public class ObjectManager2 : MonoBehaviour
         {
             hm.InputNewWords("Teacup is empty. Pour some water into it", "");
             yield return null;
-        }
+        }else{
+
+cup.GetComponent<BoxCollider>().enabled = false;
 
         hm.InputNewWords("You only have hot water now. But you two are together", "Tell each other what you are thinking");
+
+	yield return new WaitForSeconds(10);
+
+hm.InputNewWords("", "");
 
         beforeScene.SetActive(false);
         afterScene.SetActive(true);
@@ -402,13 +408,13 @@ public class ObjectManager2 : MonoBehaviour
         crowdPanel.SetActive(true);
         c2c.crowdBgAS.volume = 1;
         crowdScreamingAS.volume = 1;
-        crowdScreamingAS.Play(0);
+        crowdScreamingAS.Play();
         glassShutteredAS.volume = 1;
         glassShutteredAS.Play();
         messSoundAS.volume = 1;
         messSoundAS.Play();
 
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(8);
 
         DOTween.To(() => c2c.crowdBgAS.volume, x => c2c.crowdBgAS.volume = x, 0f, 3);
         DOTween.To(() => crowdScreamingAS.volume, x => crowdScreamingAS.volume = x, 0f, 3);
@@ -419,6 +425,7 @@ public class ObjectManager2 : MonoBehaviour
         blackPanel.SetActive(false);
 
         hm.InputNewWords("The rose is in ruins.", "Clean the glass and save the rose");
+}
     }
 
     public IEnumerator swipeGlass()
@@ -427,7 +434,7 @@ public class ObjectManager2 : MonoBehaviour
         {
             endPanel.SetActive(true);
             yield return null;
-        }
+        }else{
 
         glassCollider.GetComponent<BoxCollider>().enabled = false;
 
@@ -441,5 +448,6 @@ public class ObjectManager2 : MonoBehaviour
         glassCollider.GetComponent<BoxCollider>().enabled = true;
 
         hm.InputNewWords("", "Pick up the rose");
+}
     }
 }
