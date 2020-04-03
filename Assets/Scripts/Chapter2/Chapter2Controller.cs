@@ -111,6 +111,8 @@ public class Chapter2Controller : MonoBehaviour
             crowdBgAS.volume = 0.2f;
             //teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
 
+                om2.destroyCrowd();
+
             csc.HouseArrived();
         }
     }

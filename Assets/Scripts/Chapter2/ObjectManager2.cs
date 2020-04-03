@@ -331,7 +331,7 @@ public class ObjectManager2 : MonoBehaviour
         }
         teaboxTouched = true;
         if (kettleTouched)
-            hm.InputNewWords("The teabox is empty. Maybe we only have hot water tonight.", "");
+            hm.InputNewWords("The teabox is empty. We only have hot water tonight.", "");
         else
             hm.InputNewWords("The teabox is empty. Just pour some hot water in...", "Touch the kettle");
     }

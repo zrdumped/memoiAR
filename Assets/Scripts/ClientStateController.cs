@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -219,8 +219,8 @@ public class ClientStateController : MonoBehaviour
     public void Chapter0Ended()
     {
         loadingPanel.SetActive(true);
-        chapNum = 2;
-        gm.SwitchScene("Chapter2");
+        chapNum = 1;
+        gm.SwitchScene("Chapter1");
     }
 
     //Chapter 1
