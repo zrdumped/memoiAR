@@ -119,7 +119,7 @@ public class ObjectManager2 : MonoBehaviour
         //max's house
         kettleOnScreen.SetActive(false);
         //shatteredGlass.SetActive(false);
-        beforeScene.SetActive(true);
+        beforeScene.SetActive(false);
         afterScene.SetActive(false);
         blackPanel.SetActive(false);
     }
@@ -279,27 +279,37 @@ public class ObjectManager2 : MonoBehaviour
         curColor.a = proportion;
         crowdPanel.GetComponent<Image>().color = curColor;
 
-        if (proportion <= 0.5)
+        if (proportion <= 0.3)
         {
-            float scaledProportion = proportion / 0.5f;
+            float scaledProportion = proportion / 0.3f;
+            curColor = effectPanel1.GetComponent<Image>().color;
+            curColor.a = scaledProportion;
+            effectPanel1.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[0];
+            curColor.a = 0;
+            effectPanel2.GetComponent<Image>().color = curColor;
+            effectPanel2.GetComponent<Image>().sprite = effects[0];
+        }else if(proportion >= 0.7)
+        {
+            float scaledProportion = (proportion - 0.7f) / 0.3f;
             curColor = effectPanel1.GetComponent<Image>().color;
             curColor.a = 1 - scaledProportion;
             effectPanel1.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[1];
             curColor.a = scaledProportion;
             effectPanel2.GetComponent<Image>().color = curColor;
-            effectPanel1.GetComponent<Image>().sprite = effects[0];
-            effectPanel2.GetComponent<Image>().sprite = effects[1];
+            effectPanel2.GetComponent<Image>().sprite = effects[2];
         }
         else
         {
-            float scaledProportion = (proportion - 0.5f) / 0.5f;
+            float scaledProportion = (proportion - 0.3f) / 0.4f;
             curColor = effectPanel1.GetComponent<Image>().color;
             curColor.a = 1 - scaledProportion;
             effectPanel1.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[0];
             curColor.a = scaledProportion;
             effectPanel2.GetComponent<Image>().color = curColor;
-            effectPanel1.GetComponent<Image>().sprite = effects[1];
-            effectPanel2.GetComponent<Image>().sprite = effects[2];
+            effectPanel2.GetComponent<Image>().sprite = effects[1];
         }
 
         crowdScreamingAS.volume = proportion;
@@ -414,10 +424,10 @@ public class ObjectManager2 : MonoBehaviour
             yield return new WaitForSeconds(10);
 
             hm.InputNewWords("", "");
-            Debug.Log(2);
+            //Debug.Log(2);
             afterScene.SetActive(true);
             blackPanel.SetActive(true);
-            Debug.Log(3);
+            //Debug.Log(3);
             crowdPanel.SetActive(true);
             c2c.crowdBgAS.volume = 1;
             crowdScreamingAS.volume = 1;
@@ -426,18 +436,18 @@ public class ObjectManager2 : MonoBehaviour
             glassShutteredAS.Play();
             messSoundAS.volume = 1;
             messSoundAS.Play();
-            Debug.Log(4);
+            //Debug.Log(4);
             yield return new WaitForSeconds(8);
-            Debug.Log(5);
+            //Debug.Log(5);
             DOTween.To(() => c2c.crowdBgAS.volume, x => c2c.crowdBgAS.volume = x, 0f, 3);
             DOTween.To(() => crowdScreamingAS.volume, x => crowdScreamingAS.volume = x, 0f, 3);
             DOTween.To(() => messSoundAS.volume, x => messSoundAS.volume = x, 0f, 3);
-            Debug.Log(6);
+            //Debug.Log(6);
             yield return new WaitForSeconds(5);
             beforeScene.SetActive(false);
             crowdPanel.SetActive(false);
             blackPanel.SetActive(false);
-            Debug.Log(7);
+            //Debug.Log(7);
             hm.InputNewWords("The rose is in ruins.", "Clean the glass and save the rose");
         }
     }

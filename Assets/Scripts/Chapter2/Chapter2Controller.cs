@@ -55,6 +55,17 @@ public class Chapter2Controller : MonoBehaviour
             cameraPos.y = 0;
             float remainingDistance = Vector3.Distance(housePos, cameraPos);
             crowdBgAS.volume = 1 - remainingDistance / houseParkDistance;
+            if(remainingDistance < 0.5)
+            {
+                onTheWayToHouse = false;
+                crowdBgAS.volume = 0.2f;
+
+                csc.HouseArrived();
+
+                om2.destroyCrowd();
+
+                return;
+            }
 
             //calculate the min distance
             float minDistance = crowdRange;
@@ -119,6 +130,7 @@ public class Chapter2Controller : MonoBehaviour
     // - - - -
     public void GenerateCrowds()
     {
+        om2.beforeScene.SetActive(true);
         generatedGrowds = new List<Vector3>();
         Vector3 pos1 = parkTrans.position;
         pos1.y = 0;
