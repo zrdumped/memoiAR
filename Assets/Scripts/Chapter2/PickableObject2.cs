@@ -40,7 +40,7 @@ public class PickableObject2 : MonoBehaviour
         }else if(type == ObjectType.Kettle && hand.holdingObj == null)
         {
             hand.holdingObj = om2.observeKettle();
-        }else if(type == ObjectType.Cup && hand.holdingObj.GetComponent<PickableObject2>().type == ObjectType.Kettle)
+        }else if(type == ObjectType.Cup && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject2>().type == ObjectType.Kettle)
         {
             StartCoroutine(om2.pourWater());
             hand.releaseStaff();
