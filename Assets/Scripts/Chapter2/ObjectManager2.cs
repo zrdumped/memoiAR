@@ -279,7 +279,7 @@ public class ObjectManager2 : MonoBehaviour
         curColor.a = proportion;
         crowdPanel.GetComponent<Image>().color = curColor;
 
-        if(proportion <= 0.5)
+        if (proportion <= 0.5)
         {
             float scaledProportion = proportion / 0.5f;
             curColor = effectPanel1.GetComponent<Image>().color;
@@ -289,7 +289,8 @@ public class ObjectManager2 : MonoBehaviour
             effectPanel2.GetComponent<Image>().color = curColor;
             effectPanel1.GetComponent<Image>().sprite = effects[0];
             effectPanel2.GetComponent<Image>().sprite = effects[1];
-        }else
+        }
+        else
         {
             float scaledProportion = (proportion - 0.5f) / 0.5f;
             curColor = effectPanel1.GetComponent<Image>().color;
@@ -334,13 +335,24 @@ public class ObjectManager2 : MonoBehaviour
         kettleOnScreen.SetActive(true);
         kettleOnTable.SetActive(false);
         kettleTouched = true;
-        hm.InputNewWords("","Pour the water into the cup");
+        hm.InputNewWords("", "Pour the water into the cup");
         return kettleOnScreen;
     }
 
+    int i = 0;
     public void testPourWater()
     {
-        StartCoroutine(blackOut());
+        if (i == 0)
+            observeTeabox();
+        else if (i == 1)
+            observeKettle();
+        else if (i == 2)
+            StartCoroutine(pourWater());
+        else if (i == 3)
+            StartCoroutine(blackOut());
+        else if (i == 4)
+            StartCoroutine(swipeGlass());
+        i++;
     }
 
     public IEnumerator pourWater(bool fromscreen = true)
@@ -391,41 +403,43 @@ public class ObjectManager2 : MonoBehaviour
         {
             hm.InputNewWords("Teacup is empty. Pour some water into it", "");
             yield return null;
-        }else{
+        }
+        else
+        {
 
-cup.GetComponent<BoxCollider>().enabled = false;
+            cup.GetComponent<BoxCollider>().enabled = false;
 
-        hm.InputNewWords("You only have hot water now. But you two are together", "Tell each other what you are thinking");
+            hm.InputNewWords("You only have hot water now. But you two are together", "Tell each other what you are thinking");
 
-	yield return new WaitForSeconds(10);
+            yield return new WaitForSeconds(10);
 
-hm.InputNewWords("", "");
-
-        beforeScene.SetActive(false);
-        afterScene.SetActive(true);
-        blackPanel.SetActive(true);
-
-        crowdPanel.SetActive(true);
-        c2c.crowdBgAS.volume = 1;
-        crowdScreamingAS.volume = 1;
-        crowdScreamingAS.Play();
-        glassShutteredAS.volume = 1;
-        glassShutteredAS.Play();
-        messSoundAS.volume = 1;
-        messSoundAS.Play();
-
-        yield return new WaitForSeconds(8);
-
-        DOTween.To(() => c2c.crowdBgAS.volume, x => c2c.crowdBgAS.volume = x, 0f, 3);
-        DOTween.To(() => crowdScreamingAS.volume, x => crowdScreamingAS.volume = x, 0f, 3);
-        DOTween.To(() => messSoundAS.volume, x => messSoundAS.volume = x, 0f, 3);
-
-        yield return new WaitForSeconds(5);
-        crowdPanel.SetActive(false);
-        blackPanel.SetActive(false);
-
-        hm.InputNewWords("The rose is in ruins.", "Clean the glass and save the rose");
-}
+            hm.InputNewWords("", "");
+            Debug.Log(2);
+            afterScene.SetActive(true);
+            blackPanel.SetActive(true);
+            Debug.Log(3);
+            crowdPanel.SetActive(true);
+            c2c.crowdBgAS.volume = 1;
+            crowdScreamingAS.volume = 1;
+            crowdScreamingAS.Play();
+            glassShutteredAS.volume = 1;
+            glassShutteredAS.Play();
+            messSoundAS.volume = 1;
+            messSoundAS.Play();
+            Debug.Log(4);
+            yield return new WaitForSeconds(8);
+            Debug.Log(5);
+            DOTween.To(() => c2c.crowdBgAS.volume, x => c2c.crowdBgAS.volume = x, 0f, 3);
+            DOTween.To(() => crowdScreamingAS.volume, x => crowdScreamingAS.volume = x, 0f, 3);
+            DOTween.To(() => messSoundAS.volume, x => messSoundAS.volume = x, 0f, 3);
+            Debug.Log(6);
+            yield return new WaitForSeconds(5);
+            beforeScene.SetActive(false);
+            crowdPanel.SetActive(false);
+            blackPanel.SetActive(false);
+            Debug.Log(7);
+            hm.InputNewWords("The rose is in ruins.", "Clean the glass and save the rose");
+        }
     }
 
     public IEnumerator swipeGlass()
@@ -434,20 +448,22 @@ hm.InputNewWords("", "");
         {
             endPanel.SetActive(true);
             yield return null;
-        }else{
+        }
+        else
+        {
 
-        glassCollider.GetComponent<BoxCollider>().enabled = false;
+            glassCollider.GetComponent<BoxCollider>().enabled = false;
 
-        glassPiece1.transform.DOLocalMove(glassPiece1_target.transform.localPosition, 2);
-        glassPiece1.transform.DOLocalRotateQuaternion(glassPiece1_target.transform.localRotation, 2);
-        glassPiece2.transform.DOLocalMove(glassPiece2_target.transform.localPosition, 2);
-        glassPiece2.transform.DOLocalRotateQuaternion(glassPiece2_target.transform.localRotation, 2);
-        yield return new WaitForSeconds(2);
+            glassPiece1.transform.DOLocalMove(glassPiece1_target.transform.localPosition, 2);
+            glassPiece1.transform.DOLocalRotateQuaternion(glassPiece1_target.transform.localRotation, 2);
+            glassPiece2.transform.DOLocalMove(glassPiece2_target.transform.localPosition, 2);
+            glassPiece2.transform.DOLocalRotateQuaternion(glassPiece2_target.transform.localRotation, 2);
+            yield return new WaitForSeconds(2);
 
-        glassSwiped = true;
-        glassCollider.GetComponent<BoxCollider>().enabled = true;
+            glassSwiped = true;
+            glassCollider.GetComponent<BoxCollider>().enabled = true;
 
-        hm.InputNewWords("", "Pick up the rose");
-}
+            hm.InputNewWords("", "Pick up the rose");
+        }
     }
 }

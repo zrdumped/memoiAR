@@ -40,7 +40,7 @@ public class Chapter2Controller : MonoBehaviour
         //hm.InputNewWords("", "Go to the flowershop");
 #if SKIP_TRANSITION
         duringTransition = false;
-        onTheWayToHouse = true;
+        //onTheWayToHouse = true;
 #endif
     }
 
@@ -109,6 +109,11 @@ public class Chapter2Controller : MonoBehaviour
         if (duringTransition)
             StartCoroutine(om2.ChangeToWinter());
         duringTransition = false;
+#if SKIP_TRANSITION
+        hm.InputNewWords("You were your way home from the park when you heard shouting in the distance", "Go back home");
+        //flowershopPanel.SetActive(true);
+        GenerateCrowds();
+#endif
     }
 
     // - - - -
