@@ -364,10 +364,18 @@ public class ClientStateController : MonoBehaviour
     //Chapter 2
     public void HouseArrived()
     {
-        hm.InputNewWords("After all the mess on the street, you arrived your house", "");
 #if OFFLINE_MODE
+        if (isAnna())
+        {
+            hm.InputNewWords("That was scary. Make a cup of tea for max", "Touch the teabox and kettle");
+        }
+        else if (isMax())
+        {
+            hm.InputNewWords("That was scary. See if Annaliese is ok.", "Talk with Annaliese");
+        }
         StartCoroutine(houseArriveOffline());
 #else
+        hm.InputNewWords("After all the mess on the street, you arrived your house", "");
         if (isAnna())
         {
             client.ClientSendMessage("AnnaArrivesHouse");

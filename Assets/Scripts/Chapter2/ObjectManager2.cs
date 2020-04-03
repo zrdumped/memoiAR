@@ -246,7 +246,7 @@ public class ObjectManager2 : MonoBehaviour
         yield return new WaitForSeconds(1);
         chapter2Panel.SetActive(false);
 
-        hm.InputNewWords("You were your way home from the park when you heard shouting in the distance", "Go back home");
+        hm.InputNewWords("You heard shouting in the distance", "Go back home");
         //flowershopPanel.SetActive(true);
         c2c.GenerateCrowds();
     }
