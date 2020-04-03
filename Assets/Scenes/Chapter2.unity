@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7226,8 +7226,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.48899648, y: 0.60055244, z: 0.3701284}
-  m_Center: {x: -0.016856236, y: 0.05494625, z: -0.000000008559522}
+  m_Size: {x: 0.48899648, y: 0.71468365, z: 0.67730427}
+  m_Center: {x: -0.016856212, y: 0.112011895, z: -0.15358813}
 --- !u!64 &1074405606
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8353,8 +8353,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.7238278, y: 1.4284098, z: 1.4225127}
-  m_Center: {x: 0.04693219, y: 0.006437985, z: -0.07574455}
+  m_Size: {x: 1.7238278, y: 1.4284098, z: 1.683282}
+  m_Center: {x: 0.046931345, y: 0.006437878, z: -0.7164162}
 --- !u!43 &1413495939
 Mesh:
   m_ObjectHideFlags: 0
@@ -9021,6 +9021,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.9017594, y: 1.1497374, z: 3.8921058}
   m_Center: {x: -0.6905139, y: 0.27677223, z: -0.3380374}
+--- !u!114 &1578163121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578163119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5509e41c19cbaaa459e1e931b9de9ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 3
 --- !u!1 &1580610878 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 274545fa131c02845b53739c1b5755f9,
