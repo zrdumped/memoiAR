@@ -48,14 +48,30 @@ public class ObjectManager2 : MonoBehaviour
     public AudioSource crowdScreamingAS;
 
     [Header("Max's House")]
+    public GameObject beforeScene;
+    public GameObject afterScene;
+    public GameObject blackPanel;
     public GameObject teaboxLid;
     public GameObject kettleOnTable;
     public GameObject kettleOnScreen;
+    //public GameObject wholeGlass;
+    //public GameObject shatteredGlass;
+    public GameObject cup;
+    public Transform pourKettle;
     private bool teaboxTouched = false;
     private bool kettleTouched = false;
     private bool cupTouched = false;
     private Vector3 originalLocalPostion;
     private Quaternion originalLocalRotation;
+    public AudioSource glassShutteredAS;
+    public AudioSource messSoundAS;
+    private bool glassSwiped = false;
+    public GameObject glassPiece1;
+    public GameObject glassPiece1_target;
+    public GameObject glassPiece2;
+    public GameObject glassPiece2_target;
+    public GameObject glassCollider;
+    public GameObject endPanel;
 
     // Start is called before the first frame update
     public void Start()
@@ -102,8 +118,10 @@ public class ObjectManager2 : MonoBehaviour
 
         //max's house
         kettleOnScreen.SetActive(false);
-        originalLocalPostion = kettleOnTable.transform.localPosition;
-        originalLocalRotation = kettleOnTable.transform.localRotation;
+        //shatteredGlass.SetActive(false);
+        beforeScene.SetActive(true);
+        afterScene.SetActive(false);
+        blackPanel.SetActive(false);
     }
 
     public IEnumerator ChangeToSummer()
@@ -320,13 +338,108 @@ public class ObjectManager2 : MonoBehaviour
         return kettleOnScreen;
     }
 
-    public void pourWater()
+    public void testPourWater()
     {
-        kettleOnTable.transform.position = kettleOnScreen.transform.position;
-        kettleOnTable.transform.rotation = kettleOnScreen.transform.rotation;
+        StartCoroutine(swipeGlass());
+    }
+
+    public IEnumerator pourWater(bool fromscreen = true)
+    {
+        cup.GetComponent<BoxCollider>().enabled = false;
+        cup.GetComponent<MeshCollider>().enabled = true;
+
+        originalLocalPostion = kettleOnTable.transform.localPosition;
+        originalLocalRotation = kettleOnTable.transform.localRotation;
+        if (fromscreen)
+        {
+            kettleOnTable.transform.position = kettleOnScreen.transform.position;
+            kettleOnTable.transform.rotation = kettleOnScreen.transform.rotation;
+        }
         kettleOnScreen.SetActive(false);
+        kettleOnTable.GetComponent<BoxCollider>().enabled = false;
         kettleOnTable.SetActive(true);
+
+        //fly in the air and pour water
+        kettleOnTable.transform.DOLocalMove(pourKettle.localPosition, 2);
+        kettleOnTable.transform.DOLocalRotateQuaternion(pourKettle.localRotation, 2);
+
+        yield return new WaitForSeconds(2);
+
+        Vector3 oldRot = pourKettle.localEulerAngles;
+        Vector3 newRot = pourKettle.localEulerAngles + new Vector3(0, -60, 0);
+        kettleOnTable.transform.DOLocalRotate(newRot, 2);
+
+        yield return new WaitForSeconds(3);
+        kettleOnTable.transform.DOLocalRotate(oldRot, 0.5f);
+        cup.transform.GetChild(0).gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        //move back
         kettleOnTable.transform.DOLocalMove(originalLocalPostion, 2);
         kettleOnTable.transform.DOLocalRotateQuaternion(originalLocalRotation, 2);
+        yield return new WaitForSeconds(2);
+        kettleOnTable.GetComponent<BoxCollider>().enabled = true;
+
+        cup.GetComponent<BoxCollider>().enabled = true;
+        cup.GetComponent<MeshCollider>().enabled = false;
+
+        cupTouched = true;
+    }
+
+    public IEnumerator blackOut()
+    {
+        if (!cupTouched)
+        {
+            hm.InputNewWords("Teacup is empty. Pour some water into it", "");
+            yield return null;
+        }
+
+        hm.InputNewWords("You only have hot water now. But you two are together", "Tell each other what you are thinking");
+
+        beforeScene.SetActive(false);
+        afterScene.SetActive(true);
+        blackPanel.SetActive(true);
+
+        crowdPanel.SetActive(true);
+        c2c.crowdBgAS.volume = 1;
+        crowdScreamingAS.volume = 1;
+        crowdScreamingAS.Play(0);
+        glassShutteredAS.volume = 1;
+        glassShutteredAS.Play();
+        messSoundAS.volume = 1;
+        messSoundAS.Play();
+
+        yield return new WaitForSeconds(10);
+
+        DOTween.To(() => c2c.crowdBgAS.volume, x => c2c.crowdBgAS.volume = x, 0f, 3);
+        DOTween.To(() => crowdScreamingAS.volume, x => crowdScreamingAS.volume = x, 0f, 3);
+        DOTween.To(() => messSoundAS.volume, x => messSoundAS.volume = x, 0f, 3);
+
+        yield return new WaitForSeconds(5);
+        crowdPanel.SetActive(false);
+        blackPanel.SetActive(false);
+
+        hm.InputNewWords("The rose is in ruins.", "Clean the glass and save the rose");
+    }
+
+    public IEnumerator swipeGlass()
+    {
+        if (glassSwiped)
+        {
+            endPanel.SetActive(true);
+            yield return null;
+        }
+
+        glassCollider.GetComponent<BoxCollider>().enabled = false;
+
+        glassPiece1.transform.DOLocalMove(glassPiece1_target.transform.localPosition, 2);
+        glassPiece1.transform.DOLocalRotateQuaternion(glassPiece1_target.transform.localRotation, 2);
+        glassPiece2.transform.DOLocalMove(glassPiece2_target.transform.localPosition, 2);
+        glassPiece2.transform.DOLocalRotateQuaternion(glassPiece2_target.transform.localRotation, 2);
+        yield return new WaitForSeconds(2);
+
+        glassSwiped = true;
+        glassCollider.GetComponent<BoxCollider>().enabled = true;
+
+        hm.InputNewWords("", "Pick up the rose");
     }
 }

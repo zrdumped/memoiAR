@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickableObject2 : MonoBehaviour
 {
-    public enum ObjectType { Teabox, Kettle, Cup };
+    public enum ObjectType { Teabox, Kettle, Cup, Pieces };
     public ObjectType type;
 
     private ObjectManager2 om2;
@@ -39,11 +39,18 @@ public class PickableObject2 : MonoBehaviour
             om2.observeTeabox();
         }else if(type == ObjectType.Kettle && hand.holdingObj == null)
         {
-            hand.holdStaff(om2.observeKettle());
+            hand.holdingObj = om2.observeKettle();
         }else if(type == ObjectType.Cup && hand.holdingObj.GetComponent<PickableObject2>().type == ObjectType.Kettle)
         {
-            om2.pourWater();
+            StartCoroutine(om2.pourWater());
             hand.releaseStaff();
+        }else if (type == ObjectType.Cup && hand.holdingObj == null)
+        {
+            StartCoroutine(om2.blackOut());
+        }
+        else if (type == ObjectType.Pieces)
+        {
+            StartCoroutine(om2.swipeGlass());
         }
     }
 }

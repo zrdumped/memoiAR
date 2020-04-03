@@ -22,6 +22,7 @@ public class PickHand : MonoBehaviour
         
     }
 
+
     public void holdStaff(GameObject other)
     {
         holdingObj = other;

@@ -383,4 +383,5 @@ public class ClientStateController : MonoBehaviour
         yield return new WaitForSeconds(3);
         SetState("BothArriveHouse");
     }
+
 }
