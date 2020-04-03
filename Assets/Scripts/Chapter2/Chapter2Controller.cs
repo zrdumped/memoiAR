@@ -68,7 +68,7 @@ public class Chapter2Controller : MonoBehaviour
             }
 
             //calculate the min distance
-            float minDistance = crowdRange;
+            float minDistance = 100;
             for (int i = 0; i < crowdNum; i++)
             {
                 Vector3 pos1 = generatedGrowds[i];
@@ -78,15 +78,15 @@ public class Chapter2Controller : MonoBehaviour
                 minDistance = Mathf.Min(minDistance, Vector3.Distance(pos1, pos2));
             }
             float proportion = 1 - minDistance / crowdRange;
-            if(proportion < 1 && !inCrowd)
+            if(proportion > 0 && !inCrowd)
             {
                 inCrowd = true;
                 om2.initCrowd();
                 om2.updateCrowd(proportion);
-            }else if(proportion < 1 && inCrowd)
+            }else if(proportion > 0 && inCrowd)
             {
                 om2.updateCrowd(proportion);
-            }else if (inCrowd)
+            }else if (proportion <= 0 && inCrowd)
             {
                 inCrowd = false;
                 om2.destroyCrowd();

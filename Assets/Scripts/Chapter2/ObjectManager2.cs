@@ -317,6 +317,7 @@ public class ObjectManager2 : MonoBehaviour
 
     public void destroyCrowd()
     {
+        crowdPanel.SetActive(false);
         effectPanel1.SetActive(false);
         effectPanel2.SetActive(false);
         crowdScreamingAS.Stop();
