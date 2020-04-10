@@ -17,6 +17,8 @@ public class Chapter2Controller : MonoBehaviour
     public AudioSource crowdBgAS;
     private float houseParkDistance;
     private Vector3 housePos;
+    private bool maxGoOut = false;
+    private bool maxGoingBack = false;
 
     //Max House
     //public GameObject teaboxLid;
@@ -58,7 +60,7 @@ public class Chapter2Controller : MonoBehaviour
             if(remainingDistance < 0.5)
             {
                 onTheWayToHouse = false;
-                crowdBgAS.volume = 0.2f;
+                crowdBgAS.volume = 0.1f;
 
                 csc.HouseArrived();
 
@@ -93,6 +95,31 @@ public class Chapter2Controller : MonoBehaviour
             }
         }
 #endif
+        if(maxGoOut && isMax())
+        {
+            Vector3 cameraPos = ARCamera.transform.position;
+            cameraPos.y = 0;
+            float remainingDistance = Vector3.Distance(housePos, cameraPos);
+            if (remainingDistance > 1)
+            {
+                maxGoOut = false;
+                maxGoingBack = true;
+                om2.ShowOutside();
+            }
+        }
+
+        if (maxGoingBack)
+        {
+            Vector3 cameraPos = ARCamera.transform.position;
+            cameraPos.y = 0;
+            float remainingDistance = Vector3.Distance(housePos, cameraPos);
+            if (remainingDistance < 0.5)
+            {
+                maxGoingBack = false;
+                om2.HideOutside();
+                csc.MaxSawOutside();
+            }
+        }
     }
 
     public void FlowerShopFound()
@@ -103,16 +130,20 @@ public class Chapter2Controller : MonoBehaviour
 
     public void HouseFound()
     {
+        housePos = houseTrans.position;
+        housePos.y = 0;
         if (duringTransition)
+        {
             StartCoroutine(om2.ChangeToAutumn());
+        }
         else if (onTheWayToHouse)
         {
             onTheWayToHouse = false;
-            crowdBgAS.volume = 0.2f;
+            crowdBgAS.volume = 0.1f;
             //teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
 
-                om2.destroyCrowd();
-
+            om2.destroyCrowd();
+            
             csc.HouseArrived();
         }
     }
@@ -136,8 +167,7 @@ public class Chapter2Controller : MonoBehaviour
         generatedGrowds = new List<Vector3>();
         Vector3 pos1 = parkTrans.position;
         pos1.y = 0;
-        housePos = houseTrans.position;
-        housePos.y = 0;
+        //housePos = houseTrans.position;
         Vector3 distance = (pos1 - housePos) / (crowdNum + 1);
         houseParkDistance = Vector3.Distance(pos1, housePos);
         for (int i = 0; i < crowdNum; i++)
@@ -149,5 +179,15 @@ public class Chapter2Controller : MonoBehaviour
         onTheWayToHouse = true;
         crowdBgAS.volume = 0;
         crowdBgAS.Play();
+    }
+
+    public bool isAnna()
+    {
+        return csc.isAnna();
+    }
+
+    public bool isMax()
+    {
+        return csc.isMax();
     }
 }

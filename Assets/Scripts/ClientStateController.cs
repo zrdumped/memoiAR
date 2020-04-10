@@ -194,13 +194,57 @@ public class ClientStateController : MonoBehaviour
         {
             if(stateName == "BothArriveHouse")
             {
-                if (isAnna())
+                om2.escapeInHouse();
+                if (isMax())
                 {
-                    hm.InputNewWords("That was scary. Make a cup of tea for max", "Touch the teabox and kettle");
-                }else if (isMax())
-                {
-                    hm.InputNewWords("That was scary. See if Annaliese is ok.", "Talk with Annaliese");
+                    hm.InputNewWords("Your heart won’t stop pounding but you need to see if Annaliese is ok.", "Talk with Annaliese");
                 }
+                else if (isAnna())
+                {
+                    hm.InputNewWords("You know Max is trying to be brave. Maybe some tea will calm you both down.", "Get some hot water from the kettle");
+                }
+            }else if(stateName == "AnnaOpenTeabox")
+            {
+                om2.observeTeabox(true);
+            }
+            else if (stateName == "AnnaPourWater")
+            {
+                if (isMax())
+                {
+                    StartCoroutine(om2.pourWater(false));
+                    hm.InputNewWords("Were things always this bad? How will you keep Anna safe?", "Wait for Anna to get Tea");
+                }
+                else
+                {
+                    hm.InputNewWords("Max looks like he has something on his mind.", "Get some tea from the Tea Box");
+                }
+            }
+            else if (stateName == "MaxSawOutside")
+            {
+                if (isMax())
+                {
+                    StartCoroutine(om2.pourWater(false));
+                    hm.InputNewWords("If you can’t even have tea, what are you supposed to do?", "Thank Anna for the 'tea' and drink it");
+                }
+                else
+                {
+                    hm.InputNewWords("Will home change after this?", "Drink the 'tea'");
+                }
+                om2.couldDrink = true;
+            }
+            else if (stateName == "TwoDrinkTea")
+            {
+                StartCoroutine(om2.blackOut());
+            }
+            else if (stateName == "AnnaSwipeGlass")
+            {
+                if(isMax())
+                    StartCoroutine(om2.swipeGlass());
+            }
+            else if (stateName == "MaxSwipeGlass")
+            {
+                if (isAnna())
+                    StartCoroutine(om2.swipeGlass());
             }
         }
     }
@@ -219,8 +263,8 @@ public class ClientStateController : MonoBehaviour
     public void Chapter0Ended()
     {
         loadingPanel.SetActive(true);
-        chapNum = 1;
-        gm.SwitchScene("Chapter1");
+        chapNum = 2;
+        gm.SwitchScene("Chapter2");
     }
 
     //Chapter 1
@@ -364,32 +408,69 @@ public class ClientStateController : MonoBehaviour
     //Chapter 2
     public void HouseArrived()
     {
+#if SHOW_HM
 #if OFFLINE_MODE
-        if (isAnna())
-        {
-            hm.InputNewWords("That was scary. Make a cup of tea for max", "Touch the teabox and kettle");
-        }
-        else if (isMax())
-        {
-            hm.InputNewWords("That was scary. See if Annaliese is ok.", "Talk with Annaliese");
-        }
-        StartCoroutine(houseArriveOffline());
+        SetState("BothArriveHouse");
 #else
-        hm.InputNewWords("After all the mess on the street, you arrived your house", "");
+        hm.InputNewWords("The door can’t block all of the yelling, but you should be safe here.", "");
         if (isAnna())
         {
-            client.ClientSendMessage("AnnaArrivesHouse");
+            client.ClientSendMessage("AnnaGetBackHome");
         }else if (isMax())
         {
-            client.ClientSendMessage("MaxArrivesHouse");
+            client.ClientSendMessage("MaxGetBackHouse");
         }
+#endif
 #endif
     }
 
-    private IEnumerator houseArriveOffline()
+
+    public void teaboxOpened()
     {
-        yield return new WaitForSeconds(3);
-        SetState("BothArriveHouse");
+#if OFFLINE_MODE
+        SetState("AnnaOpenTeabox");
+#else
+        client.ClientSendMessage("AnnaOpenTeabox");
+#endif
     }
 
+    public void waterPoured()
+    {
+#if OFFLINE_MODE
+        SetState("AnnaPourWater");
+#else
+        client.ClientSendMessage("AnnaPourWater");
+#endif
+    }
+
+    public void MaxSawOutside()
+    {
+#if OFFLINE_MODE
+        SetState("MaxSawOutside");
+#else
+        client.ClientSendMessage("MaxSawOutside");
+#endif
+    }
+
+    public void OneDrinkTea()
+    {
+#if OFFLINE_MODE
+        SetState("TwoDrinkTea");
+#else
+        client.ClientSendMessage("OneDrinkTea");
+#endif
+    }
+
+    public void SwipeGlass()
+    {
+#if OFFLINE_MODE
+        SetState("TwoDrinkTea");
+#else
+        if(isAnna())
+            client.ClientSendMessage("AnnaSwipeGlass");
+        else
+            client.ClientSendMessage("MaxSwipeGlass");
+#endif
+
+    }
 }

@@ -9,28 +9,39 @@ public class ObjectManager2 : MonoBehaviour
 {
     public PostProcessProfile normalProfile;
     public PostProcessVolume volumn;
+    public Material transitionMaterial;
     private HintManager hm;
     private Chapter2Controller c2c;
+    private ClientStateController csc;
     //public GameObject effectCamera;
     [Header("Summer")]
+    public GameObject flowershop;
     public GameObject flare;
     public GameObject vLight1;
     public GameObject vLight2;
     public GameObject weddingPhoto;
+    public GameObject weddingPhotoPos;
     public Transform flarePos1, flarePos2;
     public PostProcessProfile summerProfile;
     private float srcVLight1Intensity, srcVLight2Intensity;
     private float srcVLight1Range, srcVLight2Range;
 
     [Header("Autumn")]
+    public GameObject house;
+    public GameObject houseEnv;
     public PostProcessProfile autumnProfile;
     public GameObject leaves;
     public GameObject movingPhoto;
+    private Vector3 movingPhotoOriginalPos;
+    private Quaternion movingPhotoOriginalRot;
+    public GameObject movingPhotoPos;
 
     [Header("Winter")]
+    public GameObject park;
     public PostProcessProfile winterProfile;
     public GameObject snow;
     public GameObject playingPhoto;
+    public GameObject playingPhotoPos;
     public FrostEffect fe;
 
     [Header("Panels")]
@@ -48,6 +59,8 @@ public class ObjectManager2 : MonoBehaviour
     public AudioSource crowdScreamingAS;
 
     [Header("Max's House")]
+    public GameObject ruinedRose;
+    public Transform ruinedRosePos;
     public GameObject beforeScene;
     public GameObject afterScene;
     public GameObject blackPanel;
@@ -56,31 +69,51 @@ public class ObjectManager2 : MonoBehaviour
     public GameObject kettleOnScreen;
     //public GameObject wholeGlass;
     //public GameObject shatteredGlass;
-    public GameObject cup;
-    public Transform pourKettle;
+    public List<GameObject> cups;
+    public List<Transform> kettlePoses;
     private bool teaboxTouched = false;
     private bool kettleTouched = false;
+    private bool teaboxCouldBeTouched = false;
     private bool cupTouched = false;
     private Vector3 originalLocalPostion;
     private Quaternion originalLocalRotation;
     public AudioSource glassShutteredAS;
     public AudioSource messSoundAS;
     private bool glassSwiped = false;
-    public GameObject glassPiece1;
-    public GameObject glassPiece1_target;
-    public GameObject glassPiece2;
-    public GameObject glassPiece2_target;
+    public List<GameObject> glassPiece;
+    public List<GameObject> glassPiece_target;
+    private int piecesCount = 0;
     public GameObject glassCollider;
     public GameObject endPanel;
+    public bool couldDrink = false;
+
+    private List<string> annaWords = new List<string>
+    {
+        "Is Max alright?",
+        "Why they are trying to destroy your life?",
+        "They won’t even let you drink hot water."
+    };
+
+    private List<string> maxWords = new List<string>
+    {
+        "Why are they ruining your home? Is Anna still ok?",
+        "Why do they hate you two so much?",
+        "What did you do wrong?"
+    };
 
     // Start is called before the first frame update
     public void Start()
     {
         volumn.profile = normalProfile;
 
-        hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
+#if SHOW_HM
+        hm.InputNewWords("", "");
+        hm.InputNewWords("A few years later and one thing lead to another…", "Go to the flowershop");
+#endif
         c2c = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<Chapter2Controller>();
-        hm.InputNewWords("", "Go to the flowershop");
+
+        csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
+
 
         //summer
         flare.SetActive(false);
@@ -96,6 +129,8 @@ public class ObjectManager2 : MonoBehaviour
         //autumn
         leaves.SetActive(false);
         movingPhoto.SetActive(false);
+        movingPhotoOriginalPos = movingPhoto.transform.localPosition;
+        movingPhotoOriginalRot = movingPhoto.transform.localRotation;
 
         //winter
         snow.SetActive(false);
@@ -126,7 +161,10 @@ public class ObjectManager2 : MonoBehaviour
 
     public IEnumerator ChangeToSummer()
     {
+#if SHOW_HM
         hm.InputNewWords("", "");
+#endif
+        StartCoroutine(showGradually(flowershop));
         flowershopPanel.SetActive(false);
         flare.SetActive(true);
         vLight1.SetActive(true);
@@ -145,6 +183,10 @@ public class ObjectManager2 : MonoBehaviour
         DOTween.To(() => vLight1.GetComponent<Light>().range, x => vLight1.GetComponent<Light>().range = x, srcVLight1Range, 2);
         DOTween.To(() => vLight2.GetComponent<Light>().range, x => vLight2.GetComponent<Light>().range = x, srcVLight2Range, 2);
 
+        weddingPhoto.SetActive(true);
+        weddingPhoto.transform.DOLocalMove(weddingPhotoPos.transform.localPosition, 5);
+        weddingPhoto.transform.DOLocalRotate(weddingPhotoPos.transform.localEulerAngles, 5);
+
         yield return new WaitForSeconds(4);
 
         DOTween.To(() => vLight1.GetComponent<Light>().intensity, x => vLight1.GetComponent<Light>().intensity = x, 0, 1);
@@ -154,58 +196,87 @@ public class ObjectManager2 : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
+        weddingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
+
         flare.SetActive(false);
         vLight1.SetActive(false);
         vLight2.SetActive(false);
 
         volumn.profile = normalProfile;
 
-        weddingPhoto.SetActive(true);
-        Color curColor = weddingPhoto.GetComponent<Renderer>().material.color;
-        weddingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
-        curColor.a = 1;
-        weddingPhoto.GetComponent<Renderer>().material.DOColor(curColor, 4);
+
+        //Color curColor = weddingPhoto.GetComponent<Renderer>().material.color;
+        //weddingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
+        //curColor.a = 1;
+        //weddingPhoto.GetComponent<Renderer>().material.DOColor(curColor, 4);
         //weddingPhoto.transform.DOLocalJump(weddingPhoto.transform.localPosition + new Vector3(0, 0.1f, 0), 0.2f, 5, 5);
 
         yield return new WaitForSeconds(8);
         weddingPhoto.SetActive(false);
-
-        hm.InputNewWords("", "Go to Max's house");
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("Your apartment never had fresh flowers before she moved in", "Go to Max's Apartment");
+        else if (c2c.isAnna())
+            hm.InputNewWords("Over time, his apartment became our apartment", "Go to Max's Apartment");
+#endif
         housePanel.SetActive(true);
     }
 
     public IEnumerator ChangeToAutumn()
     {
+        StartCoroutine(showGradually(house));
+
         housePanel.SetActive(false);
+#if SHOW_HM
         hm.InputNewWords("", "");
+#endif
         leaves.SetActive(true);
         leaves.GetComponent<ParticleSystem>().Play();
 
         volumn.profile = autumnProfile;
 
+        movingPhoto.SetActive(true);
+        movingPhoto.transform.DOLocalMove(movingPhotoPos.transform.localPosition, 5);
+        movingPhoto.transform.DOLocalRotate(movingPhotoPos.transform.localEulerAngles, 5);
+
         yield return new WaitForSeconds(5);
+
+        movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
+        yield return new WaitForSeconds(1);
+        movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 2);
 
         //leaves.SetActive(false);
         leaves.GetComponent<ParticleSystem>().Stop();
         volumn.profile = normalProfile;
-        movingPhoto.SetActive(true);
-        Color curColor = movingPhoto.GetComponent<Renderer>().material.color;
-        movingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
-        curColor.a = 1;
-        movingPhoto.GetComponent<Renderer>().material.DOColor(curColor, 4);
+        //movingPhoto.SetActive(true);
+        //Color curColor = movingPhoto.GetComponent<Renderer>().material.color;
+        //movingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
+        //curColor.a = 1;
+        //movingPhoto.GetComponent<Renderer>().material.DOColor(curColor, 4);
 
         yield return new WaitForSeconds(8);
         movingPhoto.SetActive(false);
         leaves.SetActive(false);
+        houseEnv.SetActive(false);
 
-        hm.InputNewWords("", "Go to the park");
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("You looked for Anna’s face whenever you played in the park", "Go to The Park");
+        else if (c2c.isAnna())
+            hm.InputNewWords("Selling flowers was always a great excuse to go see him play", "Go to The Park");
+#endif
         parkPanel.SetActive(true);
     }
 
     public IEnumerator ChangeToWinter()
     {
+        StartCoroutine(showGradually(park));
+
+        playingPhoto.SetActive(true);
+        playingPhoto.transform.DOLocalMove(playingPhotoPos.transform.localPosition, 5);
+        playingPhoto.transform.DOLocalRotate(playingPhotoPos.transform.localEulerAngles, 5);
         parkPanel.SetActive(false);
-        hm.InputNewWords("", "");
+        //hm.InputNewWords("", "");
         snow.SetActive(true);
         snow.GetComponent<ParticleSystem>().Play();
         volumn.profile = winterProfile;
@@ -220,22 +291,28 @@ public class ObjectManager2 : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
+        playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
+        yield return new WaitForSeconds(1);
+        playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 2);
+        yield return new WaitForSeconds(1);
+        playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
+
         fe.enabled = false;
         volumn.profile = normalProfile;
         snow.GetComponent<ParticleSystem>().Stop();
 
-        playingPhoto.SetActive(true);
-        Color curColor = playingPhoto.GetComponent<Renderer>().material.color;
-        playingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
-        curColor.a = 1;
-        playingPhoto.GetComponent<Renderer>().material.DOColor(curColor, 4);
+        //playingPhoto.SetActive(true);
+        //Color curColor = playingPhoto.GetComponent<Renderer>().material.color;
+        //playingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
+        //curColor.a = 1;
+        //playingPhoto.GetComponent<Renderer>().material.DOColor(curColor, 4);
 
         yield return new WaitForSeconds(8);
         playingPhoto.SetActive(false);
         snow.SetActive(false);
 
         chapter2Panel.SetActive(true);
-        curColor = chapter2Panel.GetComponent<Image>().color;
+        Color curColor = chapter2Panel.GetComponent<Image>().color;
         curColor.a = 0;
         chapter2Panel.GetComponent<Image>().color = curColor;
         curColor.a = 1;
@@ -246,7 +323,12 @@ public class ObjectManager2 : MonoBehaviour
         yield return new WaitForSeconds(1);
         chapter2Panel.SetActive(false);
 
-        hm.InputNewWords("You heard shouting in the distance", "Go back home");
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("You hear shouting and glass shattering. It isn’t safe here", "Get Anna home");
+        else if (c2c.isAnna())
+            hm.InputNewWords("Something is wrong", "Go back home");
+#endif
         //flowershopPanel.SetActive(true);
         c2c.GenerateCrowds();
     }
@@ -273,6 +355,34 @@ public class ObjectManager2 : MonoBehaviour
         crowdScreamingAS.Play();
     }
 
+    public void ShowOutside()
+    {
+        Color curColor = crowdPanel.GetComponent<Image>().color;
+        curColor.a = 1;
+        crowdPanel.GetComponent<Image>().color = curColor;
+        crowdPanel.SetActive(true);
+
+        curColor = effectPanel1.GetComponent<Image>().color;
+        curColor.a = 1;
+        effectPanel1.GetComponent<Image>().color = curColor;
+        effectPanel1.GetComponent<Image>().sprite = effects[2];
+        effectPanel1.SetActive(true);
+
+        crowdScreamingAS.volume = 1;
+        crowdScreamingAS.Play();
+
+        houseEnv.SetActive(false);
+        beforeScene.SetActive(false);
+
+        hm.InputNewWords("People watch you in your doorway. It is definitely not safe to go outside", "Head back to the Apartment");
+    }
+
+    public void HideOutside()
+    {
+        destroyCrowd();
+        escapeInHouse();
+    }
+
     public void updateCrowd(float proportion)
     {
         Color curColor = crowdPanel.GetComponent<Image>().color;
@@ -289,7 +399,7 @@ public class ObjectManager2 : MonoBehaviour
             curColor.a = 0;
             effectPanel2.GetComponent<Image>().color = curColor;
             effectPanel2.GetComponent<Image>().sprite = effects[0];
-        }else if(proportion >= 0.7)
+        } else if (proportion >= 0.7)
         {
             float scaledProportion = (proportion - 0.7f) / 0.3f;
             curColor = effectPanel1.GetComponent<Image>().color;
@@ -323,21 +433,43 @@ public class ObjectManager2 : MonoBehaviour
         crowdScreamingAS.Stop();
     }
 
-    public void observeTeabox()
+    public void escapeInHouse()
     {
+        houseEnv.SetActive(true);
+        beforeScene.SetActive(true);
+        StartCoroutine(showGradually(houseEnv));
+        StartCoroutine(showGradually(beforeScene));
+    }
+
+    public void observeTeabox(bool fromServer = false)
+    {
+        if (!teaboxCouldBeTouched) return;
+        if (teaboxTouched) return;
+        if (c2c.isMax() && !fromServer) return;
         if (!teaboxTouched)
         {
             teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
         }
         teaboxTouched = true;
-        if (kettleTouched)
-            hm.InputNewWords("The teabox is empty. We only have hot water tonight.", "");
-        else
-            hm.InputNewWords("The teabox is empty. Just pour some hot water in...", "Touch the kettle");
+        //if (kettleTouched)
+        //    hm.InputNewWords("The teabox is empty. We only have hot water tonight.", "");
+        //else
+        //    hm.InputNewWords("The teabox is empty. Just pour some hot water in...", "Touch the kettle");
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("There’s no tea, but there might be some outside. Will they take this away from you too?", "Tell Annaliese you’re going out.");
+        else if (c2c.isAnna())
+            hm.InputNewWords("There’s no tea, but there might be some at the store", "Ask Max if he could get some outside");
+#endif
+        if (c2c.isAnna())
+        {
+            csc.teaboxOpened();
+        }
     }
 
     public GameObject observeKettle()
     {
+        if (c2c.isMax()) return null;
         if (kettleTouched)
         {
             hm.InputNewWords("", "The kettle is empty");
@@ -346,30 +478,27 @@ public class ObjectManager2 : MonoBehaviour
         kettleOnScreen.SetActive(true);
         kettleOnTable.SetActive(false);
         kettleTouched = true;
-        hm.InputNewWords("", "Pour the water into the cup");
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("Were things always this bad? How will you keep Anna safe?", "Pour the water into the cup");
+        else if (c2c.isAnna())
+            hm.InputNewWords("Max looks like he has something on his mind.", "Pour the water into cups");
+#endif
         return kettleOnScreen;
     }
 
-    int i = 0;
     public void testPourWater()
     {
-        if (i == 0)
-            observeTeabox();
-        else if (i == 1)
-            observeKettle();
-        else if (i == 2)
-            StartCoroutine(pourWater());
-        else if (i == 3)
-            StartCoroutine(blackOut());
-        else if (i == 4)
-            StartCoroutine(swipeGlass());
-        i++;
+        StartCoroutine(swipeGlass());
     }
 
     public IEnumerator pourWater(bool fromscreen = true)
     {
-        cup.GetComponent<BoxCollider>().enabled = false;
-        cup.GetComponent<MeshCollider>().enabled = true;
+#if SHOW_HM
+        hm.InputNewWords("", "");
+#endif
+        //cup.GetComponent<BoxCollider>().enabled = false;
+        //cup.GetComponent<MeshCollider>().enabled = true;
 
         originalLocalPostion = kettleOnTable.transform.localPosition;
         originalLocalRotation = kettleOnTable.transform.localRotation;
@@ -382,99 +511,207 @@ public class ObjectManager2 : MonoBehaviour
         kettleOnTable.GetComponent<BoxCollider>().enabled = false;
         kettleOnTable.SetActive(true);
 
-        //fly in the air and pour water
-        kettleOnTable.transform.DOLocalMove(pourKettle.localPosition, 2);
-        kettleOnTable.transform.DOLocalRotateQuaternion(pourKettle.localRotation, 2);
+        for (int i = 0; i < cups.Count; i++)
+        {
+            //fly in the air and pour water
+            kettleOnTable.transform.DOLocalMove(kettlePoses[i].localPosition, 2);
+            kettleOnTable.transform.DOLocalRotateQuaternion(kettlePoses[i].localRotation, 2);
 
-        yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(2);
 
-        Vector3 oldRot = pourKettle.localEulerAngles;
-        Vector3 newRot = pourKettle.localEulerAngles + new Vector3(0, -60, 0);
-        kettleOnTable.transform.DOLocalRotate(newRot, 2);
+            Vector3 oldRot = kettlePoses[i].localEulerAngles;
+            Vector3 newRot = kettlePoses[i].localEulerAngles + new Vector3(0, -60, 0);
+            kettleOnTable.transform.DOLocalRotate(newRot, 2);
 
-        yield return new WaitForSeconds(3);
-        kettleOnTable.transform.DOLocalRotate(oldRot, 0.5f);
-        cup.transform.GetChild(0).gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(3);
+            kettleOnTable.transform.DOLocalRotate(oldRot, 0.5f);
+            cups[i].transform.GetChild(0).gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+        }
         //move back
         kettleOnTable.transform.DOLocalMove(originalLocalPostion, 2);
         kettleOnTable.transform.DOLocalRotateQuaternion(originalLocalRotation, 2);
         yield return new WaitForSeconds(2);
         kettleOnTable.GetComponent<BoxCollider>().enabled = true;
 
-        cup.GetComponent<BoxCollider>().enabled = true;
-        cup.GetComponent<MeshCollider>().enabled = false;
+        //cup.GetComponent<BoxCollider>().enabled = true;
+        //cup.GetComponent<MeshCollider>().enabled = false;
 
         cupTouched = true;
+
+        if (c2c.isAnna())
+        {
+            csc.waterPoured();
+        }
+        teaboxCouldBeTouched = true;
+    }
+
+
+    public void drinkTea()
+    {
+        if (!couldDrink) return;
+        cups[0].GetComponent<BoxCollider>().enabled = false;
+        cups[1].GetComponent<BoxCollider>().enabled = false;
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("How’s the 'Tea'? Things may be imperfect but could you do it alone?", "Tell Anna what’s on your mind");
+        else
+            hm.InputNewWords("Was Max brave for trying to go out? Is this still 'tea time' for you?", "Tell Max what he needs to hear");
+#endif
+        csc.OneDrinkTea();
     }
 
     public IEnumerator blackOut()
     {
-        if (!cupTouched)
-        {
-            hm.InputNewWords("Teacup is empty. Pour some water into it", "");
-            yield return null;
-        }
-        else
-        {
+        yield return new WaitForSeconds(10);
 
-            cup.GetComponent<BoxCollider>().enabled = false;
-
-            hm.InputNewWords("You only have hot water now. But you two are together", "Tell each other what you are thinking");
-
-            yield return new WaitForSeconds(10);
-
-            hm.InputNewWords("", "");
-            //Debug.Log(2);
-            afterScene.SetActive(true);
-            blackPanel.SetActive(true);
-            //Debug.Log(3);
-            crowdPanel.SetActive(true);
-            c2c.crowdBgAS.volume = 1;
-            crowdScreamingAS.volume = 1;
-            crowdScreamingAS.Play();
-            glassShutteredAS.volume = 1;
-            glassShutteredAS.Play();
-            messSoundAS.volume = 1;
-            messSoundAS.Play();
-            //Debug.Log(4);
-            yield return new WaitForSeconds(8);
-            //Debug.Log(5);
-            DOTween.To(() => c2c.crowdBgAS.volume, x => c2c.crowdBgAS.volume = x, 0f, 3);
-            DOTween.To(() => crowdScreamingAS.volume, x => crowdScreamingAS.volume = x, 0f, 3);
-            DOTween.To(() => messSoundAS.volume, x => messSoundAS.volume = x, 0f, 3);
-            //Debug.Log(6);
-            yield return new WaitForSeconds(5);
-            beforeScene.SetActive(false);
-            crowdPanel.SetActive(false);
-            blackPanel.SetActive(false);
-            //Debug.Log(7);
-            hm.InputNewWords("The rose is in ruins.", "Clean the glass and save the rose");
-        }
+        hm.InputNewWords("", "");
+        //Debug.Log(2);
+        afterScene.SetActive(true);
+        blackPanel.SetActive(true);
+        //Debug.Log(3);
+        crowdPanel.SetActive(true);
+        c2c.crowdBgAS.volume = 1;
+        crowdScreamingAS.volume = 1;
+        crowdScreamingAS.Play();
+        glassShutteredAS.volume = 1;
+        glassShutteredAS.Play();
+        messSoundAS.volume = 1;
+        messSoundAS.Play();
+        //Debug.Log(4);
+        yield return new WaitForSeconds(8);
+        //Debug.Log(5);
+        DOTween.To(() => c2c.crowdBgAS.volume, x => c2c.crowdBgAS.volume = x, 0f, 3);
+        DOTween.To(() => crowdScreamingAS.volume, x => crowdScreamingAS.volume = x, 0f, 3);
+        DOTween.To(() => messSoundAS.volume, x => messSoundAS.volume = x, 0f, 3);
+        //Debug.Log(6);
+        yield return new WaitForSeconds(5);
+        beforeScene.SetActive(false);
+        crowdPanel.SetActive(false);
+        blackPanel.SetActive(false);
+        //Debug.Log(7);
+        hm.InputNewWords("So it’s come to this.", "Clean up the glass");
     }
 
     public IEnumerator swipeGlass()
     {
-        if (glassSwiped)
+        glassCollider.GetComponent<BoxCollider>().enabled = false;
+        if (piecesCount < glassPiece.Count)
         {
-            endPanel.SetActive(true);
-            yield return null;
+            glassPiece[piecesCount].transform.DOLocalMove(glassPiece_target[piecesCount].transform.localPosition, 1);
+            glassPiece[piecesCount].transform.DOLocalRotateQuaternion(glassPiece_target[piecesCount].transform.localRotation, 1);
+            yield return new WaitForSeconds(1);
+            piecesCount++;
+#if SHOW_HM
+            if (c2c.isAnna())
+            {
+                if (piecesCount == glassPiece.Count)
+                    hm.InputNewWords("The rose looks pretty damaged", "Pick up the rose");
+                else
+                    hm.InputNewWords(annaWords[piecesCount], "");
+            }
+            else
+            {
+                if (piecesCount == glassPiece.Count)
+                    hm.InputNewWords("The rose looks pretty damaged", "");
+                else
+                    hm.InputNewWords(maxWords[piecesCount], "");
+
+            }
+#endif
+
         }
+
         else
         {
+            if(c2c.isAnna())
+                hm.InputNewWords("You should be able to press it", "Place the rose in your album.");
+            else
+                hm.InputNewWords("Anna should be able to press it", "");
 
-            glassCollider.GetComponent<BoxCollider>().enabled = false;
+            movingPhoto.SetActive(true);
+            movingPhoto.transform.localPosition = movingPhotoOriginalPos;
+            movingPhoto.transform.localRotation = movingPhotoOriginalRot;
 
-            glassPiece1.transform.DOLocalMove(glassPiece1_target.transform.localPosition, 2);
-            glassPiece1.transform.DOLocalRotateQuaternion(glassPiece1_target.transform.localRotation, 2);
-            glassPiece2.transform.DOLocalMove(glassPiece2_target.transform.localPosition, 2);
-            glassPiece2.transform.DOLocalRotateQuaternion(glassPiece2_target.transform.localRotation, 2);
+            showGradually(movingPhoto);
+            //yield return new WaitForSeconds(2);
+
+            Vector3 curScale = ruinedRosePos.localScale;
+            curScale.y = 0.1f;
+
+
+            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
+            yield return new WaitForSeconds(1);
+            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 2);
+            yield return new WaitForSeconds(1);
+            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
+            yield return new WaitForSeconds(1);
+
+
+
+            ruinedRose.transform.DOLocalMove(ruinedRosePos.localPosition, 1);
+            ruinedRose.transform.DOLocalRotateQuaternion(ruinedRosePos.localRotation, 1);
+            ruinedRose.transform.DOScale(curScale, 2);
+            yield return new WaitForSeconds(1);
+
+            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 4);
+            yield return new WaitForSeconds(1);
+            ruinedRose.SetActive(false);
+            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 5);
+            yield return new WaitForSeconds(1);
+            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 6);
             yield return new WaitForSeconds(2);
+            endPanel.SetActive(true);
+        }
 
-            glassSwiped = true;
-            glassCollider.GetComponent<BoxCollider>().enabled = true;
+        glassCollider.GetComponent<BoxCollider>().enabled = true;
+    }
 
-            hm.InputNewWords("", "Pick up the rose");
+    public IEnumerator showGradually(GameObject parent)
+    {
+        Renderer[] rendererd = parent.GetComponentsInChildren<Renderer>();
+        List<Material> materials = new List<Material>();
+        foreach(Renderer r in rendererd)
+        {
+            Material m = Instantiate(transitionMaterial);
+            m.SetTexture("_MainTex", r.material.GetTexture("_MainTex"));
+            materials.Add(r.material);
+            r.material = m;
+
+            m.DOFloat(1, "_Alpha", 2);
+        }
+
+        yield return new WaitForSeconds(2);
+
+        int count = 0;
+        foreach (Renderer r in rendererd)
+        {
+            r.material = materials[count];
+            count++;
+        }
+    }
+
+    public IEnumerator showGradually_SkinMesh(GameObject parent)
+    {
+        SkinnedMeshRenderer[] rendererd = parent.GetComponentsInChildren<SkinnedMeshRenderer>();
+        List<Material> materials = new List<Material>();
+        foreach (SkinnedMeshRenderer r in rendererd)
+        {
+            Material m = Instantiate(transitionMaterial);
+            m.SetTexture("_MainTex", r.material.GetTexture("_MainTex"));
+            materials.Add(r.material);
+            r.material = m;
+
+            m.DOFloat(1, "_Alpha", 2);
+        }
+
+        yield return new WaitForSeconds(2);
+
+        int count = 0;
+        foreach (SkinnedMeshRenderer r in rendererd)
+        {
+            r.material = materials[count];
+            count++;
         }
     }
 }

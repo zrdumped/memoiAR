@@ -11,8 +11,10 @@ public class ServerStateController : MonoBehaviour
         server = this.GetComponent<TCPTestServer>();
     }
     private int state = 0;
+    private int chap = 1;
 
     private int roseNum = 0;
+    private int glassNum = 0;
 
     private bool maxIsWaiting = false;
     private bool annaIsWaiting = false;
@@ -84,69 +86,125 @@ public class ServerStateController : MonoBehaviour
     //Chapter 1 Version 2
     public void SetState(string stateName)
     {
-        Debug.Log(stateName + " " + state);
-        if (state < 2 && stateName == "AnnaFlowerShopReached")
+        if(stateName == "ToChapter2")
         {
-            state++;
-            if (state == 2)
-                server.Broadcast("StartTutorial");
+            chap = 2;
+            state = 0;
         }
-        else if (state < 2 && stateName == "MaxHouseReached")
+        if (chap == 1)
         {
-            state++;
-            if(state == 2)
-                server.Broadcast("StartTutorial");
-        }
-
-        else if(state == 2 && stateName == "MusicComposed")
-        {
-            state++;
-            server.Broadcast("GoToPark");
-        }
-        
-        //max reaches first
-        else if(state == 3 && stateName == "MaxParkReached")
-        {
-            state++;
-            server.Broadcast("MakeMaxWait");
-            maxIsWaiting = true;
-        }
-        //anna reaches later
-        else if (state == 3 && stateName == "AnnaParkReached")
-        {
-            state++;
-            server.Broadcast("MakeAnnaWait");
-            annaIsWaiting = true;
-        }
-        else if (state == 4 && ((stateName == "MaxParkReached"&& annaIsWaiting) || (stateName == "AnnaParkReached" && maxIsWaiting)))
-        {
-            annaIsWaiting = false;
-            maxIsWaiting = false;
-            state++;
-            server.Broadcast("PickUpFlower");
-        }
-        else if(state == 5 && stateName.Contains("PickedUpFlower"))
-        {
-            roseNum++;
-            if(roseNum == 10)
+            Debug.Log(stateName + " " + state);
+            if (state < 2 && stateName == "AnnaFlowerShopReached")
             {
                 state++;
-                server.Broadcast(stateName[stateName.Length - 1] + "GiveFlower");
+                if (state == 2)
+                    server.Broadcast("StartTutorial");
             }
-            else
+            else if (state < 2 && stateName == "MaxHouseReached")
             {
-                server.Broadcast(stateName[stateName.Length - 1] + "FlowerPicked");
+                state++;
+                if (state == 2)
+                    server.Broadcast("StartTutorial");
             }
-        }
-        else if(state == 6 && stateName == "FlowerGiven")
+
+            else if (state == 2 && stateName == "MusicComposed")
+            {
+                state++;
+                server.Broadcast("GoToPark");
+            }
+
+            //max reaches first
+            else if (state == 3 && stateName == "MaxParkReached")
+            {
+                state++;
+                server.Broadcast("MakeMaxWait");
+                maxIsWaiting = true;
+            }
+            //anna reaches later
+            else if (state == 3 && stateName == "AnnaParkReached")
+            {
+                state++;
+                server.Broadcast("MakeAnnaWait");
+                annaIsWaiting = true;
+            }
+            else if (state == 4 && ((stateName == "MaxParkReached" && annaIsWaiting) || (stateName == "AnnaParkReached" && maxIsWaiting)))
+            {
+                annaIsWaiting = false;
+                maxIsWaiting = false;
+                state++;
+                server.Broadcast("PickUpFlower");
+            }
+            else if (state == 5 && stateName.Contains("PickedUpFlower"))
+            {
+                roseNum++;
+                if (roseNum == 10)
+                {
+                    state++;
+                    server.Broadcast(stateName[stateName.Length - 1] + "GiveFlower");
+                }
+                else
+                {
+                    server.Broadcast(stateName[stateName.Length - 1] + "FlowerPicked");
+                }
+            }
+            else if (state == 6 && stateName == "FlowerGiven")
+            {
+                state++;
+                server.Broadcast("FlowerGiven");
+            }
+            else if (state == 7 && stateName == "EndChapter1")
+            {
+                state++;
+                server.Broadcast("EndChapter1");
+            }
+        }else if(chap == 2)
         {
-            state++;
-            server.Broadcast("FlowerGiven");
-        }
-        else if (state == 7 && stateName == "EndChapter1")
-        {
-            state++;
-            server.Broadcast("EndChapter1");
+            if(state < 2 && stateName == "MaxGetBackHouse")
+            {
+                state++;
+                if(state == 2)
+                    server.Broadcast("BothArriveHouse");
+            }else if(state < 2 && stateName == "AnnaGetBackHome")
+            {
+                state++;
+                if (state == 2)
+                    server.Broadcast("BothArriveHouse");
+            }
+            else if (state == 3 && stateName == "AnnaPourWater")
+            {
+                state++;
+                server.Broadcast("AnnaPourWater");
+            }
+            else if (state == 4 && stateName == "AnnaOpenTeabox")
+            {
+                state++;
+                server.Broadcast("AnnaOpenTeabox");
+            }else if(state == 5 && stateName == "MaxSawOutside")
+            {
+                state++;
+                server.Broadcast("MaxSawOutside");
+            }
+            else if(state == 6 && stateName == "OneDrinkTea")
+            {
+                state ++;
+            }
+            else if(state == 7 && stateName == "OneDrinkTea")
+            {
+                state++;
+                server.Broadcast("TwoDrinkTea");
+            }
+            else if (state == 8 && stateName == "SwipeGlass")
+            {
+                glassNum++;
+                if (glassNum == 3)
+                {
+                    state++;
+                }
+                else
+                {
+                    server.Broadcast("SwipeGlass");
+                }
+            }
         }
     }
 
