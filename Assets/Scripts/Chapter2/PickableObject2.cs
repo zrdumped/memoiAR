@@ -47,7 +47,7 @@ public class PickableObject2 : MonoBehaviour
         }else if (type == ObjectType.Cup && hand.holdingObj == null)
         {
             //Debug.Log(1);
-            StartCoroutine(om2.blackOut());
+            om2.drinkTea();
         }
         else if (type == ObjectType.Pieces)
         {

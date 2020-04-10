@@ -211,7 +211,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &243953073
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2109,7 +2109,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 192.168.0.27
+  m_Text: 192.168.0.35
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2634,6 +2634,11 @@ PrefabInstance:
     - target: {fileID: 4993504657716916577, guid: 71cc3cd3e0125b641b9345da2832a914,
         type: 3}
       propertyPath: m_Text
+      value: 192.168.0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993504657870703512, guid: 71cc3cd3e0125b641b9345da2832a914,
+        type: 3}
+      propertyPath: m_Text
       value: 192.168.0.27
       objectReference: {fileID: 0}
     - target: {fileID: 4993504659057443616, guid: 71cc3cd3e0125b641b9345da2832a914,
@@ -3069,7 +3074,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 192.168.0.27
+  m_Text: 192.168.0.35
 --- !u!222 &2092129003
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -91,7 +91,7 @@ public class ObjectManager2 : MonoBehaviour
     {
         "Is Max alright?",
         "Why they are trying to destroy your life?",
-        "They won’t even let you drink hot water."
+        "They won't even let you drink hot water."
     };
 
     private List<string> maxWords = new List<string>
@@ -107,8 +107,9 @@ public class ObjectManager2 : MonoBehaviour
         volumn.profile = normalProfile;
 
 #if SHOW_HM
-        hm.InputNewWords("", "");
-        hm.InputNewWords("A few years later and one thing lead to another…", "Go to the flowershop");
+        hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
+        //hm.InputNewWords("", "");
+        hm.InputNewWords("A few years later and one thing lead to another...", "Go to the flowershop");
 #endif
         c2c = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<Chapter2Controller>();
 
@@ -161,9 +162,6 @@ public class ObjectManager2 : MonoBehaviour
 
     public IEnumerator ChangeToSummer()
     {
-#if SHOW_HM
-        hm.InputNewWords("", "");
-#endif
         StartCoroutine(showGradually(flowershop));
         flowershopPanel.SetActive(false);
         flare.SetActive(true);
@@ -227,9 +225,6 @@ public class ObjectManager2 : MonoBehaviour
         StartCoroutine(showGradually(house));
 
         housePanel.SetActive(false);
-#if SHOW_HM
-        hm.InputNewWords("", "");
-#endif
         leaves.SetActive(true);
         leaves.GetComponent<ParticleSystem>().Play();
 
@@ -258,10 +253,11 @@ public class ObjectManager2 : MonoBehaviour
         movingPhoto.SetActive(false);
         leaves.SetActive(false);
         houseEnv.SetActive(false);
+        beforeScene.SetActive(false);
 
 #if SHOW_HM
         if (c2c.isMax())
-            hm.InputNewWords("You looked for Anna’s face whenever you played in the park", "Go to The Park");
+            hm.InputNewWords("You looked for Anna's face whenever you played in the park", "Go to The Park");
         else if (c2c.isAnna())
             hm.InputNewWords("Selling flowers was always a great excuse to go see him play", "Go to The Park");
 #endif
@@ -325,7 +321,7 @@ public class ObjectManager2 : MonoBehaviour
 
 #if SHOW_HM
         if (c2c.isMax())
-            hm.InputNewWords("You hear shouting and glass shattering. It isn’t safe here", "Get Anna home");
+            hm.InputNewWords("You hear shouting and glass shattering. It isn't safe here", "Get Anna home");
         else if (c2c.isAnna())
             hm.InputNewWords("Something is wrong", "Go back home");
 #endif
@@ -365,7 +361,7 @@ public class ObjectManager2 : MonoBehaviour
         curColor = effectPanel1.GetComponent<Image>().color;
         curColor.a = 1;
         effectPanel1.GetComponent<Image>().color = curColor;
-        effectPanel1.GetComponent<Image>().sprite = effects[2];
+        effectPanel1.GetComponent<Image>().sprite = effects[0];
         effectPanel1.SetActive(true);
 
         crowdScreamingAS.volume = 1;
@@ -446,10 +442,11 @@ public class ObjectManager2 : MonoBehaviour
         if (!teaboxCouldBeTouched) return;
         if (teaboxTouched) return;
         if (c2c.isMax() && !fromServer) return;
-        if (!teaboxTouched)
+        if (c2c.isAnna())
         {
-            teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
+            csc.teaboxOpened();
         }
+        teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
         teaboxTouched = true;
         //if (kettleTouched)
         //    hm.InputNewWords("The teabox is empty. We only have hot water tonight.", "");
@@ -457,14 +454,11 @@ public class ObjectManager2 : MonoBehaviour
         //    hm.InputNewWords("The teabox is empty. Just pour some hot water in...", "Touch the kettle");
 #if SHOW_HM
         if (c2c.isMax())
-            hm.InputNewWords("There’s no tea, but there might be some outside. Will they take this away from you too?", "Tell Annaliese you’re going out.");
+            hm.InputNewWords("There's no tea, but there might be some outside. Will they take this away from you too?", "Tell Annaliese you're going out.");
         else if (c2c.isAnna())
-            hm.InputNewWords("There’s no tea, but there might be some at the store", "Ask Max if he could get some outside");
+            hm.InputNewWords("There's no tea, but there might be some at the store", "Ask Max if he could get some outside");
 #endif
-        if (c2c.isAnna())
-        {
-            csc.teaboxOpened();
-        }
+        c2c.maxBuyTea();
     }
 
     public GameObject observeKettle()
@@ -490,14 +484,19 @@ public class ObjectManager2 : MonoBehaviour
     public void testPourWater()
     {
         StartCoroutine(swipeGlass());
+        //ShowOutside();
     }
 
     public IEnumerator pourWater(bool fromscreen = true)
     {
-#if SHOW_HM
-        hm.InputNewWords("", "");
-#endif
-        //cup.GetComponent<BoxCollider>().enabled = false;
+        if (c2c.isAnna())
+        {
+            csc.waterPoured();
+        }
+        cups[0].GetComponent<BoxCollider>().enabled = false;
+        cups[1].GetComponent<BoxCollider>().enabled = false;
+        cups[0].transform.GetChild(0).gameObject.SetActive(true);
+        cups[1].transform.GetChild(0).gameObject.SetActive(true);
         //cup.GetComponent<MeshCollider>().enabled = true;
 
         originalLocalPostion = kettleOnTable.transform.localPosition;
@@ -525,7 +524,7 @@ public class ObjectManager2 : MonoBehaviour
 
             yield return new WaitForSeconds(3);
             kettleOnTable.transform.DOLocalRotate(oldRot, 0.5f);
-            cups[i].transform.GetChild(0).gameObject.SetActive(true);
+            
             yield return new WaitForSeconds(0.5f);
         }
         //move back
@@ -534,15 +533,12 @@ public class ObjectManager2 : MonoBehaviour
         yield return new WaitForSeconds(2);
         kettleOnTable.GetComponent<BoxCollider>().enabled = true;
 
-        //cup.GetComponent<BoxCollider>().enabled = true;
+        cups[0].GetComponent<BoxCollider>().enabled = true;
+        cups[1].GetComponent<BoxCollider>().enabled = true;
         //cup.GetComponent<MeshCollider>().enabled = false;
 
         cupTouched = true;
 
-        if (c2c.isAnna())
-        {
-            csc.waterPoured();
-        }
         teaboxCouldBeTouched = true;
     }
 
@@ -554,7 +550,7 @@ public class ObjectManager2 : MonoBehaviour
         cups[1].GetComponent<BoxCollider>().enabled = false;
 #if SHOW_HM
         if (c2c.isMax())
-            hm.InputNewWords("How’s the 'Tea'? Things may be imperfect but could you do it alone?", "Tell Anna what’s on your mind");
+            hm.InputNewWords("How's the 'Tea'? Things may be imperfect but could you do it alone?", "Tell Anna what's on your mind");
         else
             hm.InputNewWords("Was Max brave for trying to go out? Is this still 'tea time' for you?", "Tell Max what he needs to hear");
 #endif
@@ -590,12 +586,13 @@ public class ObjectManager2 : MonoBehaviour
         crowdPanel.SetActive(false);
         blackPanel.SetActive(false);
         //Debug.Log(7);
-        hm.InputNewWords("So it’s come to this.", "Clean up the glass");
+        hm.InputNewWords("So it's come to this.", "Clean up the glass");
     }
 
     public IEnumerator swipeGlass()
     {
         glassCollider.GetComponent<BoxCollider>().enabled = false;
+        csc.SwipeGlass();
         if (piecesCount < glassPiece.Count)
         {
             glassPiece[piecesCount].transform.DOLocalMove(glassPiece_target[piecesCount].transform.localPosition, 1);
@@ -625,7 +622,7 @@ public class ObjectManager2 : MonoBehaviour
         else
         {
             if(c2c.isAnna())
-                hm.InputNewWords("You should be able to press it", "Place the rose in your album.");
+                hm.InputNewWords("You should be able to press it", "");
             else
                 hm.InputNewWords("Anna should be able to press it", "");
 
@@ -657,10 +654,10 @@ public class ObjectManager2 : MonoBehaviour
             movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 4);
             yield return new WaitForSeconds(1);
             ruinedRose.SetActive(false);
-            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 5);
-            yield return new WaitForSeconds(1);
-            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 6);
-            yield return new WaitForSeconds(2);
+            //movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 5);
+            //yield return new WaitForSeconds(1);
+            //movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 6);
+            yield return new WaitForSeconds(3);
             endPanel.SetActive(true);
         }
 

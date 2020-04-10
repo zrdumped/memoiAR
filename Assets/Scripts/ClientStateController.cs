@@ -197,7 +197,7 @@ public class ClientStateController : MonoBehaviour
                 om2.escapeInHouse();
                 if (isMax())
                 {
-                    hm.InputNewWords("Your heart won’t stop pounding but you need to see if Annaliese is ok.", "Talk with Annaliese");
+                    hm.InputNewWords("Your heart won't stop pounding but you need to see if Annaliese is ok.", "Talk with Annaliese");
                 }
                 else if (isAnna())
                 {
@@ -223,8 +223,7 @@ public class ClientStateController : MonoBehaviour
             {
                 if (isMax())
                 {
-                    StartCoroutine(om2.pourWater(false));
-                    hm.InputNewWords("If you can’t even have tea, what are you supposed to do?", "Thank Anna for the 'tea' and drink it");
+                    hm.InputNewWords("If you can't even have tea, what are you supposed to do?", "Thank Anna for the 'tea' and drink it");
                 }
                 else
                 {
@@ -412,13 +411,13 @@ public class ClientStateController : MonoBehaviour
 #if OFFLINE_MODE
         SetState("BothArriveHouse");
 #else
-        hm.InputNewWords("The door can’t block all of the yelling, but you should be safe here.", "");
+        hm.InputNewWords("The door can't block all of the yelling, but you should be safe here.", "");
         if (isAnna())
         {
-            client.ClientSendMessage("AnnaGetBackHome");
+            client.ClientSendMessage("!AnnaGetBackHome");
         }else if (isMax())
         {
-            client.ClientSendMessage("MaxGetBackHouse");
+            client.ClientSendMessage("!MaxGetBackHouse");
         }
 #endif
 #endif
@@ -430,7 +429,7 @@ public class ClientStateController : MonoBehaviour
 #if OFFLINE_MODE
         SetState("AnnaOpenTeabox");
 #else
-        client.ClientSendMessage("AnnaOpenTeabox");
+        client.ClientSendMessage("!AnnaOpenTeabox");
 #endif
     }
 
@@ -439,7 +438,7 @@ public class ClientStateController : MonoBehaviour
 #if OFFLINE_MODE
         SetState("AnnaPourWater");
 #else
-        client.ClientSendMessage("AnnaPourWater");
+        client.ClientSendMessage("!AnnaPourWater");
 #endif
     }
 
@@ -448,7 +447,7 @@ public class ClientStateController : MonoBehaviour
 #if OFFLINE_MODE
         SetState("MaxSawOutside");
 #else
-        client.ClientSendMessage("MaxSawOutside");
+        client.ClientSendMessage("!MaxSawOutside");
 #endif
     }
 
@@ -457,7 +456,7 @@ public class ClientStateController : MonoBehaviour
 #if OFFLINE_MODE
         SetState("TwoDrinkTea");
 #else
-        client.ClientSendMessage("OneDrinkTea");
+        client.ClientSendMessage("!OneDrinkTea");
 #endif
     }
 
@@ -467,9 +466,9 @@ public class ClientStateController : MonoBehaviour
         SetState("TwoDrinkTea");
 #else
         if(isAnna())
-            client.ClientSendMessage("AnnaSwipeGlass");
+            client.ClientSendMessage("!AnnaSwipeGlass");
         else
-            client.ClientSendMessage("MaxSwipeGlass");
+            client.ClientSendMessage("!MaxSwipeGlass");
 #endif
 
     }

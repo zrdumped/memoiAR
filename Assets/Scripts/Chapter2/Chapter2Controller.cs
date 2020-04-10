@@ -36,7 +36,7 @@ public class Chapter2Controller : MonoBehaviour
     void Start()
     {
         om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
-        hm = GameObject.FindGameObjectWithTag("Client").GetComponent<HintManager>();
+        hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
         csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
 
         //hm.InputNewWords("", "Go to the flowershop");
@@ -100,7 +100,7 @@ public class Chapter2Controller : MonoBehaviour
             Vector3 cameraPos = ARCamera.transform.position;
             cameraPos.y = 0;
             float remainingDistance = Vector3.Distance(housePos, cameraPos);
-            if (remainingDistance > 1)
+            if (remainingDistance > 3)
             {
                 maxGoOut = false;
                 maxGoingBack = true;
@@ -163,7 +163,7 @@ public class Chapter2Controller : MonoBehaviour
     // - - - -
     public void GenerateCrowds()
     {
-        om2.beforeScene.SetActive(true);
+        //om2.beforeScene.SetActive(true);
         generatedGrowds = new List<Vector3>();
         Vector3 pos1 = parkTrans.position;
         pos1.y = 0;
@@ -189,5 +189,10 @@ public class Chapter2Controller : MonoBehaviour
     public bool isMax()
     {
         return csc.isMax();
+    }
+
+    public void maxBuyTea()
+    {
+        maxGoOut = true;
     }
 }

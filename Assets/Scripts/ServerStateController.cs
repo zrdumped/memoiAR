@@ -11,7 +11,7 @@ public class ServerStateController : MonoBehaviour
         server = this.GetComponent<TCPTestServer>();
     }
     private int state = 0;
-    private int chap = 1;
+    private int chap = 2;
 
     private int roseNum = 0;
     private int glassNum = 0;
@@ -170,40 +170,46 @@ public class ServerStateController : MonoBehaviour
                 if (state == 2)
                     server.Broadcast("BothArriveHouse");
             }
-            else if (state == 3 && stateName == "AnnaPourWater")
+            else if (state == 2 && stateName == "AnnaPourWater")
             {
                 state++;
                 server.Broadcast("AnnaPourWater");
             }
-            else if (state == 4 && stateName == "AnnaOpenTeabox")
+            else if (state == 3 && stateName == "AnnaOpenTeabox")
             {
                 state++;
                 server.Broadcast("AnnaOpenTeabox");
-            }else if(state == 5 && stateName == "MaxSawOutside")
+            }else if(state == 4 && stateName == "MaxSawOutside")
             {
                 state++;
                 server.Broadcast("MaxSawOutside");
             }
-            else if(state == 6 && stateName == "OneDrinkTea")
+            else if(state == 5 && stateName == "OneDrinkTea")
             {
                 state ++;
             }
-            else if(state == 7 && stateName == "OneDrinkTea")
+            else if(state == 6 && stateName == "OneDrinkTea")
             {
                 state++;
                 server.Broadcast("TwoDrinkTea");
             }
-            else if (state == 8 && stateName == "SwipeGlass")
+            else if (state == 7 && stateName == "AnnaSwipeGlass")
             {
                 glassNum++;
-                if (glassNum == 3)
+                if (glassNum == 4)
                 {
                     state++;
                 }
-                else
+                server.Broadcast("AnnaSwipeGlass");
+            }
+            else if (state == 7 && stateName == "MaxSwipeGlass")
+            {
+                glassNum++;
+                if (glassNum == 4)
                 {
-                    server.Broadcast("SwipeGlass");
+                    state++;
                 }
+                server.Broadcast("MaxSwipeGlass");
             }
         }
     }
