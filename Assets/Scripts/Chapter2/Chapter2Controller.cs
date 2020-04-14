@@ -9,15 +9,16 @@ public class Chapter2Controller : MonoBehaviour
     //public GameObject crowd;
     public Transform parkTrans;
     public Transform houseTrans;
-    private int crowdNum = 2;
-    private float crowdRange = 0.5f;
+    private int crowdNum = 6;//on each half axis
+    private float crowdDistance = 0.5f;
+    private float crowdRange = 0.3f;
     private List<Vector3> generatedGrowds;
     private bool onTheWayToHouse = false;
     private bool inCrowd = false;
     public AudioSource crowdBgAS;
     private float houseParkDistance;
     private Vector3 housePos;
-    private bool maxGoOut = false;
+    public bool maxGoOut = false;
     private bool maxGoingBack = false;
 
     //Max House
@@ -32,6 +33,8 @@ public class Chapter2Controller : MonoBehaviour
 
     private HintManager hm;
     private ClientStateController csc;
+
+    private Coroutine showingOutside;
     // Start is called before the first frame update
     void Start()
     {
@@ -104,7 +107,7 @@ public class Chapter2Controller : MonoBehaviour
             {
                 maxGoOut = false;
                 maxGoingBack = true;
-                om2.ShowOutside();
+                showingOutside = StartCoroutine(om2.ShowOutside());
             }
         }
 
@@ -116,6 +119,7 @@ public class Chapter2Controller : MonoBehaviour
             if (remainingDistance < 0.5)
             {
                 maxGoingBack = false;
+                StopCoroutine(showingOutside);
                 om2.HideOutside();
                 csc.MaxSawOutside();
             }
@@ -168,13 +172,20 @@ public class Chapter2Controller : MonoBehaviour
         Vector3 pos1 = parkTrans.position;
         pos1.y = 0;
         //housePos = houseTrans.position;
-        Vector3 distance = (pos1 - housePos) / (crowdNum + 1);
+        //Vector3 distance = (pos1 - housePos) / (crowdNum + 1);
         houseParkDistance = Vector3.Distance(pos1, housePos);
-        for (int i = 0; i < crowdNum; i++)
+        //for (int i = 0; i < crowdNum; i++)
+        //{
+        //    //GameObject newCrowd = Instantiate(crowd);
+        //    //newCrowd.transform.position = ;
+        //    generatedGrowds.Add(houseTrans.position + distance * (i + 1));
+        //}
+        for(float i = pos1.x - crowdNum * crowdDistance; i <= pos1.x + crowdNum * crowdDistance; i += crowdDistance)
         {
-            //GameObject newCrowd = Instantiate(crowd);
-            //newCrowd.transform.position = ;
-            generatedGrowds.Add(houseTrans.position + distance * (i + 1));
+            for (float j = pos1.z - crowdNum * crowdDistance; j <= pos1.z + crowdNum * crowdDistance; j += crowdDistance)
+            {
+                generatedGrowds.Add(new Vector3(i, 0, j));
+            }
         }
         onTheWayToHouse = true;
         crowdBgAS.volume = 0;
@@ -194,5 +205,10 @@ public class Chapter2Controller : MonoBehaviour
     public void maxBuyTea()
     {
         maxGoOut = true;
+    }
+
+    public void EndChapter2()
+    {
+        
     }
 }

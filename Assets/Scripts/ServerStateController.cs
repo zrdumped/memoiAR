@@ -211,6 +211,11 @@ public class ServerStateController : MonoBehaviour
                 }
                 server.Broadcast("MaxSwipeGlass");
             }
+            else if (state == 8 && stateName == "AnnaTouchBook")
+            {
+                state++;
+                server.Broadcast("AnnaTouchBook");
+            }
         }
     }
 

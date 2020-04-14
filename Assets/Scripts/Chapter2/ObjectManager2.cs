@@ -73,8 +73,8 @@ public class ObjectManager2 : MonoBehaviour
     public List<Transform> kettlePoses;
     private bool teaboxTouched = false;
     private bool kettleTouched = false;
-    private bool teaboxCouldBeTouched = false;
     private bool cupTouched = false;
+    public bool kettleCouldBeTouched = false;
     private Vector3 originalLocalPostion;
     private Quaternion originalLocalRotation;
     public AudioSource glassShutteredAS;
@@ -86,6 +86,33 @@ public class ObjectManager2 : MonoBehaviour
     public GameObject glassCollider;
     public GameObject endPanel;
     public bool couldDrink = false;
+    private int crowdNum = -1;
+    public GameObject ruinedRoseOnScreen;
+    private bool bookReadyToWrite = false;
+    private bool isSwiping = false;
+    //public GameObject album;
+    public GameObject albumOnScreen;
+
+    public GameObject annaTopicPanel;
+    public GameObject maxTopicPanel;
+
+    public GameObject violin;
+
+    public GameObject audioSourcePrefab;
+
+    private bool isWriting = false;
+
+    public List<AudioClip> clips1;
+    public List<AudioClip> clips2;
+    public AudioClip srceamingSound;
+    private int clipNum = 0;
+
+    //violin
+    [Header("Violin")]
+    public List<AudioClip> nodeMusic;
+    public AudioSource audioSource;
+    public List<int> musicSelected = new List<int> { 1, 2, 3 };
+    public List<ParticleSystem> psColor;
 
     private List<string> annaWords = new List<string>
     {
@@ -158,10 +185,19 @@ public class ObjectManager2 : MonoBehaviour
         beforeScene.SetActive(false);
         afterScene.SetActive(false);
         blackPanel.SetActive(false);
+
+        //swipe
+        ruinedRoseOnScreen.SetActive(false);
+        albumOnScreen.SetActive(false);
+        annaTopicPanel.SetActive(false);
+        maxTopicPanel.SetActive(false);
+
+        violin.SetActive(false);
     }
 
     public IEnumerator ChangeToSummer()
     {
+        hm.InputNewWords("You got married with the person you met in the park", "Go to Max's home");
         StartCoroutine(showGradually(flowershop));
         flowershopPanel.SetActive(false);
         flare.SetActive(true);
@@ -211,17 +247,19 @@ public class ObjectManager2 : MonoBehaviour
 
         yield return new WaitForSeconds(8);
         weddingPhoto.SetActive(false);
-#if SHOW_HM
-        if (c2c.isMax())
-            hm.InputNewWords("Your apartment never had fresh flowers before she moved in", "Go to Max's Apartment");
-        else if (c2c.isAnna())
-            hm.InputNewWords("Over time, his apartment became our apartment", "Go to Max's Apartment");
-#endif
+
         housePanel.SetActive(true);
     }
 
     public IEnumerator ChangeToAutumn()
     {
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("Your apartment never had fresh flowers before she moved in", "Go to The Park");
+        else if (c2c.isAnna())
+            hm.InputNewWords("Over time, his apartment became our apartment", "Go to The Park");
+#endif
+
         StartCoroutine(showGradually(house));
 
         housePanel.SetActive(false);
@@ -236,8 +274,8 @@ public class ObjectManager2 : MonoBehaviour
 
         yield return new WaitForSeconds(5);
 
-        movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
-        yield return new WaitForSeconds(1);
+        //movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
+        //yield return new WaitForSeconds(1);
         movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 2);
 
         //leaves.SetActive(false);
@@ -255,17 +293,17 @@ public class ObjectManager2 : MonoBehaviour
         houseEnv.SetActive(false);
         beforeScene.SetActive(false);
 
-#if SHOW_HM
-        if (c2c.isMax())
-            hm.InputNewWords("You looked for Anna's face whenever you played in the park", "Go to The Park");
-        else if (c2c.isAnna())
-            hm.InputNewWords("Selling flowers was always a great excuse to go see him play", "Go to The Park");
-#endif
         parkPanel.SetActive(true);
     }
 
     public IEnumerator ChangeToWinter()
     {
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("You looked for Anna's face whenever you played in the park", "");
+        else if (c2c.isAnna())
+            hm.InputNewWords("Selling flowers was always a great excuse to go see him play", "");
+#endif
         StartCoroutine(showGradually(park));
 
         playingPhoto.SetActive(true);
@@ -287,10 +325,10 @@ public class ObjectManager2 : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
-        yield return new WaitForSeconds(1);
-        playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 2);
-        yield return new WaitForSeconds(1);
+        //playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
+        //yield return new WaitForSeconds(1);
+        //playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 2);
+        //yield return new WaitForSeconds(1);
         playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
 
         fe.enabled = false;
@@ -331,11 +369,12 @@ public class ObjectManager2 : MonoBehaviour
 
     public void initCrowd()
     {
-        int crownNum = Random.Range(0, 3);
+        crowdNum++;
+        if (crowdNum == 3) crowdNum = 0;
         Color curColor = crowdPanel.GetComponent<Image>().color;
         curColor.a = 0;
         crowdPanel.GetComponent<Image>().color = curColor;
-        crowdPanel.GetComponent<Image>().sprite = crowds[crownNum];
+        crowdPanel.GetComponent<Image>().sprite = crowds[crowdNum];
         crowdPanel.SetActive(true);
 
         curColor = effectPanel1.GetComponent<Image>().color;
@@ -347,30 +386,42 @@ public class ObjectManager2 : MonoBehaviour
         effectPanel1.SetActive(true);
         effectPanel2.SetActive(true);
 
-        crowdScreamingAS.volume = 0;
-        crowdScreamingAS.Play();
+        GameObject newAudioSource = Instantiate(audioSourcePrefab);
+        if (!c2c.maxGoOut)
+        {
+            newAudioSource.GetComponent<AudioSource>().clip = clips1[clipNum % 4];
+        }
+        else
+        {
+            newAudioSource.GetComponent<AudioSource>().clip = clips2[clipNum % 2];
+        }
+        newAudioSource.GetComponent<AudioSource>().Play();
+        clipNum++;
     }
 
-    public void ShowOutside()
+    public IEnumerator ShowOutside()
     {
-        Color curColor = crowdPanel.GetComponent<Image>().color;
-        curColor.a = 1;
-        crowdPanel.GetComponent<Image>().color = curColor;
-        crowdPanel.SetActive(true);
-
-        curColor = effectPanel1.GetComponent<Image>().color;
-        curColor.a = 1;
-        effectPanel1.GetComponent<Image>().color = curColor;
-        effectPanel1.GetComponent<Image>().sprite = effects[0];
-        effectPanel1.SetActive(true);
-
-        crowdScreamingAS.volume = 1;
-        crowdScreamingAS.Play();
-
-        houseEnv.SetActive(false);
-        beforeScene.SetActive(false);
-
-        hm.InputNewWords("People watch you in your doorway. It is definitely not safe to go outside", "Head back to the Apartment");
+#if SHOW_HM
+        hm.InputNewWords("Screams, shouts and yells flood in. Eyes look at you.", "");
+#endif
+        int i = 0;
+        while (true)
+        {
+            initCrowd();
+            float proportion = 0;
+            DOTween.To(() => proportion, x => updateCrowd(x), 1, 1);
+            yield return new WaitForSeconds(1.5f);
+            proportion = 1;
+            DOTween.To(() => proportion, x => updateCrowd(x), 0, 1);
+            yield return new WaitForSeconds(1);
+            i++;
+#if SHOW_HM
+            if(i == 3)
+            {
+                hm.InputNewWords("It is definitely not safe to be outside", "Head back to the Apartment");
+            }
+#endif
+        }
     }
 
     public void HideOutside()
@@ -418,7 +469,7 @@ public class ObjectManager2 : MonoBehaviour
             effectPanel2.GetComponent<Image>().sprite = effects[1];
         }
 
-        crowdScreamingAS.volume = proportion;
+        //crowdScreamingAS.volume = proportion;
     }
 
     public void destroyCrowd()
@@ -439,7 +490,7 @@ public class ObjectManager2 : MonoBehaviour
 
     public void observeTeabox(bool fromServer = false)
     {
-        if (!teaboxCouldBeTouched) return;
+        //if (!teaboxCouldBeTouched) return;
         if (teaboxTouched) return;
         if (c2c.isMax() && !fromServer) return;
         if (c2c.isAnna())
@@ -463,10 +514,12 @@ public class ObjectManager2 : MonoBehaviour
 
     public GameObject observeKettle()
     {
+        if (!teaboxTouched) return null;
+        if (!kettleCouldBeTouched) return null;
         if (c2c.isMax()) return null;
         if (kettleTouched)
         {
-            hm.InputNewWords("", "The kettle is empty");
+            hm.InputNewWords("", "The kettle is already empty");
             return null;
         }
         kettleOnScreen.SetActive(true);
@@ -474,21 +527,31 @@ public class ObjectManager2 : MonoBehaviour
         kettleTouched = true;
 #if SHOW_HM
         if (c2c.isMax())
-            hm.InputNewWords("Were things always this bad? How will you keep Anna safe?", "Pour the water into the cup");
+            hm.InputNewWords("Were things always this bad? How will you keep Anna safe?", "Wait for Anna to get Tea");
         else if (c2c.isAnna())
             hm.InputNewWords("Max looks like he has something on his mind.", "Pour the water into cups");
 #endif
+
         return kettleOnScreen;
     }
 
     public void testPourWater()
     {
-        StartCoroutine(swipeGlass());
+        bookReadyToWrite = true;
+        startWrite();
+        //StartCoroutine(ShowOutside());
         //ShowOutside();
     }
 
     public IEnumerator pourWater(bool fromscreen = true)
     {
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("If you can't even have tea, what are you supposed to do?", "");
+        else if (c2c.isAnna())
+            hm.InputNewWords("Will home change after this ? ", "");
+#endif
+
         if (c2c.isAnna())
         {
             csc.waterPoured();
@@ -524,8 +587,9 @@ public class ObjectManager2 : MonoBehaviour
 
             yield return new WaitForSeconds(3);
             kettleOnTable.transform.DOLocalRotate(oldRot, 0.5f);
-            
-            yield return new WaitForSeconds(0.5f);
+
+            yield return new WaitForSeconds(2);
+
         }
         //move back
         kettleOnTable.transform.DOLocalMove(originalLocalPostion, 2);
@@ -538,8 +602,14 @@ public class ObjectManager2 : MonoBehaviour
         //cup.GetComponent<MeshCollider>().enabled = false;
 
         cupTouched = true;
+        couldDrink = true;
 
-        teaboxCouldBeTouched = true;
+#if SHOW_HM
+        if (c2c.isMax())
+            hm.InputNewWords("", "Touch the cup and thank Anna for the 'tea'");
+        else if (c2c.isAnna())
+            hm.InputNewWords("", "Touch the cup to drink the tea");
+#endif
     }
 
 
@@ -551,7 +621,7 @@ public class ObjectManager2 : MonoBehaviour
 #if SHOW_HM
         if (c2c.isMax())
             hm.InputNewWords("How's the 'Tea'? Things may be imperfect but could you do it alone?", "Tell Anna what's on your mind");
-        else
+        else if (c2c.isAnna())
             hm.InputNewWords("Was Max brave for trying to go out? Is this still 'tea time' for you?", "Tell Max what he needs to hear");
 #endif
         csc.OneDrinkTea();
@@ -589,15 +659,24 @@ public class ObjectManager2 : MonoBehaviour
         hm.InputNewWords("So it's come to this.", "Clean up the glass");
     }
 
-    public IEnumerator swipeGlass()
+    private IEnumerator oneSwipeCompleted()
     {
-        glassCollider.GetComponent<BoxCollider>().enabled = false;
-        csc.SwipeGlass();
+        yield return new WaitForSeconds(1);
+        isSwiping = false;
+    }
+
+    public void swipeGlass(bool fromserver = false)
+    {
+        if (isSwiping) return;
+        isSwiping = true;
+        StartCoroutine(oneSwipeCompleted());
+        //glassCollider.GetComponent<BoxCollider>().enabled = false;
         if (piecesCount < glassPiece.Count)
         {
+            csc.SwipeGlass();
             glassPiece[piecesCount].transform.DOLocalMove(glassPiece_target[piecesCount].transform.localPosition, 1);
             glassPiece[piecesCount].transform.DOLocalRotateQuaternion(glassPiece_target[piecesCount].transform.localRotation, 1);
-            yield return new WaitForSeconds(1);
+            //yield return new WaitForSeconds(1);
             piecesCount++;
 #if SHOW_HM
             if (c2c.isAnna())
@@ -619,49 +698,143 @@ public class ObjectManager2 : MonoBehaviour
 
         }
 
-        else
+        else if(piecesCount == glassPiece.Count)
         {
+#if SHOW_HM
             if(c2c.isAnna())
-                hm.InputNewWords("You should be able to press it", "");
+                hm.InputNewWords("You should be able to press it", "Place the rose in your album");
             else
                 hm.InputNewWords("Anna should be able to press it", "");
+#endif
+            if (isMax() && !fromserver)
+                return;
+
+            piecesCount++;
 
             movingPhoto.SetActive(true);
             movingPhoto.transform.localPosition = movingPhotoOriginalPos;
             movingPhoto.transform.localRotation = movingPhotoOriginalRot;
 
             showGradually(movingPhoto);
-            //yield return new WaitForSeconds(2);
 
-            Vector3 curScale = ruinedRosePos.localScale;
-            curScale.y = 0.1f;
+            if (isAnna())
+            {
+                //pick up the flower
+                ruinedRose.SetActive(false);
+                ruinedRoseOnScreen.SetActive(true);
 
-
-            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
-            yield return new WaitForSeconds(1);
-            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 2);
-            yield return new WaitForSeconds(1);
-            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
-            yield return new WaitForSeconds(1);
-
-
-
-            ruinedRose.transform.DOLocalMove(ruinedRosePos.localPosition, 1);
-            ruinedRose.transform.DOLocalRotateQuaternion(ruinedRosePos.localRotation, 1);
-            ruinedRose.transform.DOScale(curScale, 2);
-            yield return new WaitForSeconds(1);
-
-            movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 4);
-            yield return new WaitForSeconds(1);
-            ruinedRose.SetActive(false);
-            //movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 5);
-            //yield return new WaitForSeconds(1);
-            //movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 6);
-            yield return new WaitForSeconds(3);
-            endPanel.SetActive(true);
+                csc.SwipeGlass();
+            }
         }
 
-        glassCollider.GetComponent<BoxCollider>().enabled = true;
+        //glassCollider.GetComponent<BoxCollider>().enabled = true;
+    }
+
+    public IEnumerator placeRose()
+    {
+        if (!ruinedRoseOnScreen.activeSelf)
+            yield break;
+
+        if (isAnna())
+        {
+            csc.PlaceRose();
+            //re-initiate rose
+            ruinedRose.transform.position = ruinedRoseOnScreen.transform.position;
+            ruinedRose.transform.rotation = ruinedRoseOnScreen.transform.rotation;
+            ruinedRose.SetActive(true);
+            ruinedRoseOnScreen.SetActive(false);
+        }
+        else if (isMax())
+        {
+            bookReadyToWrite = true;
+#if SHOW_HM
+            if(c2c.isAnna())
+                hm.InputNewWords("Maybe there can be more to this memory than pain.", "Ask Max to write what this flower commemorates");
+            else
+                hm.InputNewWords("What do you want this flower to symbolize when you look at it years from now?", "Touch the book");
+#endif
+        }
+
+        movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
+        yield return new WaitForSeconds(1);
+
+        ruinedRose.transform.DOLocalMove(ruinedRosePos.localPosition, 1);
+        ruinedRose.transform.DOLocalRotateQuaternion(ruinedRosePos.localRotation, 1);
+    }
+
+    public void maxTouchBook()
+    {
+        if (bookReadyToWrite)
+        {
+            startWrite();
+            bookReadyToWrite = true;
+            isWriting = true;
+        }
+        else if (isWriting)
+        {
+            isWriting = false;
+            StartCoroutine(writeDone());
+        }
+    }
+
+    public void startWrite()
+    {
+
+        movingPhoto.SetActive(false);
+        albumOnScreen.SetActive(true);
+        albumOnScreen.GetComponent<Animator>().speed = 0;
+        albumOnScreen.GetComponent<Animator>().Play("pageTwo 0", 0, 0);
+
+#if SHOW_HM
+            hm.InputNewWords("Write a description for the flower.", "Put the book back onto the table after you finish writing.");
+#endif
+    }
+
+    public IEnumerator writeDone()
+    {
+        if (isMax())
+        {
+            Vector3 oldpos = movingPhoto.transform.position;
+            movingPhoto.transform.position = ruinedRoseOnScreen.transform.position;
+            Quaternion oldrot = movingPhoto.transform.rotation;
+            movingPhoto.transform.rotation = ruinedRoseOnScreen.transform.rotation;
+            movingPhoto.transform.DOLocalMove(oldpos, 1);
+            movingPhoto.transform.DOLocalRotateQuaternion(oldrot, 1);
+
+            Destroy(albumOnScreen);
+
+            movingPhoto.SetActive(true);
+            movingPhoto.GetComponent<Animator>().Play("pageTwo 0", 0, 0);
+
+            csc.MaxWriteOnTheBook();
+        }
+
+        movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 6);
+
+        yield return new WaitForSeconds(1);
+
+        if (isMax())
+            maxTopicPanel.SetActive(true);
+        else if (isAnna())
+            annaTopicPanel.SetActive(true);
+
+    }
+
+    public void maxPlayTheViolin()
+    {
+        maxTopicPanel.SetActive(false);
+        violin.SetActive(true);
+    }
+
+
+    public bool isAnna()
+    {
+        return c2c.isAnna();
+    }
+
+    public bool isMax()
+    {
+        return c2c.isMax();
     }
 
     public IEnumerator showGradually(GameObject parent)

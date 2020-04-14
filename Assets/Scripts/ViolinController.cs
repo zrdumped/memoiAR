@@ -14,6 +14,7 @@ public class ViolinController : MonoBehaviour
     private AudioSource violinPlayer;
 
     private ObjectManager om;
+    private ObjectManager2 om2;
 
     private bool timeToPause = false;
 
@@ -30,7 +31,11 @@ public class ViolinController : MonoBehaviour
     void Start()
     {
         csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
-        om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+        if(csc.chapNum == 1)
+            om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+        else if (csc.chapNum == 2)
+            om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
+
         violinPlayer = gameObject.GetComponent<AudioSource>();
     }
 
@@ -126,7 +131,10 @@ public class ViolinController : MonoBehaviour
     private IEnumerator PlayViolin()
     {
         //Debug.Log("dwqdqwd");
-        violinPlayer.clip = om.nodeMusic[om.musicSelected[currentNum]];
+        if(csc.chapNum == 1)
+            violinPlayer.clip = om.nodeMusic[om.musicSelected[currentNum]];
+        else
+            violinPlayer.clip = om2.nodeMusic[om2.musicSelected[currentNum]];
         while (true)
         {
             if (timeToPause)
@@ -144,10 +152,13 @@ public class ViolinController : MonoBehaviour
                     musicFlash.Play();
                     //get componet in children does not work
                     var color = musicFlash.transform.GetChild(0).GetComponent<ParticleSystem>().colorOverLifetime;
-                    color.color = om.psColor[om.musicSelected[currentNum]].colorOverLifetime.color;
+                    if (csc.chapNum == 1)
+                        color.color = om.psColor[om.musicSelected[currentNum]].colorOverLifetime.color;
+                    else
+                        color.color = om2.psColor[om2.musicSelected[currentNum]].colorOverLifetime.color;
                 }
                 playTime += Time.fixedDeltaTime;
-                if(playTime > om.nodeMusic[om.musicSelected[currentNum]].length)
+                if(csc.chapNum == 1 && playTime > om.nodeMusic[om.musicSelected[currentNum]].length)
                 {
                     if (currentNum == 2)
                     {
@@ -161,6 +172,21 @@ public class ViolinController : MonoBehaviour
                     violinPlayer.clip = om.nodeMusic[om.musicSelected[currentNum]];
                     var color = musicFlash.transform.GetChild(0).GetComponent<ParticleSystem>().colorOverLifetime;
                     color.color = om.psColor[om.musicSelected[currentNum]].colorOverLifetime.color;
+                }
+                else if (csc.chapNum == 2 && playTime > om2.nodeMusic[om2.musicSelected[currentNum]].length)
+                {
+                    if (currentNum == 2)
+                    {
+                        om2.endPanel.SetActive(true);
+                        break;
+                    }
+                    //currentNum = 0;
+                    else
+                        currentNum++;
+                    playTime = 0;
+                    violinPlayer.clip = om2.nodeMusic[om2.musicSelected[currentNum]];
+                    var color = musicFlash.transform.GetChild(0).GetComponent<ParticleSystem>().colorOverLifetime;
+                    color.color = om2.psColor[om2.musicSelected[currentNum]].colorOverLifetime.color;
                 }
             }
             yield return new WaitForFixedUpdate();

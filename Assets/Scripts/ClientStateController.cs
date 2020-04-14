@@ -10,7 +10,7 @@ public class ClientStateController : MonoBehaviour
     //2 - Max
     int character = 0;
 
-    private int chapNum = 0;
+    public int chapNum = 0;
 
     private TCPTestClient client;
     private AnnaController anna;
@@ -201,7 +201,7 @@ public class ClientStateController : MonoBehaviour
                 }
                 else if (isAnna())
                 {
-                    hm.InputNewWords("You know Max is trying to be brave. Maybe some tea will calm you both down.", "Get some hot water from the kettle");
+                    hm.InputNewWords("You know Max is trying to be brave. Maybe some tea will calm you both down.", "Get some tea from the Tea Box");
                 }
             }else if(stateName == "AnnaOpenTeabox")
             {
@@ -223,13 +223,13 @@ public class ClientStateController : MonoBehaviour
             {
                 if (isMax())
                 {
-                    hm.InputNewWords("If you can't even have tea, what are you supposed to do?", "Thank Anna for the 'tea' and drink it");
+                    hm.InputNewWords("People watch you in your doorway. It is definitely not safe to be outside", "");
                 }
                 else
                 {
-                    hm.InputNewWords("Will home change after this?", "Drink the 'tea'");
+                    hm.InputNewWords("It's still not safe to go outside. You'll have to make it without tea", "Touch the kettle");
+                    om2.kettleCouldBeTouched = true;
                 }
-                om2.couldDrink = true;
             }
             else if (stateName == "TwoDrinkTea")
             {
@@ -238,12 +238,23 @@ public class ClientStateController : MonoBehaviour
             else if (stateName == "AnnaSwipeGlass")
             {
                 if(isMax())
-                    StartCoroutine(om2.swipeGlass());
+                    om2.swipeGlass(true);
             }
             else if (stateName == "MaxSwipeGlass")
             {
                 if (isAnna())
-                    StartCoroutine(om2.swipeGlass());
+                    om2.swipeGlass(true);
+
+            }
+            else if (stateName == "AnnaTouchBook")
+            {
+                if (isMax())
+                    StartCoroutine(om2.placeRose());
+            }
+            else if (stateName == "MaxWriteOnTheBook")
+            {
+                if (isAnna())
+                    StartCoroutine(om2.writeDone());
             }
         }
     }
@@ -471,5 +482,15 @@ public class ClientStateController : MonoBehaviour
             client.ClientSendMessage("!MaxSwipeGlass");
 #endif
 
+    }
+
+    public void PlaceRose()
+    {
+        client.ClientSendMessage("!AnnaTouchBook");
+    }
+
+    public void MaxWriteOnTheBook()
+    {
+        client.ClientSendMessage("!MaxWriteOnTheBook");
     }
 }

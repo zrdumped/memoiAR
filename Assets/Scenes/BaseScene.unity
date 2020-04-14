@@ -1764,6 +1764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b85139e92eb4ef54e81242b5ecd98bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chapNum: 0
   isMaxText: {fileID: 1542013449}
   isAnnaText: {fileID: 893787875}
   chapter0Panel: {fileID: 0}
