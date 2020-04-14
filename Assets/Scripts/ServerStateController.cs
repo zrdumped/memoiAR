@@ -86,14 +86,15 @@ public class ServerStateController : MonoBehaviour
     //Chapter 1 Version 2
     public void SetState(string stateName)
     {
-        if(stateName == "ToChapter2")
+        Debug.Log(stateName + " " + state);
+        if (stateName == "ToChapter2")
         {
             chap = 2;
             state = 0;
         }
         if (chap == 1)
         {
-            Debug.Log(stateName + " " + state);
+
             if (state < 2 && stateName == "AnnaFlowerShopReached")
             {
                 state++;
@@ -170,16 +171,16 @@ public class ServerStateController : MonoBehaviour
                 if (state == 2)
                     server.Broadcast("BothArriveHouse");
             }
-            else if (state == 2 && stateName == "AnnaPourWater")
+            else if (state == 4 && stateName == "AnnaPourWater")
             {
                 state++;
                 server.Broadcast("AnnaPourWater");
             }
-            else if (state == 3 && stateName == "AnnaOpenTeabox")
+            else if (state == 2 && stateName == "AnnaOpenTeabox")
             {
                 state++;
                 server.Broadcast("AnnaOpenTeabox");
-            }else if(state == 4 && stateName == "MaxSawOutside")
+            }else if(state == 3 && stateName == "MaxSawOutside")
             {
                 state++;
                 server.Broadcast("MaxSawOutside");

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickableObject2 : MonoBehaviour
 {
-    public enum ObjectType { Teabox, Kettle, Cup, Pieces, Book };
+    public enum ObjectType { Teabox, Kettle, Cup, Pieces, Book, Table };
     public ObjectType type;
 
     private ObjectManager2 om2;
@@ -58,7 +58,15 @@ public class PickableObject2 : MonoBehaviour
             if (om2.isAnna())
                 StartCoroutine(om2.placeRose());
             else if(om2.isMax())
-                om2.maxTouchBook();
+                StartCoroutine(om2.maxTouchBook());
+        }else if(type == ObjectType.Table)
+        {
+            if (om2.isWriting)
+            {
+                om2.isWriting = false;
+                StartCoroutine(om2.writeDone());
+                Destroy(this);
+            }
         }
     }
 }

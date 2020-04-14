@@ -212,11 +212,7 @@ public class ClientStateController : MonoBehaviour
                 if (isMax())
                 {
                     StartCoroutine(om2.pourWater(false));
-                    hm.InputNewWords("Were things always this bad? How will you keep Anna safe?", "Wait for Anna to get Tea");
-                }
-                else
-                {
-                    hm.InputNewWords("Max looks like he has something on his mind.", "Get some tea from the Tea Box");
+                    //hm.InputNewWords("Were things always this bad? How will you keep Anna safe?", "Wait for Anna to get Tea");
                 }
             }
             else if (stateName == "MaxSawOutside")

@@ -19,7 +19,7 @@ public class Chapter2Controller : MonoBehaviour
     private float houseParkDistance;
     private Vector3 housePos;
     public bool maxGoOut = false;
-    private bool maxGoingBack = false;
+    public bool maxGoingBack = false;
 
     //Max House
     //public GameObject teaboxLid;
@@ -74,14 +74,16 @@ public class Chapter2Controller : MonoBehaviour
 
             //calculate the min distance
             float minDistance = 100;
-            for (int i = 0; i < crowdNum; i++)
+            for (int i = 0; i < generatedGrowds.Count; i++)
             {
                 Vector3 pos1 = generatedGrowds[i];
+                Debug.Log(pos1);
                 pos1.y = 0;
                 Vector3 pos2 = ARCamera.transform.position;
                 pos2.y = 0;
                 minDistance = Mathf.Min(minDistance, Vector3.Distance(pos1, pos2));
             }
+            Debug.Log(minDistance);
             float proportion = 1 - minDistance / crowdRange;
             if(proportion > 0 && !inCrowd)
             {
@@ -103,10 +105,10 @@ public class Chapter2Controller : MonoBehaviour
             Vector3 cameraPos = ARCamera.transform.position;
             cameraPos.y = 0;
             float remainingDistance = Vector3.Distance(housePos, cameraPos);
-            if (remainingDistance > 3)
+            if (remainingDistance > 2)
             {
                 maxGoOut = false;
-                maxGoingBack = true;
+                //maxGoingBack = true;
                 showingOutside = StartCoroutine(om2.ShowOutside());
             }
         }

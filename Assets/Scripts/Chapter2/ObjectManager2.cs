@@ -100,12 +100,16 @@ public class ObjectManager2 : MonoBehaviour
 
     public GameObject audioSourcePrefab;
 
-    private bool isWriting = false;
+    public bool isWriting = false;
+
+    private List<GameObject> ASs;
 
     public List<AudioClip> clips1;
     public List<AudioClip> clips2;
     public AudioClip srceamingSound;
     private int clipNum = 0;
+
+    public GameObject table;
 
     //violin
     [Header("Violin")]
@@ -185,6 +189,7 @@ public class ObjectManager2 : MonoBehaviour
         beforeScene.SetActive(false);
         afterScene.SetActive(false);
         blackPanel.SetActive(false);
+        table.SetActive(false);
 
         //swipe
         ruinedRoseOnScreen.SetActive(false);
@@ -193,6 +198,8 @@ public class ObjectManager2 : MonoBehaviour
         maxTopicPanel.SetActive(false);
 
         violin.SetActive(false);
+
+        ASs = new List<GameObject>();
     }
 
     public IEnumerator ChangeToSummer()
@@ -387,6 +394,7 @@ public class ObjectManager2 : MonoBehaviour
         effectPanel2.SetActive(true);
 
         GameObject newAudioSource = Instantiate(audioSourcePrefab);
+        ASs.Add(newAudioSource);
         if (!c2c.maxGoOut)
         {
             newAudioSource.GetComponent<AudioSource>().clip = clips1[clipNum % 4];
@@ -410,7 +418,7 @@ public class ObjectManager2 : MonoBehaviour
             initCrowd();
             float proportion = 0;
             DOTween.To(() => proportion, x => updateCrowd(x), 1, 1);
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2);
             proportion = 1;
             DOTween.To(() => proportion, x => updateCrowd(x), 0, 1);
             yield return new WaitForSeconds(1);
@@ -419,6 +427,7 @@ public class ObjectManager2 : MonoBehaviour
             if(i == 3)
             {
                 hm.InputNewWords("It is definitely not safe to be outside", "Head back to the Apartment");
+                c2c.maxGoingBack = true;
             }
 #endif
         }
@@ -482,6 +491,10 @@ public class ObjectManager2 : MonoBehaviour
 
     public void escapeInHouse()
     {
+        for (int i = ASs.Count - 1; i >= 0; i--)
+        {
+            Destroy(ASs[i]);
+        }
         houseEnv.SetActive(true);
         beforeScene.SetActive(true);
         StartCoroutine(showGradually(houseEnv));
@@ -537,9 +550,9 @@ public class ObjectManager2 : MonoBehaviour
 
     public void testPourWater()
     {
-        bookReadyToWrite = true;
+        //bookReadyToWrite = true;
         startWrite();
-        //StartCoroutine(ShowOutside());
+        //swipeGlass();
         //ShowOutside();
     }
 
@@ -673,7 +686,8 @@ public class ObjectManager2 : MonoBehaviour
         //glassCollider.GetComponent<BoxCollider>().enabled = false;
         if (piecesCount < glassPiece.Count)
         {
-            csc.SwipeGlass();
+            if(!fromserver)
+                csc.SwipeGlass();
             glassPiece[piecesCount].transform.DOLocalMove(glassPiece_target[piecesCount].transform.localPosition, 1);
             glassPiece[piecesCount].transform.DOLocalRotateQuaternion(glassPiece_target[piecesCount].transform.localRotation, 1);
             //yield return new WaitForSeconds(1);
@@ -700,22 +714,18 @@ public class ObjectManager2 : MonoBehaviour
 
         else if(piecesCount == glassPiece.Count)
         {
-#if SHOW_HM
-            if(c2c.isAnna())
-                hm.InputNewWords("You should be able to press it", "Place the rose in your album");
-            else
-                hm.InputNewWords("Anna should be able to press it", "");
-#endif
             if (isMax() && !fromserver)
                 return;
+#if SHOW_HM
+            if (c2c.isAnna() && !fromserver)
+                hm.InputNewWords("You should be able to press it", "Place the rose in your album");
+            else if(c2c.isMax() && fromserver)
+                hm.InputNewWords("Anna should be able to press it", "");
+#endif
 
             piecesCount++;
 
-            movingPhoto.SetActive(true);
-            movingPhoto.transform.localPosition = movingPhotoOriginalPos;
-            movingPhoto.transform.localRotation = movingPhotoOriginalRot;
-
-            showGradually(movingPhoto);
+            StartCoroutine(waitAndSetActive());
 
             if (isAnna())
             {
@@ -730,10 +740,19 @@ public class ObjectManager2 : MonoBehaviour
         //glassCollider.GetComponent<BoxCollider>().enabled = true;
     }
 
+    private IEnumerator waitAndSetActive()
+    {
+        yield return new WaitForSeconds(3);
+        movingPhoto.SetActive(true);
+        movingPhoto.transform.localPosition = movingPhotoOriginalPos;
+        movingPhoto.transform.localRotation = movingPhotoOriginalRot;
+        showGradually(movingPhoto);
+    }
+
     public IEnumerator placeRose()
     {
-        if (!ruinedRoseOnScreen.activeSelf)
-            yield break;
+        //if (!ruinedRoseOnScreen.activeSelf)
+        //    yield break;
 
         if (isAnna())
         {
@@ -747,13 +766,14 @@ public class ObjectManager2 : MonoBehaviour
         else if (isMax())
         {
             bookReadyToWrite = true;
-#if SHOW_HM
-            if(c2c.isAnna())
-                hm.InputNewWords("Maybe there can be more to this memory than pain.", "Ask Max to write what this flower commemorates");
-            else
-                hm.InputNewWords("What do you want this flower to symbolize when you look at it years from now?", "Touch the book");
-#endif
         }
+
+#if SHOW_HM
+        if (c2c.isAnna())
+            hm.InputNewWords("Maybe there can be more to this memory than pain.", "Ask Max to write what this flower commemorates");
+        else
+            hm.InputNewWords("What do you want this flower to symbolize when you look at it years from now?", "Touch the book");
+#endif
 
         movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
         yield return new WaitForSeconds(1);
@@ -762,18 +782,15 @@ public class ObjectManager2 : MonoBehaviour
         ruinedRose.transform.DOLocalRotateQuaternion(ruinedRosePos.localRotation, 1);
     }
 
-    public void maxTouchBook()
+    public IEnumerator maxTouchBook()
     {
         if (bookReadyToWrite)
         {
             startWrite();
             bookReadyToWrite = true;
             isWriting = true;
-        }
-        else if (isWriting)
-        {
-            isWriting = false;
-            StartCoroutine(writeDone());
+            yield return new WaitForSeconds(3);
+            table.SetActive(true);
         }
     }
 
@@ -795,9 +812,9 @@ public class ObjectManager2 : MonoBehaviour
         if (isMax())
         {
             Vector3 oldpos = movingPhoto.transform.position;
-            movingPhoto.transform.position = ruinedRoseOnScreen.transform.position;
+            movingPhoto.transform.position = albumOnScreen.transform.position;
             Quaternion oldrot = movingPhoto.transform.rotation;
-            movingPhoto.transform.rotation = ruinedRoseOnScreen.transform.rotation;
+            movingPhoto.transform.rotation = albumOnScreen.transform.rotation;
             movingPhoto.transform.DOLocalMove(oldpos, 1);
             movingPhoto.transform.DOLocalRotateQuaternion(oldrot, 1);
 
