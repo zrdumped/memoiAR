@@ -100,8 +100,6 @@ public class ObjectManager2 : MonoBehaviour
 
     public GameObject audioSourcePrefab;
 
-    public bool isWriting = false;
-
     private List<GameObject> ASs;
 
     public List<AudioClip> clips1;
@@ -782,16 +780,20 @@ public class ObjectManager2 : MonoBehaviour
         ruinedRose.transform.DOLocalRotateQuaternion(ruinedRosePos.localRotation, 1);
     }
 
-    public IEnumerator maxTouchBook()
+    public void maxTouchBook()
     {
         if (bookReadyToWrite)
         {
             startWrite();
-            bookReadyToWrite = true;
-            isWriting = true;
-            yield return new WaitForSeconds(3);
-            table.SetActive(true);
+            bookReadyToWrite = false;
+            //yield return new WaitForSeconds(3);
+            //table.SetActive(true);
         }
+    }
+
+    public void maxStartWrite()
+    {
+        table.SetActive(true);
     }
 
     public void startWrite()

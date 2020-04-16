@@ -37,14 +37,17 @@ public class PickableObject2 : MonoBehaviour
         if (type == ObjectType.Teabox && hand.holdingObj == null)
         {
             om2.observeTeabox();
-        }else if(type == ObjectType.Kettle && hand.holdingObj == null)
+        }
+        else if (type == ObjectType.Kettle && hand.holdingObj == null)
         {
             hand.holdingObj = om2.observeKettle();
-        }else if(type == ObjectType.Cup && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject2>().type == ObjectType.Kettle)
+        }
+        else if (type == ObjectType.Cup && hand.holdingObj != null && hand.holdingObj.GetComponent<PickableObject2>().type == ObjectType.Kettle)
         {
             hand.releaseStaff();
             StartCoroutine(om2.pourWater());
-        }else if (type == ObjectType.Cup && hand.holdingObj == null)
+        }
+        else if (type == ObjectType.Cup && hand.holdingObj == null)
         {
             //Debug.Log(1);
             om2.drinkTea();
@@ -53,20 +56,17 @@ public class PickableObject2 : MonoBehaviour
         {
             om2.swipeGlass();
         }
-        else if(type == ObjectType.Book)
+        else if (type == ObjectType.Book)
         {
             if (om2.isAnna())
                 StartCoroutine(om2.placeRose());
-            else if(om2.isMax())
-                StartCoroutine(om2.maxTouchBook());
-        }else if(type == ObjectType.Table)
+            else if (om2.isMax())
+                om2.maxTouchBook();
+        }
+        else if (type == ObjectType.Table)
         {
-            if (om2.isWriting)
-            {
-                om2.isWriting = false;
-                StartCoroutine(om2.writeDone());
-                Destroy(this);
-            }
+            StartCoroutine(om2.writeDone());
+            Destroy(this);
         }
     }
 }
