@@ -23,17 +23,11 @@ public class ChantingController : MonoBehaviour
     void Start()
     {
         c3c = GameObject.FindGameObjectWithTag("Chap3Client").GetComponent<Chapter3Controller>();
-
-        SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
+        SpeechRecognizerListener listener = this.GetComponent<SpeechRecognizerListener>();
         listener.onFinalResults.AddListener(Hit);
         listener.onPartialResults.AddListener(Hit);
 
-        //StartChanting();
-
-        for(int i = 0; i < 8; i++)
-        {
-            panels[i].SetActive(false);
-        }
+        StartChanting();
     }
 
     // Update is called once per frame
@@ -92,6 +86,7 @@ public class ChantingController : MonoBehaviour
         panels[5].SetActive(input.Contains("our"));
         panels[6].SetActive(input.Contains("husband"));
         panels[7].SetActive(input.Contains("back"));
+        recognizedNum = 0;
         for (int i = 3; i < 8; i++)
             if (panels[i].activeSelf) recognizedNum++;
         if (recognizedNum == 5)

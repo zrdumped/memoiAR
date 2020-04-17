@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -66,7 +66,8 @@ public class PickableObject2 : MonoBehaviour
         else if (type == ObjectType.Table)
         {
             StartCoroutine(om2.writeDone());
-            Destroy(this);
+            this.GetComponent<BoxCollider>().enabled = false;
+            //Destroy(this);
         }
     }
 }

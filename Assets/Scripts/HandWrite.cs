@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +9,7 @@ public class HandWrite : MonoBehaviour
     public GameObject paper;
     public GameObject camera;
     private bool startWriting = false;
+    private List<GameObject> trails;
     private bool firstWrite = true;
     private ObjectManager2 om2;
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class HandWrite : MonoBehaviour
     {
         //paper = new Plane(Camera.main.transform.forward * -1, transform.position);
         paper.SetActive(true);
+        trails = new List<GameObject>();
 
         om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
     }
@@ -28,10 +30,11 @@ public class HandWrite : MonoBehaviour
         {
             if (firstWrite)
             {
-                om2.startWrite();
+                om2.maxStartWrite();
                 firstWrite = false;
             }
             hand = Instantiate(Trail);
+            trails.Add(hand);
             var PSmain = hand.GetComponent<ParticleSystem>().main;
             PSmain.customSimulationSpace = camera.transform;
             Ray handRay = camera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
@@ -58,7 +61,17 @@ public class HandWrite : MonoBehaviour
         else if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
  || Input.GetMouseButtonUp(0))
         {
+            hand.GetComponent<ParticleSystem>().Stop();
             startWriting = false;
         }
+    }
+
+    public void deleteTrails()
+    {
+        for(int i = trails.Count - 1; i >= 0; i--)
+        {
+            Destroy(trails[i]);
+        }
+        paper.SetActive(false);
     }
 }
