@@ -14,6 +14,8 @@ TagManager:
   - Chap0Client
   - Chap2Client
   - ObjectManager2
+  - ObjectManager3
+  - Chap3Client
   layers:
   - Default
   - TransparentFX

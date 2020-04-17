@@ -18,14 +18,22 @@ public class ChantingController : MonoBehaviour
     public List<GameObject> panels;
     public int recognizedNum = 0;
     private Coroutine bouncingCoroutine;
+    private Chapter3Controller c3c;
     // Start is called before the first frame update
     void Start()
     {
+        c3c = GameObject.FindGameObjectWithTag("Chap3Client").GetComponent<Chapter3Controller>();
+
         SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
         listener.onFinalResults.AddListener(Hit);
         listener.onPartialResults.AddListener(Hit);
 
-        StartChanting();
+        //StartChanting();
+
+        for(int i = 0; i < 8; i++)
+        {
+            panels[i].SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -109,5 +117,7 @@ public class ChantingController : MonoBehaviour
         {
             panels[i].SetActive(false);
         }
+
+        c3c.ChantingCompleted();
     }
 }
