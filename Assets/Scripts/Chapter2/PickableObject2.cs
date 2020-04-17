@@ -65,7 +65,8 @@ public class PickableObject2 : MonoBehaviour
             {
                 om2.isWriting = false;
                 StartCoroutine(om2.writeDone());
-                Destroy(this);
+                this.GetComponent<BoxCollider>().enabled = false;
+                //Destroy(this);
             }
         }
     }

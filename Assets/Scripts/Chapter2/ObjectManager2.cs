@@ -374,7 +374,7 @@ public class ObjectManager2 : MonoBehaviour
         c2c.GenerateCrowds();
     }
 
-    public void initCrowd()
+    public void initCrowd(bool secondTime = false)
     {
         crowdNum++;
         if (crowdNum == 3) crowdNum = 0;
@@ -395,7 +395,7 @@ public class ObjectManager2 : MonoBehaviour
 
         GameObject newAudioSource = Instantiate(audioSourcePrefab);
         ASs.Add(newAudioSource);
-        if (!c2c.maxGoOut)
+        if (!secondTime)
         {
             newAudioSource.GetComponent<AudioSource>().clip = clips1[clipNum % 4];
         }
@@ -415,7 +415,7 @@ public class ObjectManager2 : MonoBehaviour
         int i = 0;
         while (true)
         {
-            initCrowd();
+            initCrowd(true);
             float proportion = 0;
             DOTween.To(() => proportion, x => updateCrowd(x), 1, 1);
             yield return new WaitForSeconds(2);
@@ -550,8 +550,9 @@ public class ObjectManager2 : MonoBehaviour
 
     public void testPourWater()
     {
-        //bookReadyToWrite = true;
-        startWrite();
+        bookReadyToWrite = true;
+        //startWrite();
+        StartCoroutine(maxTouchBook());
         //swipeGlass();
         //ShowOutside();
     }
@@ -744,6 +745,7 @@ public class ObjectManager2 : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         movingPhoto.SetActive(true);
+        movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
         movingPhoto.transform.localPosition = movingPhotoOriginalPos;
         movingPhoto.transform.localRotation = movingPhotoOriginalRot;
         showGradually(movingPhoto);
@@ -775,11 +777,13 @@ public class ObjectManager2 : MonoBehaviour
             hm.InputNewWords("What do you want this flower to symbolize when you look at it years from now?", "Touch the book");
 #endif
 
-        movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 3);
-        yield return new WaitForSeconds(1);
+
+        //yield return new WaitForSeconds(1);
 
         ruinedRose.transform.DOLocalMove(ruinedRosePos.localPosition, 1);
         ruinedRose.transform.DOLocalRotateQuaternion(ruinedRosePos.localRotation, 1);
+
+        yield return new WaitForSeconds(1);
     }
 
     public IEnumerator maxTouchBook()
@@ -788,22 +792,22 @@ public class ObjectManager2 : MonoBehaviour
         {
             startWrite();
             bookReadyToWrite = true;
-            isWriting = true;
             yield return new WaitForSeconds(3);
+            isWriting = true;
             table.SetActive(true);
         }
     }
 
     public void startWrite()
     {
-
         movingPhoto.SetActive(false);
+        ruinedRose.SetActive(false);
         albumOnScreen.SetActive(true);
         albumOnScreen.GetComponent<Animator>().speed = 0;
         albumOnScreen.GetComponent<Animator>().Play("pageTwo 0", 0, 0);
 
 #if SHOW_HM
-            hm.InputNewWords("Write a description for the flower.", "Put the book back onto the table after you finish writing.");
+            //hm.InputNewWords("Write a description for the flower.", "Put the book back onto the table after you finish writing.");
 #endif
     }
 
@@ -811,6 +815,7 @@ public class ObjectManager2 : MonoBehaviour
     {
         if (isMax())
         {
+            albumOnScreen.GetComponent<HandWrite>().deleteTrails();
             Vector3 oldpos = movingPhoto.transform.position;
             movingPhoto.transform.position = albumOnScreen.transform.position;
             Quaternion oldrot = movingPhoto.transform.rotation;
@@ -818,7 +823,7 @@ public class ObjectManager2 : MonoBehaviour
             movingPhoto.transform.DOLocalMove(oldpos, 1);
             movingPhoto.transform.DOLocalRotateQuaternion(oldrot, 1);
 
-            Destroy(albumOnScreen);
+            albumOnScreen.SetActive(false);
 
             movingPhoto.SetActive(true);
             movingPhoto.GetComponent<Animator>().Play("pageTwo 0", 0, 0);

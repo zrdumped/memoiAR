@@ -217,6 +217,11 @@ public class ServerStateController : MonoBehaviour
                 state++;
                 server.Broadcast("AnnaTouchBook");
             }
+            else if (state == 9 && stateName == "MaxWriteOnTheBook")
+            {
+                state++;
+                server.Broadcast("MaxWriteOnTheBook");
+            }
         }
     }
 

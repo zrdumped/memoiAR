@@ -26,17 +26,20 @@ public class ViolinController : MonoBehaviour
 
     private ClientStateController csc;
 
+    public GameObject camera;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        violinPlayer = gameObject.GetComponent<AudioSource>();
+        //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
         csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
-        if(csc.chapNum == 1)
+        if (csc.chapNum == 1)
             om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
         else if (csc.chapNum == 2)
-            om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
+           om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
 
-        violinPlayer = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -59,7 +62,11 @@ public class ViolinController : MonoBehaviour
                 case TouchPhase.Moved:
                     // Determine direction by comparing the current touch position with the initial one
                     RaycastHit hit;
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    Ray ray;
+                    if(csc.chapNum == 1)
+                        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    else
+                        ray = camera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.name == "Touchpad")
                     {
                         violinPlayer.volume = Mathf.Lerp(0, 1, (curVelocity - minVelocity) / (maxVelocity - minVelocity));
@@ -105,7 +112,11 @@ public class ViolinController : MonoBehaviour
         else if (Input.GetMouseButton(0))
         {
             RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray;
+            if (csc.chapNum == 1)
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            else
+                ray = camera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.name == "Touchpad")
             {
                 violinPlayer.volume = Mathf.Lerp(0, 1, (curVelocity - minVelocity) / (maxVelocity - minVelocity));

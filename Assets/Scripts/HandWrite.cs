@@ -9,11 +9,13 @@ public class HandWrite : MonoBehaviour
     public GameObject paper;
     public GameObject camera;
     private bool startWriting = false;
+    private List<GameObject> trails;
     // Start is called before the first frame update
     void Start()
     {
         //paper = new Plane(Camera.main.transform.forward * -1, transform.position);
         paper.SetActive(true);
+        trails = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -23,6 +25,7 @@ public class HandWrite : MonoBehaviour
       || Input.GetMouseButtonDown(0))
         {
             hand = Instantiate(Trail);
+            trails.Add(hand);
             var PSmain = hand.GetComponent<ParticleSystem>().main;
             PSmain.customSimulationSpace = camera.transform;
             Ray handRay = camera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
@@ -49,7 +52,17 @@ public class HandWrite : MonoBehaviour
         else if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
  || Input.GetMouseButtonUp(0))
         {
+            hand.GetComponent<ParticleSystem>().Stop();
             startWriting = false;
         }
+    }
+
+    public void deleteTrails()
+    {
+        for(int i = trails.Count - 1; i >= 0; i--)
+        {
+            Destroy(trails[i]);
+        }
+        paper.SetActive(false);
     }
 }
