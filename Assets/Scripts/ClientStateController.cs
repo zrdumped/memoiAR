@@ -112,6 +112,10 @@ public class ClientStateController : MonoBehaviour
             hm.disableButton();
 
             //chapter2Panel.SetActive(false);
+        }else if(chapNum == 3)
+        {
+            hm.changeBackground(3);
+            hm.disableButton();
         }
     }
 

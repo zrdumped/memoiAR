@@ -12,6 +12,8 @@ public class HandWrite : MonoBehaviour
     private List<GameObject> trails;
     private bool firstWrite = true;
     private ObjectManager2 om2;
+    private ObjectManager3 om3;
+    private ClientStateController csc;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +21,12 @@ public class HandWrite : MonoBehaviour
         paper.SetActive(true);
         trails = new List<GameObject>();
 
-        om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
+        csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
+
+        if(csc.chapNum == 2)
+            om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
+        else if(csc.chapNum == 3)
+            om3 = GameObject.FindGameObjectWithTag("ObjectManager3").GetComponent<ObjectManager3>();
     }
 
     // Update is called once per frame
@@ -30,7 +37,13 @@ public class HandWrite : MonoBehaviour
         {
             if (firstWrite)
             {
-                om2.maxStartWrite();
+                if (csc.chapNum == 2)
+                {
+                    om2.maxStartWrite();
+                }else if(csc.chapNum == 3)
+                {
+                    om3.MaxWrite();
+                }
                 firstWrite = false;
             }
             hand = Instantiate(Trail);
