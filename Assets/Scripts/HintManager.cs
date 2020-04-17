@@ -79,7 +79,8 @@ public class HintManager : MonoBehaviour
         Story.text = storyText;
         Instruction.text = insText;
 
-        typeSoundPlayer.Play();
+        if(storyText != "" || insText != "")
+            typeSoundPlayer.Play();
 
         DOTween.To(() => textColor, x => Story.color = x, endColor, 1);
         DOTween.To(() => textColor2, x => Instruction.color = x, endColor, 1);

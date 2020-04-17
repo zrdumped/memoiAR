@@ -20,7 +20,6 @@ public class Chapter3Controller : MonoBehaviour
         om3 = GameObject.FindGameObjectWithTag("ObjectManager3").GetComponent<ObjectManager3>();
         csc = GameObject.FindGameObjectWithTag("Client").GetComponent<ClientStateController>();
 
-        StartCoroutine(FirstChanting());
     }
 
     // Update is called once per frame
@@ -33,6 +32,12 @@ public class Chapter3Controller : MonoBehaviour
     {
         if (csc.isAnna())
             StartCoroutine(FirstChanting());
+
+    }
+
+    public void MaxWriting()
+    {
+
     }
 
     public void ChantingCompleted()
@@ -57,7 +62,7 @@ public class Chapter3Controller : MonoBehaviour
         audioSource.Play();
 
         yield return new WaitForSeconds(3);
-
+        hm.InputNewWords("", "");
         cc.StartChanting();
     }
 
@@ -72,7 +77,7 @@ public class Chapter3Controller : MonoBehaviour
         hm.InputNewWords("More and more women join you.", "Say it again");
 
         yield return new WaitForSeconds(3);
-
+        hm.InputNewWords("", "");
         cc.StartChanting();
     }
 
@@ -87,7 +92,7 @@ public class Chapter3Controller : MonoBehaviour
         hm.InputNewWords("They will not take this from you. ", "Say it out again to the loudest");
 
         yield return new WaitForSeconds(3);
-
+        hm.InputNewWords("", "");
         cc.StartChanting();
     }
 
