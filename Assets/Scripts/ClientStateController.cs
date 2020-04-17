@@ -72,6 +72,7 @@ public class ClientStateController : MonoBehaviour
             c0c = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<Chapter0Controller>();
             hm.InputNewWords("Put on your favourite accessory to wear", "");
             hm.enableButton();
+            hm.changeBackground(0);
             if (isAnna())
             {
                 c0c.setUpAsAnna();
@@ -87,6 +88,7 @@ public class ClientStateController : MonoBehaviour
             anna = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<AnnaController>();
             max = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<MaxController>();
             om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
+            hm.changeBackground(1);
             if (isAnna())
             {
                 om.flowerShopPanel.SetActive(true);
@@ -106,7 +108,7 @@ public class ClientStateController : MonoBehaviour
             anna2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<AnnaController2>();
             max2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<MaxController2>();
             om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
-
+            hm.changeBackground(2);
             hm.disableButton();
 
             //chapter2Panel.SetActive(false);
@@ -401,9 +403,9 @@ public class ClientStateController : MonoBehaviour
             //om.housePanel.SetActive(true);
         }
 #if CHAPTER_2_ONLY
-        chapNum = 2;
+        chapNum = 3;
         loadingPanel.SetActive(true);
-        gm.SwitchScene("Chapter2");
+        gm.SwitchScene("Chapter3");
 #else
         chapNum = 0;
         loadingPanel.SetActive(true);
