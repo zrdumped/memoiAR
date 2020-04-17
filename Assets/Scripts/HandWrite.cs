@@ -30,7 +30,7 @@ public class HandWrite : MonoBehaviour
         {
             if (firstWrite)
             {
-                om2.startWrite();
+                om2.maxStartWrite();
                 firstWrite = false;
             }
             hand = Instantiate(Trail);

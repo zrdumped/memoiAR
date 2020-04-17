@@ -21,7 +21,7 @@ public class ChantingController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
+        SpeechRecognizerListener listener = this.GetComponent<SpeechRecognizerListener>();
         listener.onFinalResults.AddListener(Hit);
         listener.onPartialResults.AddListener(Hit);
 
@@ -84,6 +84,7 @@ public class ChantingController : MonoBehaviour
         panels[5].SetActive(input.Contains("our"));
         panels[6].SetActive(input.Contains("husband"));
         panels[7].SetActive(input.Contains("back"));
+        recognizedNum = 0;
         for (int i = 3; i < 8; i++)
             if (panels[i].activeSelf) recognizedNum++;
         if (recognizedNum == 5)

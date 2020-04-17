@@ -550,7 +550,7 @@ public class ObjectManager2 : MonoBehaviour
     {
         bookReadyToWrite = true;
         //startWrite();
-        StartCoroutine(maxTouchBook());
+        //StartCoroutine(maxTouchBook());
         //swipeGlass();
         //ShowOutside();
     }

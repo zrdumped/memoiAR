@@ -65,13 +65,9 @@ public class PickableObject2 : MonoBehaviour
         }
         else if (type == ObjectType.Table)
         {
-            if (om2.isWriting)
-            {
-                om2.isWriting = false;
-                StartCoroutine(om2.writeDone());
-                this.GetComponent<BoxCollider>().enabled = false;
-                //Destroy(this);
-            }
+            StartCoroutine(om2.writeDone());
+            this.GetComponent<BoxCollider>().enabled = false;
+            //Destroy(this);
         }
     }
 }
