@@ -109,6 +109,8 @@ public class ObjectManager2 : MonoBehaviour
 
     public GameObject table;
 
+    public bool isWriting = false;
+
     //violin
     [Header("Violin")]
     public List<AudioClip> nodeMusic;
@@ -187,7 +189,7 @@ public class ObjectManager2 : MonoBehaviour
         beforeScene.SetActive(false);
         afterScene.SetActive(false);
         blackPanel.SetActive(false);
-        table.SetActive(false);
+        //table.SetActive(false);
 
         //swipe
         ruinedRoseOnScreen.SetActive(false);
@@ -797,7 +799,8 @@ public class ObjectManager2 : MonoBehaviour
 
     public void maxStartWrite()
     {
-        table.SetActive(true);
+        //table.SetActive(true);
+        isWriting = true;
     }
 
     public void startWrite()
