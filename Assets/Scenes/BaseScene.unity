@@ -472,7 +472,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &517930752
 RectTransform:
   m_ObjectHideFlags: 0
@@ -544,7 +544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.35686275, g: 0.50980395, b: 0.6117647, a: 1}
+  m_Color: {r: 0.28627452, g: 0.19607845, b: 0.15686275, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1480,7 +1480,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.043137256, g: 0.043137256, b: 0.043137256, a: 1}
+    m_NormalColor: {r: 0.9528302, g: 0.9440909, b: 0.92136884, a: 1}
     m_HighlightedColor: {r: 0.043137256, g: 0.043137256, b: 0.043137256, a: 1}
     m_PressedColor: {r: 0.043137256, g: 0.043137256, b: 0.043137256, a: 1}
     m_SelectedColor: {r: 0.043137256, g: 0.043137256, b: 0.043137256, a: 1}
@@ -2450,7 +2450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.70980394, g: 0.8039216, b: 0.8392157, a: 1}
+  m_Color: {r: 0.28627452, g: 0.19607845, b: 0.15686275, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3210,7 +3210,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0.8
-  m_Text: You looked for Anna's face whenever you played in the park.
+  m_Text: Put on your favourite accessory to wear
 --- !u!222 &2081091881
 CanvasRenderer:
   m_ObjectHideFlags: 0
