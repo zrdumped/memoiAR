@@ -156,4 +156,5 @@ public class MaxController : CharacterController
         //this.GetComponent<AudioSource>().Stop();
         //maxTopic.SetActive(true);
     }
+
 }

@@ -407,9 +407,9 @@ public class ClientStateController : MonoBehaviour
             //om.housePanel.SetActive(true);
         }
 #if CHAPTER_2_ONLY
-        chapNum = 1;
+        chapNum = 2;
         loadingPanel.SetActive(true);
-        gm.SwitchScene("Chapter1");
+        gm.SwitchScene("Chapter2");
 #else
         chapNum = 0;
         loadingPanel.SetActive(true);
