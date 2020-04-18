@@ -25,7 +25,7 @@ public class ChantingController : MonoBehaviour
     {
         c3c = GameObject.FindGameObjectWithTag("Chap3Client").GetComponent<Chapter3Controller>();
         SpeechRecognizerListener listener = this.GetComponent<SpeechRecognizerListener>();
-        //listener.onFinalResults.AddListener(Hit);
+        listener.onFinalResults.AddListener(End);
         listener.onPartialResults.AddListener(Hit);
 
         //StartChanting();
@@ -73,7 +73,7 @@ public class ChantingController : MonoBehaviour
     public void Hit(string input)
     {
         input.ToLower();
-        if(!panels[3].activeSelf)panels[3].SetActive(input.Contains("give"));
+        if(!panels[3].activeSelf)panels[3].SetActive(true);
         if(!panels[4].activeSelf)panels[4].SetActive(input.Contains("us"));
         if(!panels[5].activeSelf)panels[5].SetActive(input.Contains("our"));
         if(!panels[6].activeSelf)panels[6].SetActive(input.Contains("husband"));
@@ -85,8 +85,12 @@ public class ChantingController : MonoBehaviour
         {
             recognized = true;
             SpeechRecognizer.StopIfRecording();
-            StartCoroutine(disappear());
         }
+    }
+
+    public void End(string input)
+    {
+        StartCoroutine(disappear());
     }
 
     private IEnumerator disappear()
