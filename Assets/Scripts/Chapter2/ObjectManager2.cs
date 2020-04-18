@@ -395,11 +395,11 @@ public class ObjectManager2 : MonoBehaviour
         ASs.Add(newAudioSource);
         if (!secondTime)
         {
-            newAudioSource.GetComponent<AudioSource>().clip = clips1[clipNum % 4];
+            newAudioSource.GetComponent<AudioSource>().clip = clips1[clipNum % 3];
         }
         else
         {
-            newAudioSource.GetComponent<AudioSource>().clip = clips2[clipNum % 2];
+            newAudioSource.GetComponent<AudioSource>().clip = clips2[clipNum % 3];
         }
         newAudioSource.GetComponent<AudioSource>().Play();
         clipNum++;
