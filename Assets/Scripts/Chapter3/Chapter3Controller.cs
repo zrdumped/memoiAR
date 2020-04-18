@@ -67,9 +67,6 @@ public class Chapter3Controller : MonoBehaviour
 
     public IEnumerator MaxEndWrite()
     {
-        changeSound(om3.jailSound);
-
-
         hm.InputNewWords("You try to imagine how she could possibly find your letter.", "");
 
         yield return new WaitForSeconds(3);
@@ -92,7 +89,7 @@ public class Chapter3Controller : MonoBehaviour
     public IEnumerator MaxWriting()
     {
         hm.InputNewWords("Tense minutes turn into hours. Crying and terrified whispers surround you.", "");
-        changeSound(om3.jailSound);
+        changeSound(om3.jailSound, true);
 
         yield return new WaitForSeconds(3);
 
@@ -203,14 +200,14 @@ public class Chapter3Controller : MonoBehaviour
             hm.InputNewWords("it sounds hopeful, what is happening?", "");
         yield return new WaitForSeconds(3);
 
-        audioSource.clip = om3.happierSound;
-        audioSource.Play(); door.GetComponent<Animator>().SetTrigger("OpenDoor");
+
+        changeSound(om3.happierSound);
+        door.GetComponent<Animator>().SetTrigger("OpenDoor");
+        changeSound(om3.doorOpen);
         if (csc.isAnna())
             hm.InputNewWords("Finally you hear shouts of joy from the front of the crowd. Men file out.", "Look for Max");
         else
         {
-            door.GetComponent<Animator>().SetTrigger("OpenDoor");
-            changeSound(om3.doorOpen);
             hm.InputNewWords("They’re letting you go! You can hardly believe it.", "Get out to find Anna");
         }
         yield return new WaitForSeconds(5);
