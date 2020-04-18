@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -6,8 +6,8 @@ using DG.Tweening;
 public class Chapter3Controller : MonoBehaviour
 {
     // Start is called before the first frame update
-    public AudioSource audioSource;
-    public AudioSource audioSourceBG;
+    //public AudioSource audioSource;
+    public GameObject audioSourcePref;
     [Header("Chanting")]
     private HintManager hm;
     private ObjectManager3 om3;
@@ -63,14 +63,11 @@ public class Chapter3Controller : MonoBehaviour
             isInjail = true;
             StartCoroutine(MaxWriting());
         }
-
-        audioSourceBG.Play();
     }
 
     public IEnumerator MaxEndWrite()
     {
-        //audioSource.clip = om3.jailSound;
-        //audioSource.Play();
+        changeSound(om3.jailSound);
 
 
         hm.InputNewWords("You try to imagine how she could possibly find your letter.", "");
@@ -95,8 +92,7 @@ public class Chapter3Controller : MonoBehaviour
     public IEnumerator MaxWriting()
     {
         hm.InputNewWords("Tense minutes turn into hours. Crying and terrified whispers surround you.", "");
-        audioSource.clip = om3.jailSound;
-        audioSource.Play();
+        changeSound(om3.jailSound);
 
         yield return new WaitForSeconds(3);
 
@@ -127,8 +123,8 @@ public class Chapter3Controller : MonoBehaviour
         else
             hm.InputNewWords("A crowd of women? One man spots his wife. Maybe Anna is out there.", "look through the window");
 
-        audioSource.clip = om3.firstChanting;
-        audioSource.Play();
+
+        changeSound(om3.firstChanting);
 
         yield return new WaitForSeconds(3);
         if (csc.isAnna())
@@ -143,8 +139,7 @@ public class Chapter3Controller : MonoBehaviour
             hm.InputNewWords("You hear the chant grow and spread through the crowd.", "");
         else
             hm.InputNewWords("It feels like Anna's voice.", "");
-        audioSource.clip = om3.secondChanting;
-        audioSource.Play();
+        changeSound(om3.secondChanting);
 
         yield return new WaitForSeconds(3);
         if (csc.isAnna())
@@ -163,8 +158,7 @@ public class Chapter3Controller : MonoBehaviour
             hm.InputNewWords("One voice fighting for one thing: your husbands.", "");
         else
             hm.InputNewWords("Yes, it must be her. although you can't see her, you hear her,", "tell Anna where you are");
-        audioSource.clip = om3.thirdChanting;
-        audioSource.Play();
+        changeSound(om3.thirdChanting);
 
         yield return new WaitForSeconds(3);
         if (csc.isAnna())
@@ -183,8 +177,7 @@ public class Chapter3Controller : MonoBehaviour
             hm.InputNewWords("The street burns with rage. Everyone chants for their husbands. Give us our husbands back!", "");
         else
             hm.InputNewWords("Where is Anna! You need to see her.", "");
-        audioSource.clip = om3.groupChanting;
-        audioSource.Play();
+        AudioSource group = changeSound(om3.groupChanting);
 
         yield return new WaitForSeconds(5);
         if (csc.isAnna())
@@ -198,14 +191,12 @@ public class Chapter3Controller : MonoBehaviour
 
         yield return new WaitForSeconds(5);
 
-        audioSource.DOFade(0, 2);
+        group.DOFade(0, 2);
 
         yield return new WaitForSeconds(2);
 
-        audioSource.Stop();
-        audioSource.clip = om3.womenGroupNoise;
-        audioSource.Play();
-        audioSourceBG.Stop();
+        group.Stop();
+        changeSound(om3.womenGroupNoise);
         if (csc.isAnna())
             hm.InputNewWords("When the chant finally ends, the crowd stays. You won't leave until you get your husbands", "Keep patient");
         else
@@ -218,9 +209,8 @@ public class Chapter3Controller : MonoBehaviour
             hm.InputNewWords("Finally you hear shouts of joy from the front of the crowd. Men file out.", "Look for Max");
         else
         {
-
-            audioSource.clip = om3.doorOpen;
-            audioSource.Play();
+            door.GetComponent<Animator>().SetTrigger("OpenDoor");
+            changeSound(om3.doorOpen);
             hm.InputNewWords("They’re letting you go! You can hardly believe it.", "Get out to find Anna");
         }
         yield return new WaitForSeconds(5);
@@ -232,5 +222,15 @@ public class Chapter3Controller : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         om3.endPanel.SetActive(true);
+    }
+
+
+    private AudioSource changeSound(AudioClip clip, bool loop = false)
+    {
+        GameObject AS = Instantiate(audioSourcePref);
+        AS.GetComponent<AudioSource>().clip = clip;
+        AS.GetComponent<AudioSource>().loop = loop;
+        AS.GetComponent<AudioSource>().Play();
+        return AS.GetComponent<AudioSource>();
     }
 }
