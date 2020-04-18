@@ -7,6 +7,7 @@ public class Chapter3Controller : MonoBehaviour
 {
     // Start is called before the first frame update
     public AudioSource audioSource;
+    public AudioSource audioSourceBG;
     [Header("Chanting")]
     private HintManager hm;
     private ObjectManager3 om3;
@@ -41,11 +42,11 @@ public class Chapter3Controller : MonoBehaviour
 
             float distance = Vector3.Distance(jailPos, camPos);
 
-            if (inside && distance >= 0.5)
+            if (inside && distance >= 1)
             {
                 inside = false;
                 hm.InputNewWords("No one escapes from here.", "");
-            }else if(!inside && distance < 0.5)
+            }else if(!inside && distance < 1)
             {
                 inside = true;
                 hm.InputNewWords("", "");
@@ -62,12 +63,14 @@ public class Chapter3Controller : MonoBehaviour
             isInjail = true;
             StartCoroutine(MaxWriting());
         }
+
+        audioSourceBG.Play();
     }
 
     public IEnumerator MaxEndWrite()
     {
-        audioSource.clip = om3.jailSound;
-        audioSource.Play();
+        //audioSource.clip = om3.jailSound;
+        //audioSource.Play();
 
 
         hm.InputNewWords("You try to imagine how she could possibly find your letter.", "");
@@ -202,6 +205,7 @@ public class Chapter3Controller : MonoBehaviour
         audioSource.Stop();
         audioSource.clip = om3.womenGroupNoise;
         audioSource.Play();
+        audioSourceBG.Stop();
         if (csc.isAnna())
             hm.InputNewWords("When the chant finally ends, the crowd stays. You won't leave until you get your husbands", "Keep patient");
         else
@@ -209,12 +213,12 @@ public class Chapter3Controller : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         audioSource.clip = om3.happierSound;
-        audioSource.Play();
+        audioSource.Play(); door.GetComponent<Animator>().SetTrigger("OpenDoor");
         if (csc.isAnna())
             hm.InputNewWords("Finally you hear shouts of joy from the front of the crowd. Men file out.", "Look for Max");
         else
         {
-            door.GetComponent<Animator>().SetTrigger("OpenDoor");
+
             audioSource.clip = om3.doorOpen;
             audioSource.Play();
             hm.InputNewWords("They’re letting you go! You can hardly believe it.", "Get out to find Anna");

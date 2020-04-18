@@ -42,15 +42,7 @@ public class ObjectManager3 : MonoBehaviour
                 readyToPinch = false;
                 StartCoroutine(c3c.MaxEndWrite());
             }
-            if(Input.touchCount == 2)
-            {
-                float distance = Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position);
-                if(distance < 50)
-                {
-                    readyToPinch = false;
-                    StartCoroutine(c3c.MaxEndWrite());
-                }
-            }
+
         }
     }
 
@@ -66,6 +58,14 @@ public class ObjectManager3 : MonoBehaviour
     {
         readyToPinch = true;
         hm.InputNewWords("She may never see these words but you mean them.", "Pinch the paper");
+    }
+
+    public void EndWrite()
+    {
+        paperOnScreen.GetComponent<HandWrite>().deleteTrails();
+        paperOnScreen.SetActive(false);
+        writePanel.SetActive(false);
+        StartCoroutine(c3c.MaxEndWrite());
     }
 
 }

@@ -32,15 +32,27 @@ public class HandWrite : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-      || Input.GetMouseButtonDown(0))
+        Debug.Log(Input.touchCount);
+        if(Input.touchCount == 2)
+        {
+            Debug.Log(Input.GetTouch(0).position +" "+ Input.GetTouch(1).position);
+        }
+        if (Input.touchCount == 2 && Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position) < 200)
+        {
+            om3.EndWrite();
+        }
+        else if (Input.touchCount == 2)
+            return;
+
+       if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began))
         {
             if (firstWrite)
             {
                 if (csc.chapNum == 2)
                 {
                     om2.maxStartWrite();
-                }else if(csc.chapNum == 3)
+                }
+                else if (csc.chapNum == 3)
                 {
                     om3.MaxWrite();
                 }
@@ -57,8 +69,8 @@ public class HandWrite : MonoBehaviour
             //hand.GetComponent<TrailRenderer>().enabled = true;
             startWriting = true;
         }
-        else if (((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-          || Input.GetMouseButton(0)) && startWriting)
+        else if (((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
+) && startWriting)
         {
             Ray handRay = camera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -71,8 +83,8 @@ public class HandWrite : MonoBehaviour
                 //Debug.Log(curVelocity);
             }
         }
-        else if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
- || Input.GetMouseButtonUp(0))
+        else if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended)
+)
         {
             hand.GetComponent<ParticleSystem>().Stop();
             startWriting = false;
