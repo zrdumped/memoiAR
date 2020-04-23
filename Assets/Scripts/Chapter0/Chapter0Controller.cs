@@ -95,6 +95,7 @@ Debug.Log(frontCameraName);
     // Update is called once per frame
     void Update()
     {
+
 #if UNITY_IOS
         if (image.isPlaying)
         {
