@@ -152,6 +152,8 @@ Shader "MyShaders/Rim Light Shader"{
 			// 每次渲染 Additional Pass 都把渲染结果与之前的混合
 			Blend One One
 
+			Cull Off
+
 			CGPROGRAM
 
 			// forward add pass 所必须声明的宏
@@ -247,4 +249,5 @@ Shader "MyShaders/Rim Light Shader"{
 	}
 		// 通过回调函数递归查找 shadow caster pass 来向其他物体投射阴影
 				FallBack "Specular"
+
 }

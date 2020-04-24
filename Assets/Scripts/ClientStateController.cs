@@ -33,6 +33,9 @@ public class ClientStateController : MonoBehaviour
     public GameObject chapter0Panel;
     public GameObject chapter1Panel;
     public GameObject chapter2Panel;
+    public GameObject chapter1EndPanel;
+    public GameObject chapter2EndPanel;
+    public GameObject chapter3EndPanel;
     public GameObject loadingPanel;
 
     //1 || 2
@@ -63,9 +66,9 @@ public class ClientStateController : MonoBehaviour
 
     public void SetupAfterSceneLoaded()
     {
-        loadingPanel.SetActive(false);
         if (chapNum == 0)
         {
+            loadingPanel.SetActive(false);
             //anna = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<AnnaController>();
             //max = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<MaxController>();
             //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
@@ -85,6 +88,7 @@ public class ClientStateController : MonoBehaviour
         }
         else if (chapNum == 1)
         {
+            chapter1Panel.SetActive(false);
             anna = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<AnnaController>();
             max = GameObject.FindGameObjectWithTag("Chap1Client").GetComponent<MaxController>();
             om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
@@ -105,6 +109,7 @@ public class ClientStateController : MonoBehaviour
         }
         else if (chapNum == 2)
         {
+            chapter1EndPanel.SetActive(false);
             anna2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<AnnaController2>();
             max2 = GameObject.FindGameObjectWithTag("Chap2Client").GetComponent<MaxController2>();
             om2 = GameObject.FindGameObjectWithTag("ObjectManager2").GetComponent<ObjectManager2>();
@@ -114,6 +119,7 @@ public class ClientStateController : MonoBehaviour
             //chapter2Panel.SetActive(false);
         }else if(chapNum == 3)
         {
+            chapter2EndPanel.SetActive(false);
             hm.changeBackground(3);
             hm.disableButton();
         }
@@ -193,7 +199,7 @@ public class ClientStateController : MonoBehaviour
             }
             else if (stateName == "EndChapter1")
             {
-                om.stopGame();
+                Chapter1Ended();
             }
         }
         else if (chapNum == 2)
@@ -258,6 +264,10 @@ public class ClientStateController : MonoBehaviour
                 if (isAnna())
                     StartCoroutine(om2.writeDone());
             }
+            else if (stateName == "EndChapter2")
+            {
+                Chapter2Ended();
+            }
         }
     }
 
@@ -274,9 +284,9 @@ public class ClientStateController : MonoBehaviour
     //Chapter 0 
     public void Chapter0Ended()
     {
-        loadingPanel.SetActive(true);
-        chapNum = 2;
-        gm.SwitchScene("Chapter2");
+        chapter1Panel.SetActive(true);
+        chapNum = 1;
+        gm.SwitchScene("Chapter1");
     }
 
     //Chapter 1
@@ -393,6 +403,13 @@ public class ClientStateController : MonoBehaviour
         client.ClientSendMessage("!EndChapter1");
     }
 
+    public void Chapter1Ended()
+    {
+        chapter1Panel.SetActive(true);
+        chapNum = 2;
+        gm.SwitchScene("Chapter2");
+    }
+
     public void ConnectToServer(int signal)
     {
         client.ConnectToTcpServer();
@@ -494,5 +511,22 @@ public class ClientStateController : MonoBehaviour
     public void MaxWriteOnTheBook()
     {
         client.ClientSendMessage("!MaxWriteOnTheBook");
+    }
+
+    public void EndChapter2()
+    {
+        client.ClientSendMessage("!EndChapter2");
+    }
+
+    public void Chapter2Ended()
+    {
+        chapter2EndPanel.SetActive(true);
+        chapNum = 3;
+        gm.SwitchScene("Chapter3");
+    }
+
+    public void EndChapter3()
+    {
+        chapter3EndPanel.SetActive(true);
     }
 }

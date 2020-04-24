@@ -11,7 +11,8 @@ public class ServerStateController : MonoBehaviour
         server = this.GetComponent<TCPTestServer>();
     }
     private int state = 0;
-    private int chap = 2;
+    //private int chap = 1;
+    private int chap = 3;
 
     private int roseNum = 0;
     private int glassNum = 0;
@@ -87,11 +88,6 @@ public class ServerStateController : MonoBehaviour
     public void SetState(string stateName)
     {
         Debug.Log(stateName + " " + state);
-        if (stateName == "ToChapter2")
-        {
-            chap = 2;
-            state = 0;
-        }
         if (chap == 1)
         {
 
@@ -155,7 +151,8 @@ public class ServerStateController : MonoBehaviour
             }
             else if (state == 7 && stateName == "EndChapter1")
             {
-                state++;
+                chap = 2;
+                state = 0;
                 server.Broadcast("EndChapter1");
             }
         }else if(chap == 2)
@@ -221,6 +218,12 @@ public class ServerStateController : MonoBehaviour
             {
                 state++;
                 server.Broadcast("MaxWriteOnTheBook");
+            }
+            else if (state == 10 && stateName == "EndChapter2")
+            {
+                state = 0;
+                chap = 3;
+                server.Broadcast("EndChapter2");
             }
         }
     }

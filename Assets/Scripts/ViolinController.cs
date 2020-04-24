@@ -188,7 +188,7 @@ public class ViolinController : MonoBehaviour
                 {
                     if (currentNum == 2)
                     {
-                        om2.endPanel.SetActive(true);
+                        csc.EndChapter2();
                         break;
                     }
                     //currentNum = 0;

@@ -27,7 +27,7 @@ public class ObjectManager : MonoBehaviour
 
     //public GameObject promptText;
 
-    public GameObject annaPanel, maxPanel, endPanel;
+    public GameObject annaPanel, maxPanel;
     public GameObject parkPanel, housePanel, flowerShopPanel;
 
     public List<GameObject> testUIs;
@@ -56,7 +56,6 @@ public class ObjectManager : MonoBehaviour
         //promptText.SetActive(false);
         annaPanel.SetActive(false);
         maxPanel.SetActive(false);
-        endPanel.SetActive(false);
         parkPanel.SetActive(false);
         housePanel.SetActive(false);
         flowerShopPanel.SetActive(false);
@@ -72,8 +71,8 @@ public class ObjectManager : MonoBehaviour
 
     public void stopGame()
     {
-        endPanel.SetActive(true);
-        Time.timeScale = 0;
+        //endPanel.SetActive(true);
+        //Time.timeScale = 0;
     }
 
     public void disableHouse()

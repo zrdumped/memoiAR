@@ -84,7 +84,7 @@ public class ObjectManager2 : MonoBehaviour
     public List<GameObject> glassPiece_target;
     private int piecesCount = 0;
     public GameObject glassCollider;
-    public GameObject endPanel;
+    //public GameObject endPanel;
     public bool couldDrink = false;
     private int crowdNum = -1;
     public GameObject ruinedRoseOnScreen;
@@ -235,7 +235,7 @@ public class ObjectManager2 : MonoBehaviour
         DOTween.To(() => vLight1.GetComponent<Light>().range, x => vLight1.GetComponent<Light>().range = x, 0, 1);
         DOTween.To(() => vLight2.GetComponent<Light>().range, x => vLight2.GetComponent<Light>().range = x, 0, 1);
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(4);
 
         weddingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
 
@@ -279,7 +279,7 @@ public class ObjectManager2 : MonoBehaviour
         movingPhoto.transform.DOLocalMove(movingPhotoPos.transform.localPosition, 5);
         movingPhoto.transform.DOLocalRotate(movingPhotoPos.transform.localEulerAngles, 5);
 
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(8);
 
         //movingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
         //yield return new WaitForSeconds(1);
@@ -330,7 +330,7 @@ public class ObjectManager2 : MonoBehaviour
 
         DOTween.To(() => fe.FrostAmount, x => fe.FrostAmount = x, 0, 1);
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(4);
 
         //playingPhoto.GetComponent<Animator>().SetInteger("FlipOnePage", 1);
         //yield return new WaitForSeconds(1);

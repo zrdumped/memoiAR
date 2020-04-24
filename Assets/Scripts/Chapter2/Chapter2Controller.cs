@@ -77,13 +77,13 @@ public class Chapter2Controller : MonoBehaviour
             for (int i = 0; i < generatedGrowds.Count; i++)
             {
                 Vector3 pos1 = generatedGrowds[i];
-                Debug.Log(pos1);
+                //Debug.Log(pos1);
                 pos1.y = 0;
                 Vector3 pos2 = ARCamera.transform.position;
                 pos2.y = 0;
                 minDistance = Mathf.Min(minDistance, Vector3.Distance(pos1, pos2));
             }
-            Debug.Log(minDistance);
+            //Debug.Log(minDistance);
             float proportion = 1 - minDistance / crowdRange;
             if(proportion > 0 && !inCrowd)
             {
