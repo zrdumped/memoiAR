@@ -26,7 +26,7 @@ public class Chapter3Controller : MonoBehaviour
 
     private int crowdNum = 6;//on each half axis
     private float crowdDistance = 0.5f;
-    private float crowdRange = 0.3f;
+    private float crowdRange = 0.7f;
 
     public GameObject crowd;
     public GameObject target;
@@ -48,7 +48,7 @@ public class Chapter3Controller : MonoBehaviour
 
         duringTransition = true;
 
-        GenerateCrowd();
+        //GenerateCrowd();
     }
 
     // Update is called once per frame
@@ -56,65 +56,20 @@ public class Chapter3Controller : MonoBehaviour
     {
         if (onTheWayToR)
         {
-            //calculate the min distance
-            float minDistance = 100;
             for (int i = 0; i < generatedGrowds.Count; i++)
             {
                 Vector3 pos1 = generatedGrowds[i].transform.position;
                 //Debug.Log(pos1);
                 Vector3 pos2 = target.transform.position;
                 pos2.y = pos1.y;
-                if(Vector3.Distance(pos1, pos2) < minDistance)
-                {
-                    minDistance = Vector3.Distance(pos1, pos2);
-                    minObject = generatedGrowds[i];
-                }
+
+                generatedGrowds[i].transform.LookAt(pos2);
+
+                float proportion = 1 - Vector3.Distance(pos1, pos2) / crowdRange;
+                om3.updateCrowd(proportion, minObject, target);
             }
-            float proportion = 1 - minDistance / crowdRange;
-            if (proportion > 0 && !inCrowd)
-            {
-                inCrowd = true;
-                om3.initCrowd(minObject);
-                minObject.transform.LookAt(target.transform);
-                Vector3 rotation = minObject.transform.eulerAngles;
-                rotation.x = 90;
-                minObject.transform.eulerAngles = rotation;
-                om3.updateCrowd(proportion, minObject);
-            }
-            else if (proportion > 0 && inCrowd)
-            {
-                minObject.transform.LookAt(target.transform);
-                Vector3 rotation = minObject.transform.eulerAngles;
-                rotation.x = 90;
-                minObject.transform.eulerAngles = rotation;
-                om3.updateCrowd(proportion, minObject);
-            }
-            else if (proportion <= 0 && inCrowd)
-            {
-                inCrowd = false;
-                om3.destroyCrowd(minObject);
-            }
+
         }
-        //if (csc.isMax() && isInjail)
-        //{
-        //    Vector3 jailPos = jail.transform.position;
-        //    jailPos.y = 0;
-
-        //    Vector3 camPos = camera.transform.position;
-        //    camPos.y = 0;
-
-        //    float distance = Vector3.Distance(jailPos, camPos);
-
-        //    if (inside && distance >= 1)
-        //    {
-        //        inside = false;
-        //        hm.InputNewWords("No one escapes from here.", "");
-        //    }else if(!inside && distance < 1)
-        //    {
-        //        inside = true;
-        //        hm.InputNewWords("", "");
-        //    }
-        //}
     }
 
     public void JailFound()
@@ -344,14 +299,17 @@ public class Chapter3Controller : MonoBehaviour
 
     public void HouseFound()
     {
-
+        if (duringTransition)
+        {
+            StartCoroutine(om3.comeBackHome());
+            duringTransition = false;
+        }
     }
 
     public void ParkFound()
     {
         if (duringTransition)
             StartCoroutine(om3.ChangeToRain());
-        duringTransition = false;
     }
 
     public bool isAnna()

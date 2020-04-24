@@ -100,6 +100,8 @@ public class ObjectManager3 : MonoBehaviour
         //storm
         storm.SetActive(false);
 
+        kettleOnScreen.SetActive(false);
+
         //StartCoroutine(ChangeToRain());
     }
 
@@ -229,6 +231,7 @@ public class ObjectManager3 : MonoBehaviour
 
     public IEnumerator comeBackHome()
     {
+        housePanel.SetActive(false);
         chapter3Panel.SetActive(true);
         Color curColor = chapter3Panel.GetComponent<Image>().color;
         curColor.a = 0;
@@ -242,14 +245,14 @@ public class ObjectManager3 : MonoBehaviour
         chapter3Panel.SetActive(false);
 
 #if SHOW_HM
-        if (c2c.isMax())
+        if (c3c.isMax())
             hm.InputNewWords("One day, they came. They herded you into a room on the street of roses, Rosenstrasse.", "Go to Rosenstrasse");
-        else if (c2c.isAnna())
+        else if (c3c.isAnna())
             hm.InputNewWords("You’d greet Max after work with tea as usual.", "");
 #endif
         yield return new WaitForSeconds(5);
 #if SHOW_HM
-        if (c2c.isAnna())
+        if (c3c.isAnna())
             hm.InputNewWords("Max’s shift ended an hour ago. He should be home any minute.", "Touch the tea box");
 #endif
     }
@@ -383,6 +386,7 @@ public class ObjectManager3 : MonoBehaviour
 #if SHOW_HM
         hm.InputNewWords("Something is happening outside.", "Go to Rosenstrasse");
 #endif
+        c3c.GenerateCrowd();
     }
 
     private void OnDestroy()
@@ -414,8 +418,25 @@ public class ObjectManager3 : MonoBehaviour
         PlayMusic(clips[crowdNum]);
     }
 
-    public void updateCrowd(float proportion, GameObject crowd)
+    public void updateCrowd(float proportion, GameObject crowd, GameObject target)
     {
+        if(proportion < 0)
+        {
+            if (crowd.activeSelf)
+                crowd.SetActive(false);
+            return;
+        }
+        else
+        {
+            if (!crowd.activeSelf)
+            {
+                Vector3 pos = crowd.transform.position;
+                pos.y = target.transform.position.y;
+                crowd.transform.position = pos;
+                crowd.SetActive(true);
+            }
+        }
+
         Color curColor = crowd.GetComponent<Renderer>().material.color;
         curColor.a = proportion;
         crowd.GetComponent<Renderer>().material.color = curColor;
