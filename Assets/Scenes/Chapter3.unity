@@ -6900,7 +6900,6 @@ MonoBehaviour:
   Trail: {fileID: 2020274214145953739, guid: 9ad96aafd4fc7934188ade6d058b9031, type: 3}
   paper: {fileID: 290824057}
   camera: {fileID: 995933696}
-  input: []
 --- !u!1 &954275707
 GameObject:
   m_ObjectHideFlags: 0
@@ -12720,7 +12719,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1928693886
 RectTransform:
   m_ObjectHideFlags: 0
