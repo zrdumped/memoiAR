@@ -32,7 +32,7 @@ public class HandWrite : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(Input.touchCount);
+        //Debug.Log(Input.touchCount);
         if(Input.touchCount == 2)
         {
             Debug.Log(Input.GetTouch(0).position +" "+ Input.GetTouch(1).position);
@@ -44,7 +44,7 @@ public class HandWrite : MonoBehaviour
         else if (Input.touchCount == 2)
             return;
 
-       if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began))
+       if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
             if (firstWrite)
             {
@@ -69,8 +69,7 @@ public class HandWrite : MonoBehaviour
             //hand.GetComponent<TrailRenderer>().enabled = true;
             startWriting = true;
         }
-        else if (((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
-) && startWriting)
+        else if (((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)|| Input.GetMouseButton(0)) && startWriting)
         {
             Ray handRay = camera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -83,8 +82,7 @@ public class HandWrite : MonoBehaviour
                 //Debug.Log(curVelocity);
             }
         }
-        else if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended)
-)
+        else if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0))
         {
             hand.GetComponent<ParticleSystem>().Stop();
             startWriting = false;
@@ -93,10 +91,49 @@ public class HandWrite : MonoBehaviour
 
     public void deleteTrails()
     {
-        for(int i = trails.Count - 1; i >= 0; i--)
+        if (csc.chapNum == 2)
         {
-            Destroy(trails[i]);
+            for (int i = trails.Count - 1; i >= 0; i--)
+            {
+                Destroy(trails[i]);
+            }
+            paper.SetActive(false);
         }
-        paper.SetActive(false);
+        else
+        {
+            for (int i = trails.Count - 1; i >= 0; i--)
+            {
+                trails[i].layer = LayerMask.NameToLayer("Invisible");
+            }
+            paper.GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
+
+    public void redo()
+    {
+        for (int i = trails.Count - 1; i >= 0; i--)
+        {
+            trails[i].layer = LayerMask.NameToLayer("Default");
+        }
+    }
+
+    public static Vector3 StringToVector3(string sVector)
+    {
+        // Remove the parentheses
+        if (sVector.StartsWith("(") && sVector.EndsWith(")"))
+        {
+            sVector = sVector.Substring(1, sVector.Length - 2);
+        }
+
+        // split the items
+        string[] sArray = sVector.Split(',');
+
+        // store as a Vector3
+        Vector3 result = new Vector3(
+            float.Parse(sArray[0]),
+            float.Parse(sArray[1]),
+            float.Parse(sArray[2]));
+
+        return result;
     }
 }

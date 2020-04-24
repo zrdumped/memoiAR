@@ -36,6 +36,8 @@ public class Chapter3Controller : MonoBehaviour
     public Vector3 housePos;
     private GameObject minObject;
     private bool inCrowd = false;
+
+    public GameObject embracePanel;
     //private float minDistance;
 
     void Start()
@@ -280,13 +282,28 @@ public class Chapter3Controller : MonoBehaviour
         else
             hm.InputNewWords("You find Anna", "");
 #endif
+
+        //csc.EndChapter3();
+        embracePanel.SetActive(true);
+
         yield return new WaitForSeconds(3);
 
-        csc.EndChapter3();
+        if (isMax())
+        {
+            embracePanel.SetActive(false);
+            om3.StartRedo();
+#if SHOW_HM
+            if (csc.isMax())
+                hm.InputNewWords("Show Anna the letter you wrote for her", "");
+#endif
+        }
+
+
+
     }
 
 
-    private AudioSource changeSound(AudioClip clip, bool loop = false)
+private AudioSource changeSound(AudioClip clip, bool loop = false)
     {
         GameObject AS = Instantiate(audioSourcePref);
         AS.GetComponent<AudioSource>().clip = clip;

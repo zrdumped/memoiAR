@@ -119,6 +119,17 @@ public class ObjectManager3 : MonoBehaviour
         }
     }
 
+    public void test()
+    {
+        StartCoroutine(test2());
+    }
+    public IEnumerator test2()
+    {
+        EndWrite();
+        yield return new WaitForSeconds(5);
+        StartRedo();
+    }
+
     public void StartWriting()
     {
         paper.SetActive(false);
@@ -127,6 +138,13 @@ public class ObjectManager3 : MonoBehaviour
 #if SHOW_HM
         hm.InputNewWords("This is your last chance to write to Anna.", "Write something");
 #endif
+    }
+
+    public void StartRedo()
+    {
+        //paperOnScreen.SetActive(true);
+        paperOnScreen.GetComponent<MeshRenderer>().enabled = true;
+        paperOnScreen.GetComponent<HandWrite>().redo();
     }
 
     public void MaxWrite()
@@ -140,7 +158,7 @@ public class ObjectManager3 : MonoBehaviour
     public void EndWrite()
     {
         paperOnScreen.GetComponent<HandWrite>().deleteTrails();
-        paperOnScreen.SetActive(false);
+        paperOnScreen.GetComponent<MeshRenderer>().enabled = false;
         writePanel.SetActive(false);
         StartCoroutine(c3c.MaxEndWrite());
     }
