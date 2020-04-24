@@ -56,6 +56,7 @@ public class Chapter3Controller : MonoBehaviour
     {
         if (onTheWayToR)
         {
+            float MinDistance = 100;
             for (int i = 0; i < generatedGrowds.Count; i++)
             {
                 Vector3 pos1 = generatedGrowds[i].transform.position;
@@ -66,8 +67,11 @@ public class Chapter3Controller : MonoBehaviour
                 generatedGrowds[i].transform.LookAt(pos2);
 
                 float proportion = 1 - Vector3.Distance(pos1, pos2) / crowdRange;
-                om3.updateCrowd(proportion, minObject, target);
+                om3.updateCrowd(proportion, generatedGrowds[i], target);
+
+                MinDistance = Mathf.Min(MinDistance, Vector3.Distance(pos1, pos2));
             }
+            om3.UpdateCrowdEffects(1 - MinDistance / crowdRange);
 
         }
     }
@@ -332,10 +336,10 @@ public class Chapter3Controller : MonoBehaviour
             for (float j = pos1.z - crowdNum * crowdDistance; j <= pos1.z + crowdNum * crowdDistance; j += crowdDistance)
             {
                 GameObject newCrowd = Instantiate(crowd);
-                newCrowd.GetComponent<Renderer>().material = Instantiate(crowd.GetComponent<Renderer>().sharedMaterial);
-                Color c = newCrowd.GetComponent<Renderer>().material.color;
+                newCrowd.GetComponentInChildren<Renderer>().material = Instantiate(crowd.GetComponentInChildren<Renderer>().sharedMaterial);
+                Color c = newCrowd.GetComponentInChildren<Renderer>().material.color;
                 c.a = 0;
-                newCrowd.GetComponent<Renderer>().material.color = c;
+                newCrowd.GetComponentInChildren<Renderer>().material.color = c;
                 newCrowd.transform.position = new Vector3(i, house.transform.position.y, j);
                 newCrowd.SetActive(false);
                 generatedGrowds.Add(newCrowd);

@@ -89,7 +89,7 @@ public class ObjectManager3 : MonoBehaviour
         writePanel.SetActive(false);
 #if SHOW_HM
         hm = GameObject.FindGameObjectWithTag("Hint").GetComponent<HintManager>();
-        hm.InputNewWords("Things only get worse. Each day takes you farther from normal life.", "Go to Park");
+        hm.InputNewWords("Things only get worse. Each day takes you further from normal life.", "Go to Park");
 #endif
         c3c = GameObject.FindGameObjectWithTag("Chap3Client").GetComponent<Chapter3Controller>();
         parkPanel.SetActive(true);
@@ -188,7 +188,7 @@ public class ObjectManager3 : MonoBehaviour
     {
 #if SHOW_HM
         if (c3c.isMax())
-            hm.InputNewWords("you joined the men in the factories", "go back home");
+            hm.InputNewWords("You joined the men in the factories", "go back home");
         else
             hm.InputNewWords("A country at war has no need for flower shops. You held onto your pressed flowers.", "go back home");
         
@@ -296,7 +296,7 @@ public class ObjectManager3 : MonoBehaviour
         teaboxLid.GetComponent<Animator>().SetTrigger("OpenLid");
         teaboxTouched = true;
 #if SHOW_HM
-        hm.InputNewWords("Empty: looks like it's 'tea' with no tea leaves again.", "Touch the kettle");
+        hm.InputNewWords("Empty: looks like it's 'tea' with no tea left again.", "Touch the kettle");
 #endif
         return;
     }
@@ -324,7 +324,7 @@ public class ObjectManager3 : MonoBehaviour
     {
         if (c3c.isMax()) yield break;
 #if SHOW_HM
-        hm.InputNewWords("Max would usually be home by now.", "");
+        hm.InputNewWords("Max would usually be home now.", "");
 #endif
         cups[0].GetComponent<BoxCollider>().enabled = false;
         cups[1].GetComponent<BoxCollider>().enabled = false;
@@ -401,10 +401,10 @@ public class ObjectManager3 : MonoBehaviour
         crowd.SetActive(true);
         crowdNum++;
         if (crowdNum == 3) crowdNum = 0;
-        Color curColor = crowd.GetComponent<Renderer>().material.color;
+        Color curColor = crowd.GetComponentInChildren<Renderer>().material.color;
         curColor.a = 0;
-        crowd.GetComponent<Renderer>().material.color = curColor;
-        crowd.GetComponent<Renderer>().material.SetTexture("_MainTex", crowds[crowdNum]);
+        crowd.GetComponentInChildren<Renderer>().material.color = curColor;
+        crowd.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", crowds[crowdNum]);
 
         curColor = effectPanel1.GetComponent<Image>().color;
         curColor.a = 0;
@@ -415,7 +415,7 @@ public class ObjectManager3 : MonoBehaviour
         effectPanel1.SetActive(true);
         effectPanel2.SetActive(true);
 
-        PlayMusic(clips[crowdNum]);
+
     }
 
     public void updateCrowd(float proportion, GameObject crowd, GameObject target)
@@ -434,13 +434,39 @@ public class ObjectManager3 : MonoBehaviour
                 pos.y = target.transform.position.y;
                 crowd.transform.position = pos;
                 crowd.SetActive(true);
+
+                crowdNum++;
+                if (crowdNum == 3) crowdNum = 0;
+                crowd.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", crowds[crowdNum]);
+
+                PlayMusic(clips[crowdNum]);
             }
         }
 
-        Color curColor = crowd.GetComponent<Renderer>().material.color;
+        Color curColor = crowd.GetComponentInChildren<Renderer>().material.color;
         curColor.a = proportion;
-        crowd.GetComponent<Renderer>().material.color = curColor;
+        crowd.GetComponentInChildren<Renderer>().material.color = curColor;
 
+        //crowdScreamingAS.volume = proportion;
+    }
+
+    public void UpdateCrowdEffects(float proportion)
+    {
+        if (proportion < 0)
+        {
+            effectPanel1.SetActive(false);
+            effectPanel2.SetActive(false);
+            return;
+        }
+        else
+        {
+            if (!effectPanel1.activeSelf)
+            {
+                effectPanel1.SetActive(true);
+                effectPanel2.SetActive(true);
+            }
+        }
+        Color curColor;
         if (proportion <= 0.3)
         {
             float scaledProportion = proportion / 0.3f;
@@ -474,8 +500,6 @@ public class ObjectManager3 : MonoBehaviour
             effectPanel2.GetComponent<Image>().color = curColor;
             effectPanel2.GetComponent<Image>().sprite = effects[1];
         }
-
-        //crowdScreamingAS.volume = proportion;
     }
 
     public void destroyCrowd(GameObject crowd)
