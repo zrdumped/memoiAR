@@ -82,7 +82,7 @@ public class Chapter3Controller : MonoBehaviour
     {
         if (csc.isAnna())
         {
-            om3.destroyCrowd(minObject);
+            om3.destroyCrowd();
 
             for (int i = 0; i < generatedGrowds.Count; i++)
             {

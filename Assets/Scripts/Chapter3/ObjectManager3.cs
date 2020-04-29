@@ -537,9 +537,8 @@ public class ObjectManager3 : MonoBehaviour
         }
     }
 
-    public void destroyCrowd(GameObject crowd)
+    public void destroyCrowd()
     {
-        crowd.SetActive(false);
         effectPanel1.SetActive(false);
         effectPanel2.SetActive(false);
     }
