@@ -40,6 +40,7 @@ public class ObjectManager3 : MonoBehaviour
     public AudioClip doorOpen;
     public GameObject paper;
     public GameObject paperOnScreen;
+    public GameObject paperOfCredit;
     public GameObject writePanel;
     private bool readyToPinch = false;
 
@@ -126,8 +127,10 @@ public class ObjectManager3 : MonoBehaviour
     public IEnumerator test2()
     {
         EndWrite();
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         StartRedo();
+        yield return new WaitForSeconds(3);
+        FlipPage();
     }
 
     public void StartWriting()
@@ -151,7 +154,7 @@ public class ObjectManager3 : MonoBehaviour
     {
         readyToPinch = true;
 #if SHOW_HM
-        hm.InputNewWords("She may never see these words but you mean them.", "Pinch the paper");
+        hm.InputNewWords("She may never see these words, but you mean them.", "Pinch the paper");
 #endif
     }
 
@@ -391,7 +394,7 @@ public class ObjectManager3 : MonoBehaviour
         //cup.GetComponent<MeshCollider>().enabled = false;
 
 #if SHOW_HM
-        hm.InputNewWords("It is late now. Why Max hasn't come home?", "");
+        hm.InputNewWords("It's getting late. Why hasn't Max come home yet?", "");
 #endif
         //light change
         DOTween.To(() => 0, x => normalProfile.GetSetting<ColorGrading>().temperature.value = x, -30, 3);
@@ -525,5 +528,17 @@ public class ObjectManager3 : MonoBehaviour
         crowd.SetActive(false);
         effectPanel1.SetActive(false);
         effectPanel2.SetActive(false);
+    }
+
+    public IEnumerator FlipPage()
+    {
+        Vector3 rot = paperOnScreen.transform.localEulerAngles;
+        rot.y += 180;
+        paperOnScreen.transform.DOLocalRotate(rot, 2);
+        rot = paperOfCredit.transform.localEulerAngles;
+        rot.y += 180;
+        paperOfCredit.transform.DOLocalRotate(rot, 2);
+        yield return new WaitForSeconds(5);
+        c3c.EndChapter3();
     }
 }

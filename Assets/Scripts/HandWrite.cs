@@ -8,12 +8,14 @@ public class HandWrite : MonoBehaviour
     private GameObject hand;
     public GameObject paper;
     public GameObject camera;
+    public GameObject credit;
     private bool startWriting = false;
     private List<GameObject> trails;
     private bool firstWrite = true;
     private ObjectManager2 om2;
     private ObjectManager3 om3;
     private ClientStateController csc;
+    private bool secondWrite = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,16 +35,24 @@ public class HandWrite : MonoBehaviour
     void Update()
     {
         //Debug.Log(Input.touchCount);
-        if(Input.touchCount == 2)
+        if (om3 != null)
         {
-            Debug.Log(Input.GetTouch(0).position +" "+ Input.GetTouch(1).position);
+            if (Input.touchCount == 2 && Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position) < 200)
+            {
+                if (secondWrite)
+                {
+                    for (int i = trails.Count - 1; i >= 0; i--)
+                    {
+                        trails[i].layer = LayerMask.NameToLayer("Invisible");
+                    }
+                    StartCoroutine(om3.FlipPage());
+                }
+                else
+                    om3.EndWrite();
+            }
+            else if (Input.touchCount == 2)
+                return;
         }
-        if (Input.touchCount == 2 && Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position) < 200)
-        {
-            om3.EndWrite();
-        }
-        else if (Input.touchCount == 2)
-            return;
 
        if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {

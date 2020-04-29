@@ -124,7 +124,7 @@ public class Chapter3Controller : MonoBehaviour
     public IEnumerator MaxWriting()
     {
 #if SHOW_HM
-        hm.InputNewWords("Tense minutes turn into hours. Crying and terrified whispers surround you.", "");
+        hm.InputNewWords("Minutes turn into hours. You can hear crying and terrified whispers.", "");
 #endif
 
         changeSound(om3.jailSound, true);
@@ -151,7 +151,7 @@ public class Chapter3Controller : MonoBehaviour
     {
 #if SHOW_HM
         if (csc.isAnna())
-            hm.InputNewWords("A crowd gathers outside the building holding the Jews.", "");
+            hm.InputNewWords("A crowd gathers outside a building on Ronsenstrasse.", "");
         else
             hm.InputNewWords("Something is happening outside", "");
 #endif
@@ -160,7 +160,7 @@ public class Chapter3Controller : MonoBehaviour
         if (csc.isAnna())
             hm.InputNewWords("A chant starts from the front of the crowd.", "");
         else
-            hm.InputNewWords("A crowd of women? One man spots his wife. Maybe Anna is out there.", "look through the window");
+            hm.InputNewWords("There’s a crowd of women outside. Maybe Annaliese is out there.", "Look through the window");
 #endif
 
         changeSound(om3.firstChanting);
@@ -178,16 +178,16 @@ public class Chapter3Controller : MonoBehaviour
     {
 #if SHOW_HM
         if (csc.isAnna())
-            hm.InputNewWords("You hear the chant grow and spread through the crowd.", "");
+            hm.InputNewWords("The chants grow louder and spread throughout the crowd.", "");
         else
-            hm.InputNewWords("It feels like Anna's voice.", "");
+            hm.InputNewWords("It sounds like Annaliese.", "");
 #endif
         changeSound(om3.secondChanting);
 
         yield return new WaitForSeconds(3);
 #if SHOW_HM
         if (csc.isAnna())
-            hm.InputNewWords("More and more women join you.", "Say it again");
+            hm.InputNewWords("More women join you.", "Chant again");
 #endif
 
         yield return new WaitForSeconds(3);
@@ -203,16 +203,16 @@ public class Chapter3Controller : MonoBehaviour
     {
 #if SHOW_HM
         if (csc.isAnna())
-            hm.InputNewWords("One voice fighting for one thing: your husbands.", "");
+            hm.InputNewWords("One voice fighting together for your husbands.", "");
         else
-            hm.InputNewWords("Yes, it must be her. although you can't see her, you hear her,", "tell Anna where you are");
+            hm.InputNewWords("It is Annaliese! Although you can’t see her you can hear her voice.", "Call out to Annaliese");
 #endif
         changeSound(om3.thirdChanting);
 
         yield return new WaitForSeconds(3);
 #if SHOW_HM
         if (csc.isAnna())
-            hm.InputNewWords("They will not take this from you. ", "Say it out again to the loudest");
+            hm.InputNewWords("They will not take them away from you.", "Chant louder");
 #endif
 
         yield return new WaitForSeconds(3);
@@ -230,7 +230,7 @@ public class Chapter3Controller : MonoBehaviour
         if (csc.isAnna())
             hm.InputNewWords("The street burns with rage. Everyone chants for their husbands. Give us our husbands back!", "");
         else
-            hm.InputNewWords("Where is Anna! You need to see her.", "");
+            hm.InputNewWords("Where is she? You need to see her.", "");
         #endif
         AudioSource group = changeSound(om3.groupChanting);
 
@@ -259,7 +259,7 @@ public class Chapter3Controller : MonoBehaviour
         if (csc.isAnna())
             hm.InputNewWords("When the chant finally ends, the crowd stays. You won't leave until you get your husbands", "Keep patient");
         else
-            hm.InputNewWords("it sounds hopeful, what is happening?", "");
+            hm.InputNewWords("It sounds hopeful, what is happening?", "");
 #endif
         yield return new WaitForSeconds(3);
 
@@ -272,7 +272,7 @@ public class Chapter3Controller : MonoBehaviour
             hm.InputNewWords("Finally you hear shouts of joy from the front of the crowd. Men file out.", "Look for Max");
         else
         {
-            hm.InputNewWords("They’re letting you go! You can hardly believe it.", "Get out to find Anna");
+            hm.InputNewWords("They’re letting you go! You can hardly believe it.", "Look for Annaliese");
         }
 #endif
         yield return new WaitForSeconds(5);
@@ -293,13 +293,9 @@ public class Chapter3Controller : MonoBehaviour
             embracePanel.SetActive(false);
             om3.StartRedo();
 #if SHOW_HM
-            if (csc.isMax())
-                hm.InputNewWords("Show Anna the letter you wrote for her", "");
+            hm.InputNewWords("Show Anna the letter you wrote for her.", "Spin the paper to flip");
 #endif
         }
-
-
-
     }
 
 
@@ -363,5 +359,10 @@ private AudioSource changeSound(AudioClip clip, bool loop = false)
             }
         }
         onTheWayToR = true;
+    }
+
+    public void EndChapter3()
+    {
+        csc.EndChapter3();
     }
 }
