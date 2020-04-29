@@ -25,6 +25,7 @@ public class ObjectManager2 : MonoBehaviour
     public PostProcessProfile summerProfile;
     private float srcVLight1Intensity, srcVLight2Intensity;
     private float srcVLight1Range, srcVLight2Range;
+    public AudioClip summerSound;
 
     [Header("Autumn")]
     public GameObject house;
@@ -35,6 +36,7 @@ public class ObjectManager2 : MonoBehaviour
     private Vector3 movingPhotoOriginalPos;
     private Quaternion movingPhotoOriginalRot;
     public GameObject movingPhotoPos;
+    public AudioClip autumnSound;
 
     [Header("Winter")]
     public GameObject park;
@@ -43,6 +45,7 @@ public class ObjectManager2 : MonoBehaviour
     public GameObject playingPhoto;
     public GameObject playingPhotoPos;
     public FrostEffect fe;
+    public AudioClip winterSound;
 
     [Header("Panels")]
     public GameObject flowershopPanel;
@@ -204,6 +207,7 @@ public class ObjectManager2 : MonoBehaviour
 
     public IEnumerator ChangeToSummer()
     {
+        AudioSource audioSource = PlayMusic(summerSound);
         hm.InputNewWords("You got married with the person you met in the park", "Go to Max's home");
         StartCoroutine(showGradually(flowershop));
         flowershopPanel.SetActive(false);
@@ -245,7 +249,7 @@ public class ObjectManager2 : MonoBehaviour
 
         volumn.profile = normalProfile;
 
-
+        Destroy(audioSource);
         //Color curColor = weddingPhoto.GetComponent<Renderer>().material.color;
         //weddingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
         //curColor.a = 1;
@@ -266,7 +270,7 @@ public class ObjectManager2 : MonoBehaviour
         else if (c2c.isAnna())
             hm.InputNewWords("Over time, his apartment became our apartment", "Go to The Park");
 #endif
-
+        AudioSource audioSource = PlayMusic(autumnSound);
         StartCoroutine(showGradually(house));
 
         housePanel.SetActive(false);
@@ -288,6 +292,7 @@ public class ObjectManager2 : MonoBehaviour
         //leaves.SetActive(false);
         leaves.GetComponent<ParticleSystem>().Stop();
         volumn.profile = normalProfile;
+        Destroy(audioSource);
         //movingPhoto.SetActive(true);
         //Color curColor = movingPhoto.GetComponent<Renderer>().material.color;
         //movingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
@@ -311,6 +316,7 @@ public class ObjectManager2 : MonoBehaviour
         else if (c2c.isAnna())
             hm.InputNewWords("Selling flowers was always a great excuse to go see him play", "");
 #endif
+        AudioSource audioSource = PlayMusic(winterSound);
         StartCoroutine(showGradually(park));
 
         playingPhoto.SetActive(true);
@@ -341,7 +347,7 @@ public class ObjectManager2 : MonoBehaviour
         fe.enabled = false;
         volumn.profile = normalProfile;
         snow.GetComponent<ParticleSystem>().Stop();
-
+        Destroy(audioSource);
         //playingPhoto.SetActive(true);
         //Color curColor = playingPhoto.GetComponent<Renderer>().material.color;
         //playingPhoto.GetComponent<Renderer>().material.color = new Color(curColor.r, curColor.g, curColor.b, 0);
@@ -910,5 +916,13 @@ public class ObjectManager2 : MonoBehaviour
             r.material = materials[count];
             count++;
         }
+    }
+
+    public AudioSource PlayMusic(AudioClip ac)
+    {
+        AudioSource newAS = Instantiate(audioSource).GetComponent<AudioSource>() as AudioSource;
+        newAS.clip = ac;
+        newAS.Play();
+        return newAS;
     }
 }

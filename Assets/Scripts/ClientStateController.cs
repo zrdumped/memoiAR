@@ -55,6 +55,7 @@ public class ClientStateController : MonoBehaviour
         chapter2Panel.SetActive(false);
     }
 
+
     private void Update()
     {
         if (newState)

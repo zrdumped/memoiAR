@@ -4556,6 +4556,7 @@ MonoBehaviour:
   Trail: {fileID: 2020274214145953739, guid: 9ad96aafd4fc7934188ade6d058b9031, type: 3}
   paper: {fileID: 682885418}
   camera: {fileID: 373278381}
+  credit: {fileID: 0}
 --- !u!4 &585479760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3492552712840721580, guid: 970b49cdc3df6a54bb3ebf6a580139ab,
@@ -5717,18 +5718,21 @@ MonoBehaviour:
   flarePos1: {fileID: 139451023}
   flarePos2: {fileID: 1999828218}
   summerProfile: {fileID: 11400000, guid: 29997b6928b9861419ebf19d327d6faa, type: 2}
+  summerSound: {fileID: 8300000, guid: 6a8ff357b924a01409b719e663e4820c, type: 3}
   house: {fileID: 1110953696}
   houseEnv: {fileID: 8296172668390301638}
   autumnProfile: {fileID: 11400000, guid: e2f921e9b6d36c842b11260e26a11eae, type: 2}
   leaves: {fileID: 2079233599}
   movingPhoto: {fileID: 1214069942}
   movingPhotoPos: {fileID: 1944095845}
+  autumnSound: {fileID: 8300000, guid: 4d892300587068c43898d02070dc175e, type: 3}
   park: {fileID: 40666394}
   winterProfile: {fileID: 11400000, guid: 023bbab93810f06469506dd25bbe748d, type: 2}
   snow: {fileID: 64378118}
   playingPhoto: {fileID: 746761355}
   playingPhotoPos: {fileID: 1162017382}
   fe: {fileID: 556740517}
+  winterSound: {fileID: 8300000, guid: 8c4592c40223a824aa9e17419b493fbf, type: 3}
   flowershopPanel: {fileID: 449459881}
   housePanel: {fileID: 1977847820}
   parkPanel: {fileID: 638978666}
@@ -5771,7 +5775,6 @@ MonoBehaviour:
   - {fileID: 990471840}
   - {fileID: 1589732328}
   glassCollider: {fileID: 1578163119}
-  endPanel: {fileID: 0}
   couldDrink: 0
   ruinedRoseOnScreen: {fileID: 2115080144}
   albumOnScreen: {fileID: 585479757}
@@ -5781,13 +5784,13 @@ MonoBehaviour:
   audioSourcePrefab: {fileID: 5219480947653434125, guid: 330bb0ba5c8957b46b77b710f59b8df7,
     type: 3}
   clips1:
-  - {fileID: 8300000, guid: 9734460a3c57035489e23a108959f5a3, type: 3}
-  - {fileID: 8300000, guid: 2cc8c84a34cabfc46a9c9a75050c7e3b, type: 3}
-  - {fileID: 8300000, guid: ffa09d387b6c64144b5b2b62cbf38750, type: 3}
+  - {fileID: 8300000, guid: 695caad0fb83b9b4094c28a79f3eb4e4, type: 3}
+  - {fileID: 8300000, guid: b6fcaeed24b724241af779f07d1561a9, type: 3}
+  - {fileID: 8300000, guid: e03bab6b4381f654da204eaf933b27e5, type: 3}
   clips2:
-  - {fileID: 8300000, guid: c9296deb252610c458a1dbe83f62e322, type: 3}
-  - {fileID: 8300000, guid: d959e931e4dda1a46975423894fecb2f, type: 3}
-  - {fileID: 8300000, guid: 724a235e98615c542896198b490887a8, type: 3}
+  - {fileID: 8300000, guid: 62cda4af976ac754da3b2a207be87462, type: 3}
+  - {fileID: 8300000, guid: e8335638498b81b4c8d56c95b3ef7523, type: 3}
+  - {fileID: 8300000, guid: 52f5269bdd46ca74f8b7d855fd2b4620, type: 3}
   srceamingSound: {fileID: 8300000, guid: 1b08af49c23e22f408315b4263b71a23, type: 3}
   table: {fileID: 1565785316}
   isWriting: 0

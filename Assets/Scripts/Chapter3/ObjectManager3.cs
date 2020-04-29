@@ -83,6 +83,8 @@ public class ObjectManager3 : MonoBehaviour
     public List<Texture> crowds;
     public List<AudioClip> clips;
     private int crowdNum = -1;
+    private int clipNum = -1;
+    private List<AudioSource> curAS;
 
     void Start()
     {
@@ -104,6 +106,8 @@ public class ObjectManager3 : MonoBehaviour
         kettleOnScreen.SetActive(false);
 
         //StartCoroutine(ChangeToRain());
+
+        curAS = new List<AudioSource>(3);
     }
 
     // Update is called once per frame
@@ -457,10 +461,20 @@ public class ObjectManager3 : MonoBehaviour
                 crowd.SetActive(true);
 
                 crowdNum++;
-                if (crowdNum == 3) crowdNum = 0;
+                if (crowdNum == crowds.Count) crowdNum = 0;
                 crowd.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", crowds[crowdNum]);
 
-                PlayMusic(clips[crowdNum]);
+                //PlayMusic(clips[crowdNum]);
+                for(int i = 0; i < 3; i++)
+                {
+                    if(curAS[i]==null || !curAS[i].isPlaying)
+                    {
+                        clipNum++;
+                        if (clipNum == clips.Count) clipNum = 0;
+                        curAS[i] = PlayMusic(clips[clipNum]);
+                        break;
+                    }
+                }
             }
         }
 

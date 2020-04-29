@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering.PostProcessing;
-using Vuforia;
 using DG.Tweening;
 
 public class Chapter0Controller : MonoBehaviour
@@ -89,7 +88,6 @@ Debug.Log(frontCameraName);
         frontImage_Android.GetComponent<RawImage>().material.mainTexture = image;
 #endif
         image.Play();
-
     }
 
     // Update is called once per frame
