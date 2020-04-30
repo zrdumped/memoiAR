@@ -80,8 +80,8 @@ public class MaxController : CharacterController
 
     public void ConfirmComposing()
     {
-        story = "You composed a music";
-        ins = "pick up the violin case to confirm";
+        story = "You composed some music";
+        ins = "Pick up the violin case to confirm";
         hm.InputNewWords(story, ins);
     }
 
