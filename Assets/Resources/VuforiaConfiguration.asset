@@ -28,7 +28,7 @@ MonoBehaviour:
     disableModelExtraction: 0
   videoBackground:
     numDivisions: 2
-    videoBackgroundShader: {fileID: 4800000, guid: f40623b353e2f1943b1b3ba42975db7a,
+    videoBackgroundShader: {fileID: 4800000, guid: 79a7e681f254241da970a6bcc50f8e6e,
       type: 3}
     videoBackgroundEnabled: 1
   deviceTracker:
