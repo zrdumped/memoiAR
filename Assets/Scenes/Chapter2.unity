@@ -5744,10 +5744,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fb6e3d610ef5b86458b0cf1b23655cf7, type: 3}
   - {fileID: 21300000, guid: 7b5160996218b4c4ca1948864f595a10, type: 3}
   - {fileID: 21300000, guid: 03ed75266f6bff540a314d02919eceef, type: 3}
-  crowds:
-  - {fileID: 21300000, guid: 540b91aeb5db200409e062c83d763bbb, type: 3}
-  - {fileID: 21300000, guid: c27ada5629eebf245ad56f1d9943cd52, type: 3}
-  - {fileID: 21300000, guid: 126d686aa515d864b936406c591c23bb, type: 3}
   crowdScreamingAS: {fileID: 149336469}
   ruinedRose: {fileID: 1578163119}
   ruinedRosePos: {fileID: 1791542721}
@@ -5794,6 +5790,10 @@ MonoBehaviour:
   srceamingSound: {fileID: 8300000, guid: 1b08af49c23e22f408315b4263b71a23, type: 3}
   table: {fileID: 1565785316}
   isWriting: 0
+  crowds:
+  - {fileID: 2800000, guid: 540b91aeb5db200409e062c83d763bbb, type: 3}
+  - {fileID: 2800000, guid: c27ada5629eebf245ad56f1d9943cd52, type: 3}
+  - {fileID: 2800000, guid: 126d686aa515d864b936406c591c23bb, type: 3}
   nodeMusic:
   - {fileID: 8300000, guid: 846c8387cbc9c70438c119feae36711a, type: 3}
   - {fileID: 8300000, guid: 7b9444fafa4db3548836658cf7bf35c1, type: 3}
@@ -10307,6 +10307,8 @@ MonoBehaviour:
   crowdBgAS: {fileID: 1574023608}
   maxGoOut: 0
   maxGoingBack: 0
+  target: {fileID: 373278381}
+  crowd: {fileID: 8689305862325759829, guid: 9dd2b759d62b1ee4f8b7ecada95d6544, type: 3}
   ARCamera: {fileID: 373278381}
 --- !u!82 &1574023608
 AudioSource:

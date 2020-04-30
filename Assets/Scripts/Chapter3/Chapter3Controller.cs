@@ -73,7 +73,7 @@ public class Chapter3Controller : MonoBehaviour
 
                 MinDistance = Mathf.Min(MinDistance, Vector3.Distance(pos1, pos2));
             }
-            om3.UpdateCrowdEffects(1 - MinDistance / crowdRange);
+            om3.UpdateCrowdEffects(-1);
 
         }
     }
@@ -88,13 +88,14 @@ public class Chapter3Controller : MonoBehaviour
             {
                 Destroy(generatedGrowds[i]);
             }
-
-            StartCoroutine(FirstChanting());
+            csc.AnnaArriveJail();
+            //StartCoroutine(FirstChanting());
         }
         else
         {
             isInjail = true;
             StartCoroutine(MaxWriting());
+            csc.MaxArriveJail();
         }
     }
 
@@ -103,22 +104,22 @@ public class Chapter3Controller : MonoBehaviour
 #if SHOW_HM
         hm.InputNewWords("You try to imagine how she could possibly find your letter.", "");
 #endif
+        yield return null;
+        //yield return new WaitForSeconds(3);
 
-        yield return new WaitForSeconds(3);
+        //StartCoroutine(FirstChanting());
 
-        StartCoroutine(FirstChanting());
+        //yield return new WaitForSeconds(10);
 
-        yield return new WaitForSeconds(10);
+        //ChantingCompleted();
 
-        ChantingCompleted();
+        //yield return new WaitForSeconds(10);
 
-        yield return new WaitForSeconds(10);
+        //ChantingCompleted();
 
-        ChantingCompleted();
+        //yield return new WaitForSeconds(10);
 
-        yield return new WaitForSeconds(10);
-
-        ChantingCompleted();
+        //ChantingCompleted();
     }
 
     public IEnumerator MaxWriting()
@@ -140,11 +141,14 @@ public class Chapter3Controller : MonoBehaviour
     {
         chantingNum++;
         if (chantingNum == 1)
-            StartCoroutine(SecondChanting());
+            csc.FirstChantEnd();
+        //StartCoroutine(SecondChanting());
         else if (chantingNum == 2)
-            StartCoroutine(ThirdChanting());
+            csc.SecondChantEnd();
+        //StartCoroutine(ThirdChanting());
         else if (chantingNum == 3)
-            StartCoroutine(FinalChanting());
+            csc.FinalChantEnd();
+            //StartCoroutine(FinalChanting());
     }
 
     public IEnumerator FirstChanting()

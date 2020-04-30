@@ -58,7 +58,7 @@ public class ObjectManager2 : MonoBehaviour
     public GameObject effectPanel1;
     public GameObject effectPanel2;
     public List<Sprite> effects;
-    public List<Sprite> crowds;
+    //public List<Sprite> crowds;
     public AudioSource crowdScreamingAS;
 
     [Header("Max's House")]
@@ -108,11 +108,14 @@ public class ObjectManager2 : MonoBehaviour
     public List<AudioClip> clips1;
     public List<AudioClip> clips2;
     public AudioClip srceamingSound;
-    private int clipNum = 0;
+    private int clipNum = -1;
 
     public GameObject table;
 
     public bool isWriting = false;
+
+    private List<AudioSource> curAS;
+    public List<Texture> crowds;
 
     //violin
     [Header("Violin")]
@@ -203,12 +206,16 @@ public class ObjectManager2 : MonoBehaviour
         violin.SetActive(false);
 
         ASs = new List<GameObject>();
+        curAS = new List<AudioSource>(3);
     }
 
     public IEnumerator ChangeToSummer()
     {
         AudioSource audioSource = PlayMusic(summerSound);
-        hm.InputNewWords("You got married with the person you met in the park", "Go to Max's home");
+        if(isAnna())
+            hm.InputNewWords("You and Max got married in 1933.", "Go to your home.");
+        else if(isMax())
+            hm.InputNewWords("You and Annaliese got married in 1933.", "Go to your home.");
         StartCoroutine(showGradually(flowershop));
         flowershopPanel.SetActive(false);
         flare.SetActive(true);
@@ -266,9 +273,9 @@ public class ObjectManager2 : MonoBehaviour
     {
 #if SHOW_HM
         if (c2c.isMax())
-            hm.InputNewWords("Your apartment never had fresh flowers before she moved in", "Go to The Park");
+            hm.InputNewWords("Your apartment never had fresh flowers before she moved in", "Go to The park");
         else if (c2c.isAnna())
-            hm.InputNewWords("Over time, his apartment became our apartment", "Go to The Park");
+            hm.InputNewWords("Over time, his apartment became our apartment", "Go to The park");
 #endif
         AudioSource audioSource = PlayMusic(autumnSound);
         StartCoroutine(showGradually(house));
@@ -380,37 +387,150 @@ public class ObjectManager2 : MonoBehaviour
         c2c.GenerateCrowds();
     }
 
-    public void initCrowd(bool secondTime = false)
+    //public void initCrowd(bool secondTime = false)
+    //{
+    //    crowdNum++;
+    //    if (crowdNum == 3) crowdNum = 0;
+    //    Color curColor = crowdPanel.GetComponent<Image>().color;
+    //    curColor.a = 0;
+    //    crowdPanel.GetComponent<Image>().color = curColor;
+    //    crowdPanel.GetComponent<Image>().sprite = crowds[crowdNum];
+    //    crowdPanel.SetActive(true);
+
+    //    curColor = effectPanel1.GetComponent<Image>().color;
+    //    curColor.a = 0;
+    //    effectPanel1.GetComponent<Image>().color = curColor;
+    //    effectPanel2.GetComponent<Image>().color = curColor;
+    //    effectPanel1.GetComponent<Image>().sprite = effects[0];
+    //    effectPanel2.GetComponent<Image>().sprite = effects[0];
+    //    effectPanel1.SetActive(true);
+    //    effectPanel2.SetActive(true);
+
+    //    GameObject newAudioSource = Instantiate(audioSourcePrefab);
+    //    ASs.Add(newAudioSource);
+    //    if (!secondTime)
+    //    {
+    //        newAudioSource.GetComponent<AudioSource>().clip = clips1[clipNum % 3];
+    //    }
+    //    else
+    //    {
+    //        newAudioSource.GetComponent<AudioSource>().clip = clips2[clipNum % 3];
+    //    }
+    //    newAudioSource.GetComponent<AudioSource>().Play();
+    //    clipNum++;
+    //}
+
+    public void updateCrowd(float proportion, GameObject crowd, GameObject target, bool secondTime = false)
     {
-        crowdNum++;
-        if (crowdNum == 3) crowdNum = 0;
-        Color curColor = crowdPanel.GetComponent<Image>().color;
-        curColor.a = 0;
-        crowdPanel.GetComponent<Image>().color = curColor;
-        crowdPanel.GetComponent<Image>().sprite = crowds[crowdNum];
-        crowdPanel.SetActive(true);
-
-        curColor = effectPanel1.GetComponent<Image>().color;
-        curColor.a = 0;
-        effectPanel1.GetComponent<Image>().color = curColor;
-        effectPanel2.GetComponent<Image>().color = curColor;
-        effectPanel1.GetComponent<Image>().sprite = effects[0];
-        effectPanel2.GetComponent<Image>().sprite = effects[0];
-        effectPanel1.SetActive(true);
-        effectPanel2.SetActive(true);
-
-        GameObject newAudioSource = Instantiate(audioSourcePrefab);
-        ASs.Add(newAudioSource);
-        if (!secondTime)
+        if (proportion < 0)
         {
-            newAudioSource.GetComponent<AudioSource>().clip = clips1[clipNum % 3];
+            if (crowd.activeSelf)
+                crowd.SetActive(false);
+            return;
         }
         else
         {
-            newAudioSource.GetComponent<AudioSource>().clip = clips2[clipNum % 3];
+            if (!crowd.activeSelf)
+            {
+                Vector3 pos = crowd.transform.position;
+                pos.y = target.transform.position.y;
+                crowd.transform.position = pos;
+                crowd.SetActive(true);
+
+                crowdNum++;
+                if (crowdNum == crowds.Count) crowdNum = 0;
+                crowd.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", crowds[crowdNum]);
+
+                //PlayMusic(clips[crowdNum]);
+                for (int i = 0; i < 3; i++)
+                {
+                    if (curAS[i] == null || !curAS[i].isPlaying)
+                    {
+                        clipNum++;
+                        if (!secondTime)
+                        {
+                            if (clipNum == clips1.Count) clipNum = 0;
+                            curAS[i] = PlayMusic(clips1[clipNum]);
+                        }
+                        else
+                        {
+                            if (clipNum == clips2.Count) clipNum = 0;
+                            curAS[i] = PlayMusic(clips2[clipNum]);
+                        }
+
+                        break;
+                    }
+                }
+            }
         }
-        newAudioSource.GetComponent<AudioSource>().Play();
-        clipNum++;
+
+        Color curColor = crowd.GetComponentInChildren<Renderer>().material.color;
+        curColor.a = proportion;
+        crowd.GetComponentInChildren<Renderer>().material.color = curColor;
+
+        //crowdScreamingAS.volume = proportion;
+    }
+
+    public void UpdateCrowdEffects(float proportion)
+    {
+        if (proportion < 0)
+        {
+            effectPanel1.SetActive(false);
+            effectPanel2.SetActive(false);
+            return;
+        }
+        else
+        {
+            if (!effectPanel1.activeSelf)
+            {
+                effectPanel1.SetActive(true);
+                effectPanel2.SetActive(true);
+            }
+        }
+        Color curColor;
+        if (proportion <= 0.3)
+        {
+            float scaledProportion = proportion / 0.3f;
+            curColor = effectPanel1.GetComponent<Image>().color;
+            curColor.a = scaledProportion;
+            effectPanel1.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[0];
+            curColor.a = 0;
+            effectPanel2.GetComponent<Image>().color = curColor;
+            effectPanel2.GetComponent<Image>().sprite = effects[0];
+        }
+        else if (proportion >= 0.7)
+        {
+            float scaledProportion = (proportion - 0.7f) / 0.3f;
+            curColor = effectPanel1.GetComponent<Image>().color;
+            curColor.a = 1 - scaledProportion;
+            effectPanel1.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[1];
+            curColor.a = scaledProportion;
+            effectPanel2.GetComponent<Image>().color = curColor;
+            effectPanel2.GetComponent<Image>().sprite = effects[2];
+        }
+        else
+        {
+            float scaledProportion = (proportion - 0.3f) / 0.4f;
+            curColor = effectPanel1.GetComponent<Image>().color;
+            curColor.a = 1 - scaledProportion;
+            effectPanel1.GetComponent<Image>().color = curColor;
+            effectPanel1.GetComponent<Image>().sprite = effects[0];
+            curColor.a = scaledProportion;
+            effectPanel2.GetComponent<Image>().color = curColor;
+            effectPanel2.GetComponent<Image>().sprite = effects[1];
+        }
+    }
+
+    public void destroyCrowd()
+    {
+        for(int i = 0; i < curAS.Count; i++)
+        {
+            curAS[i].Stop();
+        }
+        effectPanel1.SetActive(false);
+        effectPanel2.SetActive(false);
     }
 
     public IEnumerator ShowOutside()
@@ -418,25 +538,25 @@ public class ObjectManager2 : MonoBehaviour
 #if SHOW_HM
         hm.InputNewWords("Screams, shouts and yells flood in. Eyes look at you.", "");
 #endif
-        int i = 0;
-        while (true)
-        {
-            initCrowd(true);
-            float proportion = 0;
-            DOTween.To(() => proportion, x => updateCrowd(x), 1, 1);
-            yield return new WaitForSeconds(2);
-            proportion = 1;
-            DOTween.To(() => proportion, x => updateCrowd(x), 0, 1);
-            yield return new WaitForSeconds(1);
-            i++;
+        //int i = 0;
+        //while (true)
+        //{
+            //initCrowd(true);
+            //float proportion = 0;
+            //DOTween.To(() => proportion, x => updateCrowd(x), 1, 1);
+            yield return new WaitForSeconds(5);
+            //proportion = 1;
+            //DOTween.To(() => proportion, x => updateCrowd(x), 0, 1);
+            //yield return new WaitForSeconds(1);
+            //i++;
 #if SHOW_HM
-            if(i == 3)
-            {
+            //if(i == 3)
+            //{
                 hm.InputNewWords("It is definitely not safe to be outside", "Head back to the Apartment");
                 c2c.maxGoingBack = true;
-            }
+            //}
 #endif
-        }
+        //}
     }
 
     public void HideOutside()
@@ -487,13 +607,13 @@ public class ObjectManager2 : MonoBehaviour
         //crowdScreamingAS.volume = proportion;
     }
 
-    public void destroyCrowd()
-    {
-        crowdPanel.SetActive(false);
-        effectPanel1.SetActive(false);
-        effectPanel2.SetActive(false);
-        crowdScreamingAS.Stop();
-    }
+    //public void destroyCrowd()
+    //{
+    //    crowdPanel.SetActive(false);
+    //    effectPanel1.SetActive(false);
+    //    effectPanel2.SetActive(false);
+    //    crowdScreamingAS.Stop();
+    //}
 
     public void escapeInHouse()
     {
@@ -806,6 +926,9 @@ public class ObjectManager2 : MonoBehaviour
     public void maxStartWrite()
     {
         //table.SetActive(true);
+#if SHOW_HM
+        hm.InputNewWords("What do you want this flower to symbolize when you look at it years from now?", "Put the book back on the table after writing.");
+#endif
         isWriting = true;
     }
 
@@ -855,6 +978,7 @@ public class ObjectManager2 : MonoBehaviour
 
     public void maxPlayTheViolin()
     {
+        hm.InputNewWords("", "");
         maxTopicPanel.SetActive(false);
         violin.SetActive(true);
     }

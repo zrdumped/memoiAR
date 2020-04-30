@@ -82,6 +82,12 @@ public class HintManager : MonoBehaviour
         if(storyText != "" || insText != "")
             typeSoundPlayer.Play();
 
+        if ((int)storyText[storyText.Length - 1] <= (int)'z' && (int)storyText[storyText.Length - 1] >= (int)'a')
+            storyText += '.';
+
+        if ((int)insText[insText.Length - 1] <= (int)'z' && (int)insText[insText.Length - 1] >= (int)'a')
+            insText += '.';
+
         DOTween.To(() => textColor, x => Story.color = x, endColor, 1);
         DOTween.To(() => textColor2, x => Instruction.color = x, endColor, 1);
     }

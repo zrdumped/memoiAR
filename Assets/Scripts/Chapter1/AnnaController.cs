@@ -65,8 +65,8 @@ public class AnnaController : CharacterController
 
     public void startTutorial()
     {
-        story = "Annalieses Flowers";
-        ins = "Sort your flowers";
+        story = "As usual, you start your day in the flower shop.";
+        ins = "Sort the flowers.";
         hm.InputNewWords(story, ins);
         return;
     }

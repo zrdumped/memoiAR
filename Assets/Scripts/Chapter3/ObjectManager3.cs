@@ -158,7 +158,7 @@ public class ObjectManager3 : MonoBehaviour
     {
         readyToPinch = true;
 #if SHOW_HM
-        hm.InputNewWords("She may never see these words, but you mean them.", "Pinch the paper");
+        hm.InputNewWords("She may never see these words, but you mean them.", "Pinch the paper after writing.");
 #endif
     }
 
@@ -539,6 +539,10 @@ public class ObjectManager3 : MonoBehaviour
 
     public void destroyCrowd()
     {
+        for (int i = 0; i < curAS.Count; i++)
+        {
+            curAS[i].Stop();
+        }
         effectPanel1.SetActive(false);
         effectPanel2.SetActive(false);
     }

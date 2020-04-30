@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2324,10 +2324,10 @@ MonoBehaviour:
   openAlbum: {fileID: 8300000, guid: 671b8301306d03841aa865c0814c0db0, type: 3}
   pickUpKettle: {fileID: 8300000, guid: d72e4135140fc91448db20b5ca6d82f4, type: 3}
   pourWaterAC: {fileID: 8300000, guid: b5be7056c386f5649bbb02f535726d03, type: 3}
-  firstChanting: {fileID: 8300000, guid: a4014bbdd10c1ed429cdd0e0456bd0ef, type: 3}
-  secondChanting: {fileID: 8300000, guid: 819715701068a444ab67d2e07fe1f5fd, type: 3}
-  thirdChanting: {fileID: 8300000, guid: 0155f229cb3d397489d115c996e31cbc, type: 3}
-  groupChanting: {fileID: 8300000, guid: 77c2cfd4c7c455d43802c05a6230166c, type: 3}
+  firstChanting: {fileID: 8300000, guid: eba1474526c0787458c398f5f8acf403, type: 3}
+  secondChanting: {fileID: 8300000, guid: ac881e3b52752ed48ab3db4e2edd3c7f, type: 3}
+  thirdChanting: {fileID: 8300000, guid: f133111993fe38e4a95a97f57863763c, type: 3}
+  groupChanting: {fileID: 8300000, guid: 43e5390754501d04687811786cc729e5, type: 3}
   womenGroupNoise: {fileID: 8300000, guid: 5238689de34e79441bfefc6cf4f20419, type: 3}
   happierSound: {fileID: 8300000, guid: 88c653a8432399540934eaee1fa32c9f, type: 3}
   jailSound: {fileID: 8300000, guid: c1ccb5c3984a2c247bef37867d287a34, type: 3}

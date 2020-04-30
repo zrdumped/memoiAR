@@ -41,8 +41,8 @@ public class MaxController : CharacterController
 
     public void startTutorial()
     {
-        story = "One morning at home";
-        ins = "Compose your music";
+        story = "One morning at home...";
+        ins = "Place music notes on the paper to compose a song.";
         hm.InputNewWords(story, ins);
         return;
     }

@@ -150,7 +150,10 @@ Debug.Log(frontCameraName);
         }
 
         hm.disableButton();
-        hm.InputNewWords("", "");
+        if(csc.isAnna())
+            hm.InputNewWords("You are Annaliese.", "Scan the name marker.");
+        else
+            hm.InputNewWords("You are Max.", "Scan the name marker.");
     }
 
     public void startIns()

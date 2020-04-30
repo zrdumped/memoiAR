@@ -12,7 +12,7 @@ public class Chapter2Controller : MonoBehaviour
     private int crowdNum = 6;//on each half axis
     private float crowdDistance = 0.5f;
     private float crowdRange = 0.3f;
-    private List<Vector3> generatedGrowds;
+    private List<GameObject> generatedGrowds;
     private bool onTheWayToHouse = false;
     private bool inCrowd = false;
     public AudioSource crowdBgAS;
@@ -20,6 +20,8 @@ public class Chapter2Controller : MonoBehaviour
     private Vector3 housePos;
     public bool maxGoOut = false;
     public bool maxGoingBack = false;
+    public GameObject target;
+    public GameObject crowd;
 
     //Max House
     //public GameObject teaboxLid;
@@ -73,31 +75,22 @@ public class Chapter2Controller : MonoBehaviour
             }
 
             //calculate the min distance
-            float minDistance = 100;
+            float MinDistance = 100;
             for (int i = 0; i < generatedGrowds.Count; i++)
             {
-                Vector3 pos1 = generatedGrowds[i];
+                Vector3 pos1 = generatedGrowds[i].transform.position;
                 //Debug.Log(pos1);
-                pos1.y = 0;
-                Vector3 pos2 = ARCamera.transform.position;
-                pos2.y = 0;
-                minDistance = Mathf.Min(minDistance, Vector3.Distance(pos1, pos2));
+                Vector3 pos2 = target.transform.position;
+                pos2.y = pos1.y;
+
+                generatedGrowds[i].transform.LookAt(pos2);
+
+                float proportion = 1 - Vector3.Distance(pos1, pos2) / crowdRange;
+                om2.updateCrowd(proportion, generatedGrowds[i], target);
+
+                MinDistance = Mathf.Min(MinDistance, Vector3.Distance(pos1, pos2));
             }
-            //Debug.Log(minDistance);
-            float proportion = 1 - minDistance / crowdRange;
-            if(proportion > 0 && !inCrowd)
-            {
-                inCrowd = true;
-                om2.initCrowd();
-                om2.updateCrowd(proportion);
-            }else if(proportion > 0 && inCrowd)
-            {
-                om2.updateCrowd(proportion);
-            }else if (proportion <= 0 && inCrowd)
-            {
-                inCrowd = false;
-                om2.destroyCrowd();
-            }
+            om2.UpdateCrowdEffects(1 - MinDistance / crowdRange);
         }
 #endif
         if(maxGoOut && isMax())
@@ -110,7 +103,26 @@ public class Chapter2Controller : MonoBehaviour
                 maxGoOut = false;
                 //maxGoingBack = true;
                 showingOutside = StartCoroutine(om2.ShowOutside());
+                return;
             }
+
+            //calculate the min distance
+            float MinDistance = 100;
+            for (int i = 0; i < generatedGrowds.Count; i++)
+            {
+                Vector3 pos1 = generatedGrowds[i].transform.position;
+                //Debug.Log(pos1);
+                Vector3 pos2 = target.transform.position;
+                pos2.y = pos1.y;
+
+                generatedGrowds[i].transform.LookAt(pos2);
+
+                float proportion = 1 - Vector3.Distance(pos1, pos2) / crowdRange;
+                om2.updateCrowd(proportion, generatedGrowds[i], target);
+
+                MinDistance = Mathf.Min(MinDistance, Vector3.Distance(pos1, pos2));
+            }
+            om2.UpdateCrowdEffects(1 - MinDistance / crowdRange);
         }
 
         if (maxGoingBack)
@@ -170,7 +182,7 @@ public class Chapter2Controller : MonoBehaviour
     public void GenerateCrowds()
     {
         //om2.beforeScene.SetActive(true);
-        generatedGrowds = new List<Vector3>();
+        generatedGrowds = new List<GameObject>();
         Vector3 pos1 = parkTrans.position;
         pos1.y = 0;
         //housePos = houseTrans.position;
@@ -182,11 +194,20 @@ public class Chapter2Controller : MonoBehaviour
         //    //newCrowd.transform.position = ;
         //    generatedGrowds.Add(houseTrans.position + distance * (i + 1));
         //}
-        for(float i = pos1.x - crowdNum * crowdDistance; i <= pos1.x + crowdNum * crowdDistance; i += crowdDistance)
+        for (float i = pos1.x - crowdNum * crowdDistance; i <= pos1.x + crowdNum * crowdDistance; i += crowdDistance)
         {
             for (float j = pos1.z - crowdNum * crowdDistance; j <= pos1.z + crowdNum * crowdDistance; j += crowdDistance)
             {
-                generatedGrowds.Add(new Vector3(i, 0, j));
+                if (Mathf.Abs(i - pos1.x) < 0.01 && Mathf.Abs(j - pos1.z) < 0.01)
+                    continue;
+                GameObject newCrowd = Instantiate(crowd);
+                newCrowd.GetComponentInChildren<Renderer>().material = Instantiate(crowd.GetComponentInChildren<Renderer>().sharedMaterial);
+                Color c = newCrowd.GetComponentInChildren<Renderer>().material.color;
+                c.a = 0;
+                newCrowd.GetComponentInChildren<Renderer>().material.color = c;
+                newCrowd.transform.position = new Vector3(i, houseTrans.position.y, j);
+                newCrowd.SetActive(false);
+                generatedGrowds.Add(newCrowd);
             }
         }
         onTheWayToHouse = true;

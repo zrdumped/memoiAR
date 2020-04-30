@@ -225,6 +225,37 @@ public class ServerStateController : MonoBehaviour
                 chap = 3;
                 server.Broadcast("EndChapter2");
             }
+        }else if(chap == 3)
+        {
+            if (state == 0 && stateName == "MaxArriveJail")
+            {
+                state++;
+            }
+            else if (state == 1 && stateName == "AnnaArriveJail")
+            {
+                state++;
+                server.Broadcast("BothArriveJail");
+            }
+            else if (state == 2 && stateName == "FirstChantEnd")
+            {
+                state++;
+                server.Broadcast("FirstChantEnd");
+            }
+            else if (state == 3 && stateName == "SecondChantEnd")
+            {
+                state++;
+                server.Broadcast("SecondChantEnd");
+            }
+            else if (state == 4 && stateName == "FinalChantEnd")
+            {
+                state++;
+                server.Broadcast("FinalChantEnd");
+            }
+            else if (state == 5 && stateName == "EndChapter3")
+            {
+                state++;
+                server.Broadcast("EndChapter3");
+            }
         }
     }
 

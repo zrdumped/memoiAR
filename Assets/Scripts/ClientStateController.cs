@@ -29,6 +29,7 @@ public class ClientStateController : MonoBehaviour
     private HintManager hm;
 
     private Chapter0Controller c0c;
+    private Chapter3Controller c3c;
 
     public GameObject chapter0Panel;
     public GameObject chapter1Panel;
@@ -74,7 +75,7 @@ public class ClientStateController : MonoBehaviour
             //max = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<MaxController>();
             //om = GameObject.FindGameObjectWithTag("ObjectManager").GetComponent<ObjectManager>();
             c0c = GameObject.FindGameObjectWithTag("Chap0Client").GetComponent<Chapter0Controller>();
-            hm.InputNewWords("Put on your favourite accessory to wear", "");
+            hm.InputNewWords("You see some personal belongings on the table.", "Put on what you like and continue.");
             hm.enableButton();
             hm.changeBackground(0);
             if (isAnna())
@@ -97,12 +98,12 @@ public class ClientStateController : MonoBehaviour
             if (isAnna())
             {
                 om.flowerShopPanel.SetActive(true);
-                hm.InputNewWords("Now you are Annaliese. Bring the Rose to the Flowershop.", "");
+                hm.InputNewWords("Bring the Rose to the flower shop.", "");
             }
             else if (isMax())
             {
                 om.housePanel.SetActive(true);
-                hm.InputNewWords("Now you are Max. Bring your violin home to 4076 Auguststrasse.", "");
+                hm.InputNewWords("Bring your violin home to 4076 Auguststrasse.", "");
             }
             hm.disableButton();
 
@@ -120,6 +121,7 @@ public class ClientStateController : MonoBehaviour
             //chapter2Panel.SetActive(false);
         }else if(chapNum == 3)
         {
+            c3c = GameObject.FindGameObjectWithTag("Chap3Client").GetComponent<Chapter3Controller>();
             chapter2EndPanel.SetActive(false);
             hm.changeBackground(3);
             hm.disableButton();
@@ -214,7 +216,7 @@ public class ClientStateController : MonoBehaviour
                 }
                 else if (isAnna())
                 {
-                    hm.InputNewWords("You know Max is trying to be brave. Maybe some tea will calm you both down.", "Get some tea from the Tea Box");
+                    hm.InputNewWords("You know Max is trying to be brave. Maybe some tea will calm you both down.", "Get some tea from the tea box");
                 }
             }else if(stateName == "AnnaOpenTeabox")
             {
@@ -268,6 +270,28 @@ public class ClientStateController : MonoBehaviour
             else if (stateName == "EndChapter2")
             {
                 Chapter2Ended();
+            }
+        }else if (chapNum == 3)
+        {
+            if(stateName == "BothArriveJail")
+            {
+                StartCoroutine(c3c.FirstChanting());
+            }
+            else if (stateName == "FirstChantEnd")
+            {
+                StartCoroutine(c3c.SecondChanting());
+            }
+            else if (stateName == "SecondChantEnd")
+            {
+                StartCoroutine(c3c.ThirdChanting());
+            }
+            else if (stateName == "FinalChantEnd")
+            {
+                StartCoroutine(c3c.FinalChanting());
+            }
+            else if (stateName == "EndChapter3")
+            {
+                chapter3EndPanel.SetActive(true);
             }
         }
     }
@@ -526,8 +550,34 @@ public class ClientStateController : MonoBehaviour
         gm.SwitchScene("Chapter3");
     }
 
+    public void MaxArriveJail()
+    {
+        client.ClientSendMessage("MaxArriveJail");
+    }
+
+    public void AnnaArriveJail()
+    {
+        client.ClientSendMessage("AnnaArriveJail");
+    }
+
+    public void FirstChantEnd()
+    {
+        client.ClientSendMessage("FirstChantEnd");
+    }
+
+    public void SecondChantEnd()
+    {
+        client.ClientSendMessage("SecondChantEnd");
+    }
+
+    public void FinalChantEnd()
+    {
+        client.ClientSendMessage("FinalChantEnd");
+    }
+
     public void EndChapter3()
     {
-        chapter3EndPanel.SetActive(true);
+        client.ClientSendMessage("EndChapter3");
+        //chapter3EndPanel.SetActive(true);
     }
 }
