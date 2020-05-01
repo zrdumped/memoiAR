@@ -352,7 +352,7 @@ private AudioSource changeSound(AudioClip clip, bool loop = false)
         {
             for (float j = pos1.z - crowdNum * crowdDistance; j <= pos1.z + crowdNum * crowdDistance; j += crowdDistance)
             {
-                if (Mathf.Abs(i - pos1.x) < 0.01 && Mathf.Abs(j - pos1.z) < 0.01)
+                if (Mathf.Abs(i - pos1.x) < 1.01 && Mathf.Abs(j - pos1.z) < 1.01)
                     continue;
                 GameObject newCrowd = Instantiate(crowd);
                 newCrowd.GetComponentInChildren<Renderer>().material = Instantiate(crowd.GetComponentInChildren<Renderer>().sharedMaterial);

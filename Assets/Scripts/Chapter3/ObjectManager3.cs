@@ -88,6 +88,12 @@ public class ObjectManager3 : MonoBehaviour
 
     void Start()
     {
+        curAS = new List<AudioSource>();
+        curAS.Add(null);
+        curAS.Add(null);
+        curAS.Add(null);
+
+
         paperOnScreen.SetActive(false);
         writePanel.SetActive(false);
 #if SHOW_HM
@@ -107,7 +113,6 @@ public class ObjectManager3 : MonoBehaviour
 
         //StartCoroutine(ChangeToRain());
 
-        curAS = new List<AudioSource>(3);
     }
 
     // Update is called once per frame
@@ -323,6 +328,8 @@ public class ObjectManager3 : MonoBehaviour
 #if SHOW_HM
         hm.InputNewWords("Empty: looks like it's 'tea' with no tea left again.", "Touch the kettle");
 #endif
+        DOTween.To(() => 0, x => normalProfile.GetSetting<ColorGrading>().temperature.value = x, -10, 1);
+        DOTween.To(() => 0, x => normalProfile.GetSetting<ColorGrading>().postExposure.value = x, -0.6f, 1);
         return;
     }
 
@@ -342,6 +349,8 @@ public class ObjectManager3 : MonoBehaviour
 #if SHOW_HM
         hm.InputNewWords("Tea for two: one for Max and one for you.", "Touch the tea cup to pour water");
 #endif
+        DOTween.To(() => -10, x => normalProfile.GetSetting<ColorGrading>().temperature.value = x, -20, 1);
+        DOTween.To(() => -0.6f, x => normalProfile.GetSetting<ColorGrading>().postExposure.value = x, -1.2f, 1);
         return kettleOnScreen;
     }
 
@@ -401,8 +410,8 @@ public class ObjectManager3 : MonoBehaviour
         hm.InputNewWords("It's getting late. Why hasn't Max come home yet?", "");
 #endif
         //light change
-        DOTween.To(() => 0, x => normalProfile.GetSetting<ColorGrading>().temperature.value = x, -30, 3);
-        DOTween.To(() => 0, x => normalProfile.GetSetting<ColorGrading>().postExposure.value = x, -2, 3);
+        DOTween.To(() => -20, x => normalProfile.GetSetting<ColorGrading>().temperature.value = x, -30, 1);
+        DOTween.To(() => -1.2f, x => normalProfile.GetSetting<ColorGrading>().postExposure.value = x, -2, 1);
         yield return new WaitForSeconds(3);
         //noise
         AudioSource noiseAS = PlayMusic(noise);
