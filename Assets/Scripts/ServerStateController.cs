@@ -12,7 +12,7 @@ public class ServerStateController : MonoBehaviour
     }
     private int state = 0;
     //private int chap = 1;
-    private int chap = 3;
+    private int chap = 1;
 
     private int roseNum = 0;
     private int glassNum = 0;
