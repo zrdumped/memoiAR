@@ -11,7 +11,7 @@ public class Chapter2Controller : MonoBehaviour
     public Transform houseTrans;
     private int crowdNum = 6;//on each half axis
     private float crowdDistance = 0.5f;
-    private float crowdRange = 0.3f;
+    private float crowdRange = 0.6f;
     private List<GameObject> generatedGrowds;
     private bool onTheWayToHouse = false;
     private bool inCrowd = false;
@@ -68,6 +68,11 @@ public class Chapter2Controller : MonoBehaviour
                 crowdBgAS.volume = 0.1f;
 
                 csc.HouseArrived();
+
+                for (int i = 0; i < generatedGrowds.Count; i++)
+                {
+                    generatedGrowds[i].SetActive(false);
+                }
 
                 om2.destroyCrowd();
 
@@ -132,6 +137,11 @@ public class Chapter2Controller : MonoBehaviour
             float remainingDistance = Vector3.Distance(housePos, cameraPos);
             if (remainingDistance < 0.5)
             {
+                for (int i = 0; i < generatedGrowds.Count; i++)
+                {
+                    Destroy(generatedGrowds[i]);
+                }
+
                 maxGoingBack = false;
                 StopCoroutine(showingOutside);
                 om2.HideOutside();

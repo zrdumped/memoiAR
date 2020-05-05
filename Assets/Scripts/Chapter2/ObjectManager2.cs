@@ -206,7 +206,10 @@ public class ObjectManager2 : MonoBehaviour
         violin.SetActive(false);
 
         ASs = new List<GameObject>();
-        curAS = new List<AudioSource>(3);
+        curAS = new List<AudioSource>();
+        curAS.Add(null);
+        curAS.Add(null);
+        curAS.Add(null);
     }
 
     public IEnumerator ChangeToSummer()
@@ -1044,7 +1047,7 @@ public class ObjectManager2 : MonoBehaviour
 
     public AudioSource PlayMusic(AudioClip ac)
     {
-        AudioSource newAS = Instantiate(audioSource).GetComponent<AudioSource>() as AudioSource;
+        AudioSource newAS = Instantiate(audioSourcePrefab).GetComponent<AudioSource>() as AudioSource;
         newAS.clip = ac;
         newAS.Play();
         return newAS;
