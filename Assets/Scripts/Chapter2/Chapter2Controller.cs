@@ -22,6 +22,7 @@ public class Chapter2Controller : MonoBehaviour
     public bool maxGoingBack = false;
     public GameObject target;
     public GameObject crowd;
+    private bool MaxFarAway = false;
 
     //Max House
     //public GameObject teaboxLid;
@@ -107,10 +108,14 @@ public class Chapter2Controller : MonoBehaviour
             {
                 maxGoOut = false;
                 //maxGoingBack = true;
+                MaxFarAway = true;
                 showingOutside = StartCoroutine(om2.ShowOutside());
                 return;
             }
+        }
 
+        if (maxGoingBack)
+        {
             //calculate the min distance
             float MinDistance = 100;
             for (int i = 0; i < generatedGrowds.Count; i++)
@@ -128,25 +133,27 @@ public class Chapter2Controller : MonoBehaviour
                 MinDistance = Mathf.Min(MinDistance, Vector3.Distance(pos1, pos2));
             }
             om2.UpdateCrowdEffects(1 - MinDistance / crowdRange);
-        }
 
-        if (maxGoingBack)
-        {
             Vector3 cameraPos = ARCamera.transform.position;
             cameraPos.y = 0;
             float remainingDistance = Vector3.Distance(housePos, cameraPos);
             if (remainingDistance < 0.5)
             {
-                for (int i = 0; i < generatedGrowds.Count; i++)
-                {
-                    Destroy(generatedGrowds[i]);
-                }
+                hideSilhouette();
 
                 maxGoingBack = false;
                 StopCoroutine(showingOutside);
                 om2.HideOutside();
                 csc.MaxSawOutside();
             }
+        }
+    }
+
+    public void hideSilhouette()
+    {
+        for (int i = 0; i < generatedGrowds.Count; i++)
+        {
+            generatedGrowds[i].SetActive(false);
         }
     }
 
@@ -193,7 +200,7 @@ public class Chapter2Controller : MonoBehaviour
     {
         //om2.beforeScene.SetActive(true);
         generatedGrowds = new List<GameObject>();
-        Vector3 pos1 = parkTrans.position;
+        Vector3 pos1 = houseTrans.position;
         pos1.y = 0;
         //housePos = houseTrans.position;
         //Vector3 distance = (pos1 - housePos) / (crowdNum + 1);

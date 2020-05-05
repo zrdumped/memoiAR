@@ -430,7 +430,7 @@ public class ClientStateController : MonoBehaviour
 
     public void Chapter1Ended()
     {
-        chapter1Panel.SetActive(true);
+        chapter1EndPanel.SetActive(true);
         chapNum = 2;
         gm.SwitchScene("Chapter2");
     }
@@ -450,7 +450,7 @@ public class ClientStateController : MonoBehaviour
         }
 #if CHAPTER_2_ONLY
         chapNum = 0;
-        chapter2EndPanel.SetActive(true);
+        loadingPanel.SetActive(true);
         gm.SwitchScene("Chapter0");
 #else
         chapNum = 0;
@@ -552,32 +552,32 @@ public class ClientStateController : MonoBehaviour
 
     public void MaxArriveJail()
     {
-        client.ClientSendMessage("MaxArriveJail");
+        client.ClientSendMessage("!MaxArriveJail");
     }
 
     public void AnnaArriveJail()
     {
-        client.ClientSendMessage("AnnaArriveJail");
+        client.ClientSendMessage("!AnnaArriveJail");
     }
 
     public void FirstChantEnd()
     {
-        client.ClientSendMessage("FirstChantEnd");
+        client.ClientSendMessage("!FirstChantEnd");
     }
 
     public void SecondChantEnd()
     {
-        client.ClientSendMessage("SecondChantEnd");
+        client.ClientSendMessage("!SecondChantEnd");
     }
 
     public void FinalChantEnd()
     {
-        client.ClientSendMessage("FinalChantEnd");
+        client.ClientSendMessage("!FinalChantEnd");
     }
 
     public void EndChapter3()
     {
-        client.ClientSendMessage("EndChapter3");
+        client.ClientSendMessage("!EndChapter3");
         //chapter3EndPanel.SetActive(true);
     }
 }

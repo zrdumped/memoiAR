@@ -561,9 +561,9 @@ public class ObjectManager3 : MonoBehaviour
         Vector3 rot = paperOnScreen.transform.localEulerAngles;
         rot.y += 180;
         paperOnScreen.transform.DOLocalRotate(rot, 2);
-        rot = paperOfCredit.transform.localEulerAngles;
-        rot.y += 180;
-        paperOfCredit.transform.DOLocalRotate(rot, 2);
+        Vector3 rot2 = paperOfCredit.transform.localEulerAngles;
+        rot2.y += 180;
+        paperOfCredit.transform.DOLocalRotate(rot2, 2);
         yield return new WaitForSeconds(5);
         c3c.EndChapter3();
     }

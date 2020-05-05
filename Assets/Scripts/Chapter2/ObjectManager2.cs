@@ -541,13 +541,14 @@ public class ObjectManager2 : MonoBehaviour
 #if SHOW_HM
         hm.InputNewWords("Screams, shouts and yells flood in. Eyes look at you.", "");
 #endif
+        c2c.maxGoingBack = true;
         //int i = 0;
         //while (true)
         //{
-            //initCrowd(true);
-            //float proportion = 0;
-            //DOTween.To(() => proportion, x => updateCrowd(x), 1, 1);
-            yield return new WaitForSeconds(5);
+        //initCrowd(true);
+        //float proportion = 0;
+        //DOTween.To(() => proportion, x => updateCrowd(x), 1, 1);
+        yield return new WaitForSeconds(5);
             //proportion = 1;
             //DOTween.To(() => proportion, x => updateCrowd(x), 0, 1);
             //yield return new WaitForSeconds(1);
@@ -556,7 +557,7 @@ public class ObjectManager2 : MonoBehaviour
             //if(i == 3)
             //{
                 hm.InputNewWords("It is definitely not safe to be outside", "Head back to the Apartment");
-                c2c.maxGoingBack = true;
+
             //}
 #endif
         //}
@@ -620,9 +621,10 @@ public class ObjectManager2 : MonoBehaviour
 
     public void escapeInHouse()
     {
+        c2c.hideSilhouette();
         for (int i = ASs.Count - 1; i >= 0; i--)
         {
-            Destroy(ASs[i]);
+            ASs[i].SetActive(false);
         }
         houseEnv.SetActive(true);
         beforeScene.SetActive(true);

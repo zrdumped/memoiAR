@@ -58,6 +58,7 @@ public class Chapter3Controller : MonoBehaviour
     {
         if (onTheWayToR)
         {
+            house.SetActive(false);
             float MinDistance = 100;
             for (int i = 0; i < generatedGrowds.Count; i++)
             {

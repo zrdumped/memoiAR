@@ -125,6 +125,7 @@ public class HandWrite : MonoBehaviour
         {
             trails[i].layer = LayerMask.NameToLayer("Default");
         }
+        secondWrite = true;
     }
 
     public static Vector3 StringToVector3(string sVector)
